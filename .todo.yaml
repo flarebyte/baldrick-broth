@@ -30,6 +30,7 @@ features:
   - title: Command
     includes:
       - title: run simple command
+      - title: run command from PWD or custom paths
       - title: run command with parameters validation
       - title: run multiple shells
       - title: run with schema validation

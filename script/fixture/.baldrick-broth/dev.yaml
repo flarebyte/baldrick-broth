@@ -1,0 +1,68 @@
+---
+  engine:
+    defaultShell: sh
+    telemetry:
+      verbosity: off
+      filepath: logs/telemetry.csv
+  binaries:
+    sh:
+      description: Bash
+      motivation: Run bash commands
+      homepage: https://www.gnu.org/software/bash/
+      shell:
+        run: sh
+        diagnosis: sh --version
+    elm:
+      description: Elm programming language
+      motivation: main command for Elm
+      homepage: https://guide.elm-lang.org/install/elm.html
+      shell:
+        run: elm
+        diagnosis: elm | grep Elm 0.19
+    whisker:
+      description: ...
+      motivation: ...
+      homepage: ...
+      shell:
+        run: npx baldrick-whisker@latest
+        diagnosis: npx baldrick-whisker@latest
+
+  variables:
+    githubAccount: githubAccount_Fixme
+    projectName: projectName_Fixme
+    copyright:
+      holder: copyrightHolder_Fixme
+      startYear: 2022
+    license: BSD3
+    project_yaml: script/data/project.yaml
+    project_schema: ./script/schema/project.schema.json
+    generate_sh: script/generate.sh
+    colors: [green, orange, blue]
+    animals: [cat, dog]
+  
+  domains:
+    test:
+      title: Test your library
+      description: Test your library for defects
+      tasks:
+       generate:
+            title: Generate code
+            description: Generate code
+            motivation: Generate code
+            visibility: public
+            parameters:
+              only:
+                description: only run this
+            steps:
+              - task: reset
+              - shell:
+                  bin: sh
+                  title: Run {project_yaml}
+                  if: "-f {generate_hbs}"
+                  unless: "-f .pause"
+                  each:
+                    color: colors
+                  run: "{whisker} render {project_yaml} {generate_hbs} {generate_sh} {color}"
+                  failSilently: true
+            finally:
+              - task: cleanup

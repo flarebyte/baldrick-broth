@@ -1,0 +1,5 @@
+{
+  "yaml.schemas": {
+    "script/fixture/.baldrick-broth/dev.schema.json": "script/fixture/.baldrick-broth/dev.yaml"
+  }
+}
