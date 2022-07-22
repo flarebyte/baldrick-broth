@@ -1,395 +1,346 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
-    "$ref": "#/definitions/BaldrickBroth",
-    "definitions": {
-        "BaldrickBroth": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "engine": {
-                    "$ref": "#/definitions/Engine"
-                },
-                "binaries": {
-                    "$ref": "#/definitions/Binaries"
-                },
-                "variables": {
-                    "$ref": "#/definitions/Variables"
-                },
-                "domains": {
-                    "$ref": "#/definitions/Domains"
-                }
-            },
-            "required": [
-                "binaries",
-                "domains",
-                "engine",
-                "variables"
-            ],
-            "title": "BaldrickBroth"
-        },
-        "Binaries": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "sh": {
-                    "$ref": "#/definitions/Elm"
-                },
-                "elm": {
-                    "$ref": "#/definitions/Elm"
-                },
-                "whisker": {
-                    "$ref": "#/definitions/Elm"
-                }
-            },
-            "required": [
-                "elm",
-                "sh",
-                "whisker"
-            ],
-            "title": "Binaries"
-        },
-        "Elm": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "motivation": {
-                    "type": "string"
-                },
-                "homepage": {
-                    "type": "string",
-                    "qt-uri-protocols": [
-                        "https"
-                    ],
-                    "qt-uri-extensions": [
-                        ".html"
-                    ]
-                },
-                "shell": {
-                    "$ref": "#/definitions/ElmShell"
-                }
-            },
-            "required": [
-                "description",
-                "homepage",
-                "motivation",
-                "shell"
-            ],
-            "title": "Elm"
-        },
-        "ElmShell": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "run": {
-                    "type": "string"
-                },
-                "diagnosis": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "diagnosis",
-                "run"
-            ],
-            "title": "ElmShell"
-        },
-        "Domains": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "test": {
-                    "$ref": "#/definitions/Test"
-                }
-            },
-            "required": [
-                "test"
-            ],
-            "title": "Domains"
-        },
-        "Test": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "title": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "tasks": {
-                    "$ref": "#/definitions/Tasks"
-                }
-            },
-            "required": [
-                "description",
-                "tasks",
-                "title"
-            ],
-            "title": "Test"
-        },
-        "Tasks": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "generate": {
-                    "$ref": "#/definitions/Generate"
-                }
-            },
-            "required": [
-                "generate"
-            ],
-            "title": "Tasks"
-        },
-        "Generate": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "title": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "motivation": {
-                    "type": "string"
-                },
-                "visibility": {
-                    "type": "string"
-                },
-                "parameters": {
-                    "$ref": "#/definitions/Parameters"
-                },
-                "steps": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Step"
-                    }
-                },
-                "finally": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Finally"
-                    }
-                }
-            },
-            "required": [
-                "description",
-                "finally",
-                "motivation",
-                "parameters",
-                "steps",
-                "title",
-                "visibility"
-            ],
-            "title": "Generate"
-        },
-        "Finally": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "task": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "task"
-            ],
-            "title": "Finally"
-        },
-        "Parameters": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "only": {
-                    "$ref": "#/definitions/Only"
-                }
-            },
-            "required": [
-                "only"
-            ],
-            "title": "Parameters"
-        },
-        "Only": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "description": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "description"
-            ],
-            "title": "Only"
-        },
-        "Step": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "task": {
-                    "type": "string"
-                },
-                "shell": {
-                    "$ref": "#/definitions/StepShell"
-                }
-            },
-            "required": [],
-            "title": "Step"
-        },
-        "StepShell": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "bin": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "if": {
-                    "type": "string"
-                },
-                "unless": {
-                    "type": "string"
-                },
-                "each": {
-                    "$ref": "#/definitions/Each"
-                },
-                "run": {
-                    "type": "string"
-                },
-                "failSilently": {
-                    "type": "boolean"
-                }
-            },
-            "required": [
-                "bin",
-                "each",
-                "failSilently",
-                "if",
-                "run",
-                "title",
-                "unless"
-            ],
-            "title": "StepShell"
-        },
-        "Each": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "color": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "color"
-            ],
-            "title": "Each"
-        },
-        "Engine": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "defaultShell": {
-                    "type": "string"
-                },
-                "telemetry": {
-                    "$ref": "#/definitions/Telemetry"
-                }
-            },
-            "required": [
-                "defaultShell",
-                "telemetry"
-            ],
-            "title": "Engine"
-        },
-        "Telemetry": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "verbosity": {
-                    "type": "string"
-                },
-                "filepath": {
-                    "type": "string"
-                }
-            },
-            "required": [
-                "filepath",
-                "verbosity"
-            ],
-            "title": "Telemetry"
-        },
-        "Variables": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "githubAccount": {
-                    "type": "string"
-                },
-                "projectName": {
-                    "type": "string"
-                },
-                "copyright": {
-                    "$ref": "#/definitions/Copyright"
-                },
-                "license": {
-                    "type": "string"
-                },
-                "project_yaml": {
-                    "type": "string"
-                },
-                "project_schema": {
-                    "type": "string"
-                },
-                "generate_sh": {
-                    "type": "string"
-                },
-                "colors": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "animals": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            },
-            "required": [
-                "animals",
-                "colors",
-                "copyright",
-                "generate_sh",
-                "githubAccount",
-                "license",
-                "projectName",
-                "project_schema",
-                "project_yaml"
-            ],
-            "title": "Variables"
-        },
-        "Copyright": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "holder": {
-                    "type": "string"
-                },
-                "startYear": {
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "holder",
-                "startYear"
-            ],
-            "title": "Copyright"
-        }
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "engine": {
+      "$ref": "#/$defs/Engine"
+    },
+    "binaries": {
+      "$ref": "#/$defs/Binaries"
+    },
+    "variables": {
+      "$ref": "#/$defs/Variables"
+    },
+    "domains": {
+      "$ref": "#/$defs/Domains"
     }
+  },
+  "required": ["binaries", "domains", "engine", "variables"],
+  "title": "BaldrickBroth",
+  "$defs": {
+    "Binaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sh": {
+          "$ref": "#/$defs/Elm"
+        },
+        "elm": {
+          "$ref": "#/$defs/Elm"
+        },
+        "whisker": {
+          "$ref": "#/$defs/Elm"
+        }
+      },
+      "required": ["elm", "sh", "whisker"],
+      "title": "Binaries"
+    },
+    "Elm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "motivation": {
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string",
+          "qt-uri-protocols": ["https"],
+          "qt-uri-extensions": [".html"]
+        },
+        "shell": {
+          "$ref": "#/$defs/ElmShell"
+        }
+      },
+      "required": ["description", "homepage", "motivation", "shell"],
+      "title": "Elm"
+    },
+    "ElmShell": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "run": {
+          "type": "string"
+        },
+        "diagnosis": {
+          "type": "string"
+        }
+      },
+      "required": ["diagnosis", "run"],
+      "title": "ElmShell"
+    },
+    "Domains": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "test": {
+          "$ref": "#/$defs/Test"
+        }
+      },
+      "required": ["test"],
+      "title": "Domains"
+    },
+    "Test": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tasks": {
+          "$ref": "#/$defs/Tasks"
+        }
+      },
+      "required": ["description", "tasks", "title"],
+      "title": "Test"
+    },
+    "Tasks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "generate": {
+          "$ref": "#/$defs/Generate"
+        }
+      },
+      "required": ["generate"],
+      "title": "Tasks"
+    },
+    "Generate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "motivation": {
+          "type": "string"
+        },
+        "visibility": {
+          "type": "string"
+        },
+        "parameters": {
+          "$ref": "#/$defs/Parameters"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Step"
+          }
+        },
+        "finally": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Finally"
+          }
+        }
+      },
+      "required": [
+        "description",
+        "finally",
+        "motivation",
+        "parameters",
+        "steps",
+        "title",
+        "visibility"
+      ],
+      "title": "Generate"
+    },
+    "Finally": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task": {
+          "type": "string"
+        }
+      },
+      "required": ["task"],
+      "title": "Finally"
+    },
+    "Parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "only": {
+          "$ref": "#/$defs/Only"
+        }
+      },
+      "required": ["only"],
+      "title": "Parameters"
+    },
+    "Only": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": ["description"],
+      "title": "Only"
+    },
+    "Step": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task": {
+          "type": "string"
+        },
+        "shell": {
+          "$ref": "#/$defs/StepShell"
+        }
+      },
+      "required": [],
+      "title": "Step"
+    },
+    "StepShell": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bin": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "if": {
+          "type": "string"
+        },
+        "unless": {
+          "type": "string"
+        },
+        "each": {
+          "$ref": "#/$defs/Each"
+        },
+        "run": {
+          "type": "string"
+        },
+        "failSilently": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "bin",
+        "each",
+        "failSilently",
+        "if",
+        "run",
+        "title",
+        "unless"
+      ],
+      "title": "StepShell"
+    },
+    "Each": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "color": {
+          "type": "string"
+        }
+      },
+      "required": ["color"],
+      "title": "Each"
+    },
+    "Engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "defaultShell": {
+          "type": "string"
+        },
+        "telemetry": {
+          "$ref": "#/$defs/Telemetry"
+        }
+      },
+      "required": ["defaultShell", "telemetry"],
+      "title": "Engine"
+    },
+    "Telemetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verbosity": {
+          "type": "string"
+        },
+        "filepath": {
+          "type": "string"
+        }
+      },
+      "required": ["filepath", "verbosity"],
+      "title": "Telemetry"
+    },
+    "Variables": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "githubAccount": {
+          "type": "string"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "copyright": {
+          "$ref": "#/$defs/Copyright"
+        },
+        "license": {
+          "type": "string"
+        },
+        "project_yaml": {
+          "type": "string"
+        },
+        "project_schema": {
+          "type": "string"
+        },
+        "generate_sh": {
+          "type": "string"
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "animals": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "animals",
+        "colors",
+        "copyright",
+        "generate_sh",
+        "githubAccount",
+        "license",
+        "projectName",
+        "project_schema",
+        "project_yaml"
+      ],
+      "title": "Variables"
+    },
+    "Copyright": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "holder": {
+          "type": "string"
+        },
+        "startYear": {
+          "type": "integer"
+        }
+      },
+      "required": ["holder", "startYear"],
+      "title": "Copyright"
+    }
+  }
 }
