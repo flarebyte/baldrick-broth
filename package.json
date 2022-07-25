@@ -60,6 +60,7 @@
     "cli": "node --loader ts-node/esm src/cli.mts"
   },
   "dependencies": {
+    "ajv": "^8.11.0",
     "commander": "^9.4.0",
     "handlebars": "^4.7.7",
     "yaml": "^2.1.1"
