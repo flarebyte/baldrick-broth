@@ -169,43 +169,46 @@
       }
     },
     "Step": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "task": {
-          "type": "string"
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TaskRef"
         },
-        "shell": {
+        {
           "$ref": "#/$defs/StepShell"
         }
-      },
-      "required": [],
-      "title": "Step"
+      ]
     },
     "StepShell": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "bin": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
-        "if": {
-          "type": "string"
-        },
-        "unless": {
-          "type": "string"
-        },
-        "each": {
-          "$ref": "#/$defs/Each"
-        },
-        "run": {
-          "type": "string"
-        },
-        "failSilently": {
-          "type": "boolean"
+        "shell": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "bin": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string",
+              "title": "Title for the shell step"
+            },
+            "if": {
+              "type": "string"
+            },
+            "unless": {
+              "type": "string"
+            },
+            "each": {
+              "$ref": "#/$defs/Each"
+            },
+            "run": {
+              "type": "string"
+            },
+            "failSilently": {
+              "type": "boolean"
+            }
+          }
         }
       },
       "required": [],
@@ -219,6 +222,17 @@
         }
       },
       "title": "Each"
+    },
+    "TaskRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "task": {
+          "type": "string"
+        },
+        "required": ["task"],
+        "title": "Reference to a task"
+      }
     },
     "Telemetry": {
       "type": "object",
