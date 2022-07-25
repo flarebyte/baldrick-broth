@@ -134,16 +134,10 @@
           "title": "Parameters"
         },
         "steps": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Step"
-          }
+          "$ref": "#/$defs/Steps"
         },
         "finally": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/Finally"
-          }
+          "$ref": "#/$defs/Steps"
         }
       },
       "required": [
@@ -157,18 +151,6 @@
       ],
       "title": "Generate"
     },
-    "Finally": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "task": {
-          "type": "string"
-        }
-      },
-      "required": ["task"],
-      "title": "Finally"
-    },
-
     "Parameter": {
       "type": "object",
       "additionalProperties": false,
@@ -179,6 +161,12 @@
       },
       "required": ["description"],
       "title": "Description of the parameter"
+    },
+    "Steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Step"
+      }
     },
     "Step": {
       "type": "object",
