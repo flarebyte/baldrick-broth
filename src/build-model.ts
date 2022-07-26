@@ -1,29 +1,29 @@
-import { z } from "zod"
+import { z } from 'zod';
 
 export const schema = z.object({
   engine: z.object({
     defaultShell: z.string(),
-    telemetry: z.object({ verbosity: z.string(), filepath: z.string() })
+    telemetry: z.object({ verbosity: z.string(), filepath: z.string() }),
   }),
   binaries: z.object({
     sh: z.object({
       description: z.string(),
       motivation: z.string(),
       homepage: z.string(),
-      shell: z.object({ run: z.string(), diagnosis: z.string() })
+      shell: z.object({ run: z.string(), diagnosis: z.string() }),
     }),
     elm: z.object({
       description: z.string(),
       motivation: z.string(),
       homepage: z.string(),
-      shell: z.object({ run: z.string(), diagnosis: z.string() })
+      shell: z.object({ run: z.string(), diagnosis: z.string() }),
     }),
     whisker: z.object({
       description: z.string(),
       motivation: z.string(),
       homepage: z.string(),
-      shell: z.object({ run: z.string(), diagnosis: z.string() })
-    })
+      shell: z.object({ run: z.string(), diagnosis: z.string() }),
+    }),
   }),
   variables: z.object({
     githubAccount: z.string(),
@@ -34,7 +34,7 @@ export const schema = z.object({
     project_schema: z.string(),
     generate_sh: z.string(),
     colors: z.array(z.string()),
-    animals: z.array(z.string())
+    animals: z.array(z.string()),
   }),
   domains: z.object({
     test: z.object({
@@ -58,14 +58,16 @@ export const schema = z.object({
                   unless: z.string(),
                   each: z.object({ color: z.string() }),
                   run: z.string(),
-                  failSilently: z.boolean()
-                })
-              })
+                  failSilently: z.boolean(),
+                }),
+              }),
             ])
           ),
-          finally: z.array(z.object({ task: z.string() }))
-        })
-      })
-    })
-  })
-})
+          finally: z.array(z.object({ task: z.string() })),
+        }),
+      }),
+    }),
+  }),
+});
+
+export const safeParseBuild = (content: unknown) => schema.safeParse(content);
