@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { getDomains } from './commands';
-import { version } from './version';
+import { getDomains } from './commands.js';
+import { version } from './version.js';
 
 export const createCommands = (program: Command) => {
   program

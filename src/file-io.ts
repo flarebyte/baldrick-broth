@@ -1,6 +1,6 @@
 import YAML from 'yaml';
 import fs from 'fs/promises';
-import { LoadingStatus } from './model';
+import { LoadingStatus } from './model.js';
 
 export const readYaml = async (filename: string): Promise<LoadingStatus> => {
   let content;
