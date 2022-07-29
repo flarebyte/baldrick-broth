@@ -1,8 +1,8 @@
 import { safeParseBuild } from '../src/build-model';
 import { buildModelExample } from './fixture-build-model';
-import { mutateObject, mutatorRules } from 'object-crumble'
+// import { mutateObject, mutatorRules } from 'object-crumble'
 
-const mutate = mutateObject(mutatorRules);
+//const mutate = mutateObject(mutatorRules);
 
 describe('build-model', () => {
   it('should pass through a valid model', () => {
@@ -20,13 +20,13 @@ describe('build-model', () => {
   //   expect(actual).toMatchInlineSnapshot()
   // })
 
-  it('should detect incorrect values', ()=> {
-    const mutation = {
-      path: "name",
-      kind: "string",
-      mutationName: "string => empty",
-    };
+  // it('should detect incorrect values', ()=> {
+  //   const mutation = {
+  //     path: "name",
+  //     kind: "string",
+  //     mutationName: "string => empty",
+  //   };
     
-    mutate(mutation)
-  })
+  //   mutate(mutation)
+  // })
 });

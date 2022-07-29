@@ -1,8 +1,10 @@
 {
   "extends": "baldrick-tsconfig-es2020",
   "compilerOptions": {
-    "module": "es2022",
-    "moduleResolution": "node",
+    "module": "node16",
+		"moduleResolution": "node16",
+		"moduleDetection": "force",
+    "target": "ES2020", // Node.js 14
     "allowSyntheticDefaultImports": true,
     "diagnostics": true,
     "extendedDiagnostics": true

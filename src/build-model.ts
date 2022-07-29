@@ -1,4 +1,7 @@
 import { z } from 'zod';
+import { abstractObject } from 'object-crumble';
+
+const idea = abstractObject([])({a: 12});
 
 const customKey = z
   .string()
@@ -141,7 +144,7 @@ const formatMessage = (issue: z.ZodIssue): ValidationError => {
         path,
         message: [
           'The union for the field is invalid',
-          `I would check ${issue.unionErrors}`,
+          `I would check ${issue.unionErrors.flatMap(err => err.issues).map( i => i.message)}`,
         ].join('; '),
       };
     case 'too_big':
@@ -167,7 +170,7 @@ const formatMessage = (issue: z.ZodIssue): ValidationError => {
         path,
         message: [
           'The type for the field is incorrect',
-          `${issue.message}`,
+          `${issue.message} ${JSON.stringify(idea)}`,
         ].join('; '),
       };
   }

@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { safeParseBuild } from './build-model.js';
 import { createCommands } from './commands-creator.js';
 import { buildFilePath } from './env-variables.js';
 import { readYaml } from './file-io.js';
@@ -15,6 +16,8 @@ export async function runClient() {
     }
     if (buildLoadingStatus.status === 'success') {
       console.log(`Successfully loaded the build file`);
+      const build = safeParseBuild(buildLoadingStatus.value);
+      console.log(build)
     }
     const program = new Command();
     createCommands(program);

@@ -1,8 +1,4 @@
 #!/bin/bash
 rm -rf report/shell-tests
 mkdir -p report/shell-tests
-yarn cli --help
-echo "---"
-yarn cli test --help
-echo "---"
-yarn cli test2 --help
+BALDRICK_BROTH_BUILD_FILE=script/fixture/.baldrick-broth/dev.yaml yarn cli --help
