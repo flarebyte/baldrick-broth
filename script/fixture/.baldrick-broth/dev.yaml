@@ -54,8 +54,10 @@
               only:
                 description: only run this
             steps:
-              - task: reset
-              - shell:
+              - a: task
+                task: reset
+              - a: shell
+                shell:
                   bin: sh
                   title: Run {project_yaml}
                   if: "-f {generate_hbs}"
