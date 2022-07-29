@@ -1,4 +1,4 @@
-export interface BrothDomain{
+export interface BrothDomain {
   domain: string;
   description: string;
   commands: BrothCommand[];
@@ -22,7 +22,7 @@ export const getDomains = (): BrothDomain[] => [
         task: 'generate2',
         description: 'Desc for test generate2',
       },
-    ]
+    ],
   },
   {
     domain: 'test2',
@@ -32,6 +32,6 @@ export const getDomains = (): BrothDomain[] => [
         task: 'reset',
         description: 'Desc for test reset',
       },
-    ]
+    ],
   },
 ];

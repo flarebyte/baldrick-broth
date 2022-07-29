@@ -6,13 +6,15 @@ import { version } from './version.js';
 
 export async function runClient() {
   try {
-    const buildLoadingStatus = await readYaml(buildFilePath)
+    const buildLoadingStatus = await readYaml(buildFilePath);
     if (buildLoadingStatus.status === 'parse-yaml-error') {
-      console.error(`The file ${buildLoadingStatus.filename} cannot be parsed as YAML`);
-      process.exit(1)
+      console.error(
+        `The file ${buildLoadingStatus.filename} cannot be parsed as YAML`
+      );
+      process.exit(1); // eslint-disable-line  unicorn/no-process-exit
     }
     if (buildLoadingStatus.status === 'success') {
-      console.log(`Successfully loaded the build file`)
+      console.log(`Successfully loaded the build file`);
     }
     const program = new Command();
     createCommands(program);

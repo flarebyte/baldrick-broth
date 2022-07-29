@@ -4,7 +4,7 @@ const customKey = z
   .string()
   .min(1)
   .max(30)
-  .regex(/[a-z][a-z0-9_]+/);
+  .regex(/[a-z][\d_a-z]+/);
 
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
