@@ -22,8 +22,17 @@ const stringDescription = z.string().trim().min(1).max(300);
 const stringMotivation = z.string().trim().min(1).max(300);
 const stringUrl = z.string().url().max(300);
 const stringShell = z.string().min(1).max(5000);
-const stringShellStepFlag = z.enum(['silent:fail']);
 const stringTaskFlag = z.enum(['private']);
+const onShellStepSuccessFailure = z.enum([
+  'negate',
+  'exit',
+  'silent',
+  'trim',
+  'filled',
+  'json',
+  'yaml',
+  'csv',
+]);
 
 const binary = z.object({
   title: stringTitle,
@@ -39,18 +48,17 @@ const loopEach = z.object({
 });
 const binaries = z.record(customKey, binary);
 const shellStep = z.strictObject({
-  a: z.literal('shell'),
-  bin: customKey.optional(),
   title: stringTitle,
-  if: stringShell.optional(),
-  unless: stringShell.optional(),
+  description: stringDescription.optional(),
+  motivation: stringMotivation.optional(),
+  bin: customKey.optional(),
   each: z.array(loopEach).min(1).max(12).optional(),
-  flags: z.array(stringShellStepFlag).optional(),
+  onFailure: z.array(onShellStepSuccessFailure).min(1).optional(),
+  onSuccess: z.array(onShellStepSuccessFailure).min(1).optional(),
+  asVariable: customKey.optional(),
   run: stringShell,
 });
-const taskRef = z.strictObject({ a: z.literal('task'), task: customKey });
-const eitherStep = z.discriminatedUnion('a', [taskRef, shellStep]);
-const steps = z.array(eitherStep).min(1);
+const steps = z.array(shellStep).min(1);
 const parameter = z.object({ description: z.string() });
 const task = z.object({
   title: stringTitle,
