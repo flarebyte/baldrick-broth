@@ -45,6 +45,7 @@ const binary = z.object({
 });
 const valuesLoopEach = z.string().min(1).max(300);
 const varValue = z.string().min(1).max(300);
+const constValue = z.string().min(1).max(300);
 const loopEach = z.object({
   value: customKey,
   values: valuesLoopEach,
@@ -74,16 +75,25 @@ const variableStep = z.strictObject({
   value: varValue,
 });
 
-const onStringArraySuccess = z.enum([
-  'sort',
-  'unique'
-]);
+const onStringArraySuccess = z.enum(['sort', 'unique', 'filled']);
 
+const stringArrayFilterBy = z.strictObject({
+  if: z.enum([
+    'starts-with',
+    'ends-with',
+    'contains',
+    'not starts-with',
+    'not ends-with',
+    'not contains',
+  ]),
+  anyOf: z.array(constValue).min(1).max(50),
+});
 const stringArrayStep = z.strictObject({
   a: z.literal('string-array'),
   ...metadataStep,
   value: varValue,
   onSuccess: onStringArraySuccess,
+  filterBy: stringArrayFilterBy,
 });
 
 const anyStep = z.discriminatedUnion('a', [
