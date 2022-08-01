@@ -50,28 +50,47 @@ const loopEach = z.object({
   values: valuesLoopEach,
 });
 const binaries = z.record(customKey, binary);
-const shellStep = z.strictObject({
-  a: z.literal('shell'),
-  title: stringTitle,
+
+const metadataStep = {
+  name: customKey,
+  title: stringTitle.optional(),
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
+};
+const shellStep = z.strictObject({
+  a: z.literal('shell'),
+  ...metadataStep,
   bin: customKey.optional(),
   each: z.array(loopEach).min(1).max(12).optional(),
   onFailure: z.array(onShellStepSuccessFailure).min(1).optional(),
   onSuccess: z.array(onShellStepSuccessFailure).min(1).optional(),
-  asVariable: customKey.optional(),
+  name: customKey.optional(),
   run: stringShell,
 });
+
 const variableStep = z.strictObject({
   a: z.literal('var'),
-  title: stringTitle.optional(),
-  description: stringDescription.optional(),
-  motivation: stringMotivation.optional(),
-  name: customKey,
+  ...metadataStep,
   value: varValue,
 });
 
-const anyStep = z.discriminatedUnion('a', [shellStep, variableStep]);
+const onStringArraySuccess = z.enum([
+  'sort',
+  'unique'
+]);
+
+const stringArrayStep = z.strictObject({
+  a: z.literal('string-array'),
+  ...metadataStep,
+  value: varValue,
+  onSuccess: onStringArraySuccess,
+});
+
+const anyStep = z.discriminatedUnion('a', [
+  shellStep,
+  variableStep,
+  stringArrayStep,
+]);
 const steps = z.array(anyStep).min(1);
 const parameter = z.object({ description: z.string() });
 const task = z.object({
