@@ -12,10 +12,17 @@ const createShellStep = (name: string) => ({
   a: 'shell',
   bin: 'sh',
   title: `Run ${name} {project_yaml}`,
-  if: `-f {{generate_hbs}} ${name}`,
-  unless: '-f .pause ${name}',
   run: '{{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}} {{color}}',
-  flags: ['silent:fail'],
+  onSuccess: ['trim'],
+  onFailure: ['exit'],
+});
+
+const varStep = (name: string) => ({
+  a: 'var',
+
+  name,
+  title: `Set variable ${name}`,
+  value: `model.${name}`,
 });
 export const buildModelExample = {
   engine: {
@@ -53,29 +60,13 @@ export const buildModelExample = {
           description: 'Generate code',
           motivation: 'Generate code',
 
-          flags: ['private'],
           parameters: {
             only: {
               description: 'only run this',
             },
           },
-          steps: [
-            {
-              a: 'task',
-              task: 'reset',
-            },
-            {
-              a: 'task',
-              task: 'log-time',
-            },
-            createShellStep('calculate'),
-          ],
-          finally: [
-            {
-              a: 'task',
-              task: 'cleanup',
-            },
-          ],
+          steps: [varStep('githubAccount'), createShellStep('calculate')],
+          finally: [createShellStep('finish')],
         },
       },
     },
