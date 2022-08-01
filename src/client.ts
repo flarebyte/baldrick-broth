@@ -17,7 +17,7 @@ export async function runClient() {
     if (buildLoadingStatus.status === 'success') {
       console.log(`Successfully loaded the build file`);
       const build = safeParseBuild(buildLoadingStatus.value);
-      console.log(build)
+      console.log(build);
     }
     const program = new Command();
     createCommands(program);
