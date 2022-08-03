@@ -75,16 +75,18 @@ const variableStep = z.strictObject({
   value: varValue,
 });
 
-const onStringArraySuccess = z.enum(['sort', 'unique', 'filled']);
+const onStringArraySuccess = z.enum(['sort', 'unique', 'filled', 'reverse']);
 
 const stringArrayFilterBy = z.strictObject({
   if: z.enum([
     'starts-with',
     'ends-with',
     'contains',
+    'equals',
     'not starts-with',
     'not ends-with',
     'not contains',
+    'not equals',
   ]),
   anyOf: z.array(constValue).min(1).max(50),
 });
@@ -93,13 +95,43 @@ const stringArrayStep = z.strictObject({
   ...metadataStep,
   value: varValue,
   onSuccess: onStringArraySuccess,
-  filterBy: stringArrayFilterBy,
+  filters: z.array(stringArrayFilterBy).min(1).max(20).optional(),
+});
+
+const concatArrayStep = z.strictObject({
+  a: z.literal('concat-array'),
+  ...metadataStep,
+  values: z.array(varValue).min(1).max(20),
+});
+
+const joinArrayStep = z.strictObject({
+  a: z.literal('join-array'),
+  ...metadataStep,
+  separator: z.string().min(1).max(80).default(' '),
+  values: z.array(varValue).min(1).max(20),
+});
+
+const someArrayStep = z.strictObject({
+  a: z.literal('some-array'),
+  ...metadataStep,
+
+  values: z.array(varValue).min(1).max(20),
+});
+const everyArrayStep = z.strictObject({
+  a: z.literal('every-array'),
+  ...metadataStep,
+
+  values: z.array(varValue).min(1).max(20),
 });
 
 const anyStep = z.discriminatedUnion('a', [
   shellStep,
   variableStep,
   stringArrayStep,
+  concatArrayStep,
+  joinArrayStep,
+  someArrayStep,
+  everyArrayStep,
 ]);
 const steps = z.array(anyStep).min(1);
 const parameter = z.object({ description: z.string() });
