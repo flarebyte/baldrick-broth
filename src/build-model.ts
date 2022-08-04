@@ -44,8 +44,11 @@ const binary = z.object({
   shell: z.object({ run: stringShell, diagnosis: stringShell }),
 });
 const valuesLoopEach = z.string().min(1).max(300);
-const varValue = z.string().min(1).max(300);
-const constValue = z.string().min(1).max(300);
+const varValue = z
+  .string()
+  .min(1)
+  .max(300)
+  .regex(/(([\d._a-z]+)|(\[\d+]))+/);
 const loopEach = z.object({
   value: customKey,
   values: valuesLoopEach,
@@ -89,7 +92,7 @@ const stringArrayFilterBy = z.strictObject({
     'not contains',
     'not equals',
   ]),
-  anyOf: z.array(constValue).min(1).max(50),
+  anyOf: z.array(varValue).min(1).max(50),
 });
 const stringArrayStep = z.strictObject({
   a: z.literal('string-array'),
@@ -183,7 +186,12 @@ const anyStep = z.discriminatedUnion('a', [
   invertObjectStep,
 ]);
 const steps = z.array(anyStep).min(1);
-const parameter = z.object({ description: z.string() });
+const parameter = z.object({
+  description: stringDescription,
+  flags: z.string().min(1).max(80),
+  default: z.string().min(1).max(300).optional(),
+  choices: z.array(z.string().min(1).max(300)).min(1).max(30),
+});
 const task = z.object({
   title: stringTitle,
   description: stringDescription.optional(),
