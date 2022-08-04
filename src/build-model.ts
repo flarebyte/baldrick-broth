@@ -62,6 +62,7 @@ const shellStep = z.strictObject({
   a: z.literal('shell'),
   ...metadataStep,
   bin: customKey.optional(),
+  if: varValue.optional(),
   each: z.array(loopEach).min(1).max(12).optional(),
   onFailure: z.array(onShellStepSuccessFailure).min(1).optional(),
   onSuccess: z.array(onShellStepSuccessFailure).min(1).optional(),
@@ -111,17 +112,59 @@ const joinArrayStep = z.strictObject({
   values: z.array(varValue).min(1).max(20),
 });
 
-const someArrayStep = z.strictObject({
-  a: z.literal('some-array'),
+const splitStringStep = z.strictObject({
+  a: z.literal('split-string'),
+  ...metadataStep,
+  separator: z.string().min(1).max(80).default(' '),
+  value: varValue,
+});
+
+const someTruthyArrayStep = z.strictObject({
+  a: z.literal('some-truthy'),
   ...metadataStep,
 
   values: z.array(varValue).min(1).max(20),
 });
-const everyArrayStep = z.strictObject({
-  a: z.literal('every-array'),
+
+const someFalsyArrayStep = z.strictObject({
+  a: z.literal('some-falsy'),
   ...metadataStep,
 
   values: z.array(varValue).min(1).max(20),
+});
+const everyTruthyArrayStep = z.strictObject({
+  a: z.literal('every-truthy'),
+  ...metadataStep,
+
+  values: z.array(varValue).min(1).max(20),
+});
+const everyFalsyArrayStep = z.strictObject({
+  a: z.literal('every-falsy'),
+  ...metadataStep,
+
+  values: z.array(varValue).min(1).max(20),
+});
+
+const notStep = z.strictObject({
+  a: z.literal('not'),
+  ...metadataStep,
+
+  value: varValue,
+});
+
+const rangeStep = z.strictObject({
+  a: z.literal('range'),
+  ...metadataStep,
+
+  start: z.number().int().default(0),
+  end: z.number().int(),
+  step: z.number().int().default(1),
+});
+const invertObjectStep = z.strictObject({
+  a: z.literal('invert-object'),
+  ...metadataStep,
+
+  value: varValue,
 });
 
 const anyStep = z.discriminatedUnion('a', [
@@ -130,8 +173,14 @@ const anyStep = z.discriminatedUnion('a', [
   stringArrayStep,
   concatArrayStep,
   joinArrayStep,
-  someArrayStep,
-  everyArrayStep,
+  splitStringStep,
+  someTruthyArrayStep,
+  someFalsyArrayStep,
+  everyTruthyArrayStep,
+  everyFalsyArrayStep,
+  notStep,
+  rangeStep,
+  invertObjectStep,
 ]);
 const steps = z.array(anyStep).min(1);
 const parameter = z.object({ description: z.string() });
