@@ -190,7 +190,7 @@ const parameter = z.object({
   description: stringDescription,
   flags: z.string().min(1).max(80),
   default: z.string().min(1).max(300).optional(),
-  choices: z.array(z.string().min(1).max(300)).min(1).max(30),
+  choices: z.array(z.string().min(1).max(300)).min(1).max(30).optional(),
 });
 const task = z.object({
   title: stringTitle,

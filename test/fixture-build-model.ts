@@ -63,6 +63,7 @@ export const buildModelExample = {
           parameters: {
             only: {
               description: 'only run this',
+              flags: '-p, --pizza-type <type>'
             },
           },
           steps: [varStep('githubAccount'), createShellStep('calculate')],
