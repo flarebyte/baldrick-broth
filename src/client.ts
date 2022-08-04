@@ -17,7 +17,16 @@ export async function runClient() {
     if (buildLoadingStatus.status === 'success') {
       console.log(`Successfully loaded the build file`);
       const build = safeParseBuild(buildLoadingStatus.value);
-      console.log(build);
+      if (build.status === 'invalid') {
+        console.error(
+          `The baldrick-broth build file ${buildFilePath} does not respect the schema`,
+          build.errors
+        );
+      }
+      if (build.status === 'valid') {
+        const buildValue = build.value;
+      }
+      
     }
     const program = new Command();
     createCommands(program);
