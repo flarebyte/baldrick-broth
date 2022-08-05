@@ -28,7 +28,19 @@ export const createCommands = (
         if (task === undefined) {
           continue;
         }
-        workflowCmd.command(taskId).description(task.title);
+        const taskCommand = workflowCmd.command(taskId);
+        taskCommand.description(task.title);
+        for (const parameterId in task.parameters) {
+          const parameter = task.parameters[parameterId];
+          if (parameter === undefined) {
+            continue;
+          }
+          taskCommand.option(
+            parameter.flags,
+            parameter.description,
+            parameter.default
+          );
+        }
       }
     }
   }
