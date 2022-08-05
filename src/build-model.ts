@@ -198,7 +198,7 @@ const task = z.object({
   motivation: stringMotivation.optional(),
   parameters: z.record(customKey, parameter),
   steps,
-  finally: steps,
+  finally: steps.optional(),
 });
 const domain = z.object({
   title: stringTitle,

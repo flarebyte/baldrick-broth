@@ -28,18 +28,18 @@
         }
       }
     },
-    "variables": {
+    "model": {
       "type": "object",
       "additionalProperties": true,
-      "title": "List of variables"
+      "title": "The custom model for the build script"
     },
-    "domains": {
+    "workflows": {
       "type": "object",
       "additionalProperties": false,
-      "title": "List of domains",
+      "title": "List of workflows",
       "patternProperties": {
         "^[a-z][a-z0-9_]{1,30}$": {
-          "$ref": "#/$defs/Domain"
+          "$ref": "#/$defs/Workflow"
         }
       }
     }
@@ -50,6 +50,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "title": {
+          "type": "string"
+        },
         "description": {
           "type": "string"
         },
@@ -82,7 +85,7 @@
       "required": ["diagnosis", "run"],
       "title": "Shell"
     },
-    "Domain": {
+    "Workflow": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
