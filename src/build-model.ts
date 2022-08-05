@@ -13,10 +13,12 @@ const jsonishSchema: z.ZodType<Json> = z.lazy(() =>
   z.union([literalSchema, z.array(jsonishSchema), z.record(jsonishSchema)])
 );
 
-const engine = z.object({
-  defaultShell: z.string(),
-  telemetry: z.object({ verbosity: z.string(), filepath: z.string() }),
-});
+const engine = z
+  .object({
+    defaultShell: z.string(),
+    telemetry: z.object({ verbosity: z.string(), filepath: z.string() }),
+  })
+  .optional();
 const stringTitle = z.string().trim().min(1).max(60);
 const stringDescription = z.string().trim().min(1).max(300);
 const stringMotivation = z.string().trim().min(1).max(300);

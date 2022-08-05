@@ -1,9 +1,4 @@
 ---
-engine:
-  defaultShell: sh
-  telemetry:
-    verbosity: 'off'
-    filepath: logs/telemetry.csv
 binaries:
   sh:
     title: Title of sh
