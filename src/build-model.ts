@@ -221,10 +221,13 @@ interface ValidationError {
   path: string;
 }
 
+export type BuildModel = z.infer<typeof schema>;
+export type TaskModel = z.infer<typeof task>;
+
 export type BuildModelValidation =
   | {
       status: 'valid';
-      value: z.infer<typeof schema>;
+      value: BuildModel;
     }
   | {
       status: 'invalid';

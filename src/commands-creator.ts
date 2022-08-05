@@ -1,6 +1,9 @@
 import { Command } from 'commander';
-import { BuildModelValidation } from './build-model.js';
+import { BuildModel, BuildModelValidation, TaskModel } from './build-model.js';
 import { version } from './version.js';
+
+const createTaskAction = (buildModel: BuildModel, taskModel: TaskModel) => () =>
+  console.log(buildModel.binaries[0], taskModel.title);
 
 export const createCommands = (
   program: Command,
@@ -14,6 +17,7 @@ export const createCommands = (
 
   if (buildModelValidation.status === 'valid') {
     const {
+      value,
       value: { workflows },
     } = buildModelValidation;
     for (const workflowKey in workflows) {
@@ -30,6 +34,7 @@ export const createCommands = (
         }
         const taskCommand = workflowCmd.command(taskId);
         taskCommand.description(task.title);
+        taskCommand.action(createTaskAction(value, task));
         for (const parameterId in task.parameters) {
           const parameter = task.parameters[parameterId];
           if (parameter === undefined) {
