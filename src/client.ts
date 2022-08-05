@@ -22,15 +22,12 @@ export async function runClient() {
           `The baldrick-broth build file ${buildFilePath} does not respect the schema`,
           build.errors
         );
+        process.exit(1); // eslint-disable-line  unicorn/no-process-exit
       }
-      if (build.status === 'valid') {
-        const buildValue = build.value;
-      }
-      
+      const program = new Command();
+      createCommands(program, build);
+      program.parseAsync();
     }
-    const program = new Command();
-    createCommands(program);
-    program.parseAsync();
     console.log(`✓ baldrick-broth is done. Version ${version}`);
   } catch (error) {
     console.log('baldrick-broth will exit with error code 1');
