@@ -2,8 +2,14 @@ import { Command } from 'commander';
 import { BuildModel, BuildModelValidation, TaskModel } from './build-model.js';
 import { version } from './version.js';
 
-const createTaskAction = (buildModel: BuildModel, taskModel: TaskModel) => () =>
-  console.log(buildModel.binaries[0], taskModel.title);
+const createTaskAction =
+  (buildModel: BuildModel, taskModel: TaskModel) => (opts: any) =>
+    console.log(
+      'createTaskAction',
+      opts,
+      Object.keys(buildModel.binaries),
+      taskModel.title
+    );
 
 export const createCommands = (
   program: Command,

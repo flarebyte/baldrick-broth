@@ -7,4 +7,4 @@ BALDRICK_BROTH_BUILD_FILE=script/fixture/.baldrick-broth/dev.yaml yarn cli test 
 echo "---"
 BALDRICK_BROTH_BUILD_FILE=script/fixture/.baldrick-broth/dev.yaml yarn cli test generate --help
 echo "---"
-BALDRICK_BROTH_BUILD_FILE=script/fixture/.baldrick-broth/dev.yaml yarn cli test generate
+BALDRICK_BROTH_BUILD_FILE=script/fixture/.baldrick-broth/dev.yaml yarn cli test generate -c blue
