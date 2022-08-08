@@ -23,10 +23,6 @@ const stringTitle = z.string().trim().min(1).max(60);
 const stringDescription = z.string().trim().min(1).max(300);
 const stringMotivation = z.string().trim().min(1).max(300);
 const stringUrl = z.string().url().max(300);
-const stringShell = z.union([
-  z.string().min(1).max(5000),
-  z.array(z.string().min(1).max(120)).min(1).max(50),
-]);
 const onShellStepSuccessFailure = z.enum([
   'negate',
   'exit',
@@ -36,6 +32,21 @@ const onShellStepSuccessFailure = z.enum([
   'json',
   'yaml',
   'csv',
+]);
+
+const lineShell = z.string().min(1).max(120);
+const advancedShell = z.object({
+  onFailure: z.array(onShellStepSuccessFailure).min(1).optional(),
+  onSuccess: z.array(onShellStepSuccessFailure).min(1).optional(),
+  name: z.string().min(1).max(300),
+  run: lineShell,
+});
+
+const stringOrAdvancedShell = z.union([lineShell, advancedShell]);
+
+const stringShell = z.union([
+  stringOrAdvancedShell,
+  z.array(stringOrAdvancedShell).min(1).max(50),
 ]);
 
 const binary = z.object({
