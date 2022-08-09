@@ -28,9 +28,9 @@ const stringTitle = z.string().trim().min(1).max(60);
 const stringDescription = z.string().trim().min(1).max(300);
 const stringMotivation = z.string().trim().min(1).max(300);
 const stringUrl = z.string().url().max(300);
-const onShellStepFinish = z.enum(['exit', 'silent']);
+const onBatchStepFinish = z.enum(['exit', 'silent']);
 
-const onShellCommandSuccessFailure = z.enum([
+const onShellCommandFinish = z.enum([
   'negate',
   'exit',
   'silent',
@@ -47,11 +47,11 @@ const metadataStep = {
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
 };
-const lineShell = z.string().min(1).max(120);
+const lineShell = z.string().min(1).max(300);
 const advancedShell = z.object({
   ...metadataStep,
-  onFailure: z.array(onShellCommandSuccessFailure).min(1).optional(),
-  onSuccess: z.array(onShellCommandSuccessFailure).min(1).optional(),
+  onFailure: z.array(onShellCommandFinish).min(1).optional(),
+  onSuccess: z.array(onShellCommandFinish).min(1).optional(),
   name: z.string().min(1).max(300),
 
   if: varValue.optional(),
@@ -75,12 +75,12 @@ const loopEach = z.object({
 });
 const binaries = z.record(customKey, binary);
 
-const shellStep = z.strictObject({
-  a: z.literal('shell'),
+const batchStep = z.strictObject({
+  a: z.literal('batch'),
   ...metadataStep,
   if: varValue.optional(),
   each: z.array(loopEach).min(1).max(12).optional(),
-  onFinish: z.array(onShellStepFinish).min(1).optional(),
+  onFinish: z.array(onBatchStepFinish).min(1).optional(),
   commands: commands,
 });
 
@@ -182,7 +182,7 @@ const invertObjectStep = z.strictObject({
 });
 
 const anyStep = z.discriminatedUnion('a', [
-  shellStep,
+  batchStep,
   variableStep,
   stringArrayStep,
   concatArrayStep,
@@ -232,7 +232,7 @@ interface ValidationError {
 
 export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
-export type ShellStepModel = z.infer<typeof shellStep>;
+export type ShellStepModel = z.infer<typeof batchStep>;
 
 export type BuildModelValidation =
   | {

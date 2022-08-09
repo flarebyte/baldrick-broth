@@ -14,7 +14,6 @@ type ExecuteCommandLineResult =
       stdout: string;
     };
 
-
 const executeCommandLine = async (
   line: string
 ): Promise<ExecuteCommandLineResult> => {

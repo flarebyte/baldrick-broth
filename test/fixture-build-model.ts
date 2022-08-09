@@ -15,8 +15,8 @@ const createCommand = (name: string) => ({
   onSuccess: ['trim'],
   onFailure: ['exit'],
 });
-const createShellStep = (name: string) => ({
-  a: 'shell',
+const createBatchStep = (name: string) => ({
+  a: 'batch',
   name,
   title: `Run ${name} shell step`,
 
@@ -72,8 +72,8 @@ export const buildModelExample = {
               flags: '-p, --pizza-type <type>',
             },
           },
-          steps: [varStep('githubAccount'), createShellStep('calculate')],
-          finally: [createShellStep('finish')],
+          steps: [varStep('githubAccount'), createBatchStep('calculate')],
+          finally: [createBatchStep('finish')],
         },
       },
     },
