@@ -63,11 +63,13 @@
     "commander": "^9.4.0",
     "execa": "^6.1.0",
     "handlebars": "^4.7.7",
+    "papaparse": "^5.3.2",
     "type-fest": "^2.17.0",
     "yaml": "^2.1.1",
     "zod": "^3.17.10"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.3.3",
     "baldrick-dev-ts": "^0.16.0",
     "baldrick-tsconfig-es2020": "^0.9.0",
     "ts-node": "^10.9.1",

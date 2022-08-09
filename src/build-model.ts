@@ -31,11 +31,9 @@ const stringUrl = z.string().url().max(300);
 const onBatchStepFinish = z.enum(['exit', 'silent']);
 
 const onShellCommandFinish = z.enum([
-  'negate',
   'exit',
   'silent',
   'trim',
-  'filled',
   'json',
   'yaml',
   'csv',
@@ -50,8 +48,8 @@ const metadataStep = {
 const lineShell = z.string().min(1).max(300);
 const advancedShell = z.object({
   ...metadataStep,
-  onFailure: z.array(onShellCommandFinish).min(1).optional(),
-  onSuccess: z.array(onShellCommandFinish).min(1).optional(),
+  onFailure: z.array(onShellCommandFinish).min(1).default([]),
+  onSuccess: z.array(onShellCommandFinish).min(1).default([]),
   name: z.string().min(1).max(300),
 
   if: varValue.optional(),

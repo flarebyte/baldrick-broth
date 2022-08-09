@@ -1,20 +1,105 @@
 import { execaCommand } from 'execa';
+import { JsonValue } from 'type-fest';
+import YAML from 'yaml';
+import CSV from 'papaparse';
 import { CommandOptionsModel } from './build-model.js';
+
+type ExecuteCommandLineFailedStatus =
+  | 'failed'
+  | 'canceled'
+  | 'timeout'
+  | 'killed'
+  | 'parse-json-failed'
+  | 'parse-yaml-failed'
+  | 'parse-csv-failed';
 
 type ExecuteCommandLineResult =
   | {
-      status: 'failed' | 'canceled' | 'timeout' | 'killed';
+      status: ExecuteCommandLineFailedStatus;
       line: string;
       stdout: string;
       stderr: string;
       exitCode: number;
+      onFailure: CommandOptionsModel['onFailure'];
     }
   | {
-      status: 'success';
+      status: 'string';
       line: string;
-      stdout: string;
+      name: string;
+      value: string;
+      onSuccess: CommandOptionsModel['onSuccess'];
+    }
+  | {
+      status: 'json';
+      line: string;
+      name: string;
+      value: JsonValue;
+      onSuccess: CommandOptionsModel['onSuccess'];
+    }
+  | {
+      status: 'csv';
+      line: string;
+      name: string;
+      value: Record<string, string>[];
+      onSuccess: CommandOptionsModel['onSuccess'];
     };
 
+const toStatus = (
+  exitCode: number,
+  failed: boolean,
+  isCanceled: boolean,
+  timedOut: boolean,
+  killed: boolean
+): ExecuteCommandLineFailedStatus | 'success' => {
+  if (failed) {
+    return 'failed';
+  }
+  if (isCanceled) {
+    return 'canceled';
+  }
+  if (timedOut) {
+    return 'timeout';
+  }
+  if (killed) {
+    return 'killed';
+  }
+  if (exitCode > 0) {
+    return 'failed';
+  }
+  return 'success';
+};
+
+const parseJson = (content: string): JsonValue | undefined => {
+  try {
+    const parsed: JsonValue = JSON.parse(content);
+    return parsed;
+  } catch (e) {
+    return undefined;
+  }
+};
+const parseYaml = (content: string): JsonValue | undefined => {
+  try {
+    const parsed: JsonValue = YAML.parse(content);
+    return parsed;
+  } catch (e) {
+    return undefined;
+  }
+};
+const parseCsv = (content: string): Record<string, string>[] | undefined => {
+  try {
+    const parsed = CSV.parse<Record<string, string>>(content, { header: true });
+    const { data, errors } = parsed;
+    if (errors.length > 0) {
+      return undefined;
+    }
+    if (data.length > 0) {
+      return undefined;
+    }
+    return data;
+  } catch (e) {
+    return undefined;
+  }
+};
 const executeCommandLine = async (
   line: string,
   name: string,
@@ -22,27 +107,64 @@ const executeCommandLine = async (
 ): Promise<ExecuteCommandLineResult> => {
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
     await execaCommand(line);
+  const { onSuccess, onFailure } = opts;
+  const status = toStatus(exitCode, failed, isCanceled, timedOut, killed);
 
-  const isFailure = failed || isCanceled || timedOut || killed || exitCode > 0;
+  if (status === 'success') {
+    if (onSuccess.includes('json')) {
+      const value = parseJson(stdout);
+      if (value === undefined) {
+        return {
+          status: 'parse-json-failed',
+          line,
+          stdout,
+          stderr,
+          exitCode,
+          onFailure,
+        };
+      }
+      return { status: 'json', name, line, value, onSuccess };
+    }
+    if (onSuccess.includes('yaml')) {
+      const value = parseYaml(stdout);
+      if (value === undefined) {
+        return {
+          status: 'parse-yaml-failed',
+          line,
+          stdout,
+          stderr,
+          exitCode,
+          onFailure,
+        };
+      }
+      return { status: 'json', name, line, value, onSuccess };
+    }
+    if (onSuccess.includes('csv')) {
+      const value = parseCsv(stdout);
+      if (value === undefined) {
+        return {
+          status: 'parse-csv-failed',
+          line,
+          stdout,
+          stderr,
+          exitCode,
+          onFailure,
+        };
+      }
+      return { status: 'csv', name, line, value, onSuccess };
+    }
 
-  if (failed) {
-    return { status: 'failed', line, stdout, stderr, exitCode };
+    const value = onSuccess.includes('trim') ? stdout.trim() : stdout;
+
+    return { status: 'string', name, line, value, onSuccess };
+  } else {
+    return {
+      status: 'failed',
+      line,
+      stdout,
+      stderr,
+      exitCode,
+      onFailure,
+    };
   }
-  if (isCanceled) {
-    return { status: 'canceled', line, stdout, stderr, exitCode };
-  }
-  if (timedOut) {
-    return { status: 'timeout', line, stdout, stderr, exitCode };
-  }
-  if (killed) {
-    return { status: 'killed', line, stdout, stderr, exitCode };
-  }
-  if (exitCode > 0) {
-    return { status: 'failed', line, stdout, stderr, exitCode };
-  }
-  return {
-    status: 'success',
-    line,
-    stdout,
-  };
 };
