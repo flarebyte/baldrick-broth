@@ -6,6 +6,11 @@ const customKey = z
   .max(30)
   .regex(/[a-z][\d_a-z]+/);
 
+const varValue = z
+  .string()
+  .min(1)
+  .max(300)
+  .regex(/(([\d._a-z]+)|(\[\d+]))+/);
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
 type Json = Literal | { [key: string]: Json } | Json[];
@@ -23,7 +28,9 @@ const stringTitle = z.string().trim().min(1).max(60);
 const stringDescription = z.string().trim().min(1).max(300);
 const stringMotivation = z.string().trim().min(1).max(300);
 const stringUrl = z.string().url().max(300);
-const onShellStepSuccessFailure = z.enum([
+const onShellStepFinish = z.enum(['exit', 'silent']);
+
+const onShellCommandSuccessFailure = z.enum([
   'negate',
   'exit',
   'silent',
@@ -34,56 +41,47 @@ const onShellStepSuccessFailure = z.enum([
   'csv',
 ]);
 
-const lineShell = z.string().min(1).max(120);
-const advancedShell = z.object({
-  onFailure: z.array(onShellStepSuccessFailure).min(1).optional(),
-  onSuccess: z.array(onShellStepSuccessFailure).min(1).optional(),
-  name: z.string().min(1).max(300),
-  run: lineShell,
-});
-
-const stringOrAdvancedShell = z.union([lineShell, advancedShell]);
-
-const stringShell = z.union([
-  stringOrAdvancedShell,
-  z.array(stringOrAdvancedShell).min(1).max(50),
-]);
-
-const binary = z.object({
-  title: stringTitle,
-  description: stringDescription.optional(),
-  motivation: stringMotivation.optional(),
-  homepage: stringUrl.optional(),
-  shell: z.object({ run: stringShell, diagnosis: stringShell }),
-});
-const valuesLoopEach = z.string().min(1).max(300);
-const varValue = z
-  .string()
-  .min(1)
-  .max(300)
-  .regex(/(([\d._a-z]+)|(\[\d+]))+/);
-const loopEach = z.object({
-  value: customKey,
-  values: valuesLoopEach,
-});
-const binaries = z.record(customKey, binary);
-
 const metadataStep = {
   name: customKey,
   title: stringTitle.optional(),
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
 };
+const lineShell = z.string().min(1).max(120);
+const advancedShell = z.object({
+  ...metadataStep,
+  onFailure: z.array(onShellCommandSuccessFailure).min(1).optional(),
+  onSuccess: z.array(onShellCommandSuccessFailure).min(1).optional(),
+  name: z.string().min(1).max(300),
+
+  if: varValue.optional(),
+  run: lineShell,
+});
+
+const commands = z.array(advancedShell).min(1).max(50);
+
+const binary = z.object({
+  title: stringTitle,
+  description: stringDescription.optional(),
+  motivation: stringMotivation.optional(),
+  homepage: stringUrl.optional(),
+  shell: z.object({ run: lineShell, diagnosis: lineShell }),
+});
+const valuesLoopEach = z.string().min(1).max(300);
+
+const loopEach = z.object({
+  value: customKey,
+  values: valuesLoopEach,
+});
+const binaries = z.record(customKey, binary);
+
 const shellStep = z.strictObject({
   a: z.literal('shell'),
   ...metadataStep,
-  bin: customKey.optional(),
   if: varValue.optional(),
   each: z.array(loopEach).min(1).max(12).optional(),
-  onFailure: z.array(onShellStepSuccessFailure).min(1).optional(),
-  onSuccess: z.array(onShellStepSuccessFailure).min(1).optional(),
-  name: customKey.optional(),
-  run: stringShell,
+  onFinish: z.array(onShellStepFinish).min(1).optional(),
+  commands: commands,
 });
 
 const variableStep = z.strictObject({

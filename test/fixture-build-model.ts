@@ -8,13 +8,19 @@ const createBinary = (name: string) => ({
     diagnosis: `${name} --version`,
   },
 });
-const createShellStep = (name: string) => ({
-  a: 'shell',
-  bin: 'sh',
-  title: `Run ${name} {project_yaml}`,
-  run: '{{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}} {{color}}',
+
+const createCommand = (name: string) => ({
+  run: `${name} {{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}} {{color}}`,
+  name: `${name}{{color}}`,
   onSuccess: ['trim'],
   onFailure: ['exit'],
+});
+const createShellStep = (name: string) => ({
+  a: 'shell',
+  name,
+  title: `Run ${name} shell step`,
+
+  commands: [createCommand('cat')],
 });
 
 const varStep = (name: string) => ({
