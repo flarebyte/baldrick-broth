@@ -1,4 +1,5 @@
 import { execaCommand } from 'execa';
+import { CommandOptionsModel } from './build-model.js';
 
 type ExecuteCommandLineResult =
   | {
@@ -15,10 +16,15 @@ type ExecuteCommandLineResult =
     };
 
 const executeCommandLine = async (
-  line: string
+  line: string,
+  name: string,
+  opts: CommandOptionsModel
 ): Promise<ExecuteCommandLineResult> => {
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
     await execaCommand(line);
+
+  const isFailure = failed || isCanceled || timedOut || killed || exitCode > 0;
+
   if (failed) {
     return { status: 'failed', line, stdout, stderr, exitCode };
   }
