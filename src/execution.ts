@@ -13,7 +13,7 @@ type ExecuteCommandLineFailedStatus =
   | 'parse-yaml-failed'
   | 'parse-csv-failed';
 
-interface CommandLineInput {
+export interface CommandLineInput {
   line: string;
   name: string;
   opts: CommandOptionsModel;

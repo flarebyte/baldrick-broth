@@ -229,7 +229,7 @@ interface ValidationError {
 
 export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
-export type ShellStepModel = z.infer<typeof batchStep>;
+export type BatchStepModel = z.infer<typeof batchStep>;
 export type CommandOptionsModel = z.infer<typeof advancedShell>;
 
 export type BuildModelValidation =
