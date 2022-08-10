@@ -175,9 +175,5 @@ const executeCommandLine = async (
   }
 };
 
-export const executeCommandLines = async (
-  commandLines: CommandLineInput[]
-): Promise<ExecuteCommandLineResult[]> => {
-  const all = commandLines.map(executeCommandLine);
-  return Promise.all(all);
-};
+export const executeCommandLines = (commandLines: CommandLineInput[]) =>
+  commandLines.map(executeCommandLine);
