@@ -17,15 +17,15 @@ model:
     startYear: 2022
   license: BSD3
   project_yaml: script/data/project.yaml
-  project_schema: "./script/schema/project.schema.json"
+  project_schema: './script/schema/project.schema.json'
   generate_sh: script/generate.sh
   colors:
-  - green
-  - orange
-  - blue
+    - green
+    - orange
+    - blue
   animals:
-  - cat
-  - dog
+    - cat
+    - dog
 workflows:
   test:
     title: Test your library
@@ -38,17 +38,20 @@ workflows:
         parameters:
           color:
             description: Color
-            flags: "-c, --color <type>"
+            flags: '-c, --color <type>'
         steps:
-        - a: var
-          name: githubAccount
-          title: Set variable githubAccount
-          value: model.githubAccount
-        - a: shell
-          bin: sh
-          title: Run calculate
-          run: echo "{{githubAccount}} and {{color}}"
-          onSuccess:
-          - trim
-          onFailure:
-          - exit
+          - a: var
+            name: githubAccount
+            title: Set variable githubAccount
+            value: model.githubAccount
+          - a: batch
+            name: calculate
+            title: Run calculate
+            commands:
+              - name: echo
+                title: simple echo
+                run: echo "{{githubAccount}} and {{color}}"
+                onSuccess:
+                  - trim
+                onFailure:
+                  - exit
