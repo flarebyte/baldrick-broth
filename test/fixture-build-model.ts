@@ -15,9 +15,10 @@ const createCommand = (name: string) => ({
   onSuccess: ['trim'],
   onFailure: ['exit'],
 });
-const createBatchStep = (name: string) => ({
+const createBatchStep = (name: string, before: any[]) => ({
   a: 'batch',
   name,
+  before,
   title: `Run ${name} shell step`,
 
   commands: [createCommand('cat')],
@@ -72,8 +73,8 @@ export const buildModelExample = {
               flags: '-p, --pizza-type <type>',
             },
           },
-          steps: [varStep('githubAccount'), createBatchStep('calculate')],
-          finally: [createBatchStep('finish')],
+          steps: [createBatchStep('calculate', [varStep('githubAccount')])],
+          finally: [createBatchStep('finish', [])],
         },
       },
     },

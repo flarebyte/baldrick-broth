@@ -40,13 +40,14 @@ workflows:
             description: Color
             flags: '-c, --color <type>'
         steps:
-          - a: var
-            name: githubAccount
-            title: Set variable githubAccount
-            value: model.githubAccount
           - a: batch
             name: calculate
             title: Run calculate
+            before:
+              - a: var
+                name: githubAccount
+                title: Set variable githubAccount
+                value: model.githubAccount
             commands:
               - name: echo
                 title: simple echo

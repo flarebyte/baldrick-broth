@@ -73,15 +73,6 @@ const loopEach = z.object({
 });
 const binaries = z.record(customKey, binary);
 
-const batchStep = z.strictObject({
-  a: z.literal('batch'),
-  ...metadataStep,
-  if: varValue.optional(),
-  each: z.array(loopEach).min(1).max(12).optional(),
-  onFinish: z.array(onBatchStepFinish).min(1).optional(),
-  commands: commands,
-});
-
 const variableStep = z.strictObject({
   a: z.literal('var'),
   ...metadataStep,
@@ -178,9 +169,7 @@ const invertObjectStep = z.strictObject({
 
   value: varValue,
 });
-
-const anyStep = z.discriminatedUnion('a', [
-  batchStep,
+const anyBeforeStep = z.discriminatedUnion('a', [
   variableStep,
   stringArrayStep,
   concatArrayStep,
@@ -194,7 +183,17 @@ const anyStep = z.discriminatedUnion('a', [
   rangeStep,
   invertObjectStep,
 ]);
-const steps = z.array(anyStep).min(1);
+
+const batchStep = z.strictObject({
+  a: z.literal('batch'),
+  ...metadataStep,
+  before: z.array(anyBeforeStep),
+  if: varValue.optional(),
+  each: z.array(loopEach).min(1).max(12).optional(),
+  onFinish: z.array(onBatchStepFinish).min(1).optional(),
+  commands: commands,
+});
+const steps = z.array(batchStep).min(1);
 const parameter = z.object({
   description: stringDescription,
   flags: z.string().min(1).max(80),
