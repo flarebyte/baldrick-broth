@@ -13,6 +13,12 @@ type ExecuteCommandLineFailedStatus =
   | 'parse-yaml-failed'
   | 'parse-csv-failed';
 
+interface CommandLineInput {
+  line: string;
+  name: string;
+  opts: CommandOptionsModel;
+}
+
 type ExecuteCommandLineResult =
   | {
       status: ExecuteCommandLineFailedStatus;
@@ -44,13 +50,14 @@ type ExecuteCommandLineResult =
       onSuccess: CommandOptionsModel['onSuccess'];
     };
 
-const toStatus = (
-  exitCode: number,
-  failed: boolean,
-  isCanceled: boolean,
-  timedOut: boolean,
-  killed: boolean
-): ExecuteCommandLineFailedStatus | 'success' => {
+const toStatus = (params: {
+  exitCode: number;
+  failed: boolean;
+  isCanceled: boolean;
+  timedOut: boolean;
+  killed: boolean;
+}): ExecuteCommandLineFailedStatus | 'success' => {
+  const { exitCode, failed, isCanceled, timedOut, killed } = params;
   if (failed) {
     return 'failed';
   }
@@ -101,14 +108,13 @@ const parseCsv = (content: string): Record<string, string>[] | undefined => {
   }
 };
 const executeCommandLine = async (
-  line: string,
-  name: string,
-  opts: CommandOptionsModel
+  params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
+  const { line, name, opts } = params;
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
     await execaCommand(line);
   const { onSuccess, onFailure } = opts;
-  const status = toStatus(exitCode, failed, isCanceled, timedOut, killed);
+  const status = toStatus({ exitCode, failed, isCanceled, timedOut, killed });
 
   if (status === 'success') {
     if (onSuccess.includes('json')) {
@@ -167,4 +173,11 @@ const executeCommandLine = async (
       onFailure,
     };
   }
+};
+
+export const executeCommandLines = async (
+  commandLines: CommandLineInput[]
+): Promise<ExecuteCommandLineResult[]> => {
+  const all = commandLines.map(executeCommandLine);
+  return Promise.all(all);
 };
