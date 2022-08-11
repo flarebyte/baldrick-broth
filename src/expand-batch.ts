@@ -22,12 +22,13 @@ const getArray = (_ctx: Ctx, _name: string): any[] => [];
 const createTemplate = (run: string) =>
   Handlebars.compile(run, { noEscape: true });
 
+type CommandLocalVars = {
+  commandOpts: CommandOptionsModel;
+  extra: Record<string, any>;
+};
 const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
-  (current: {
-    commandOpts: CommandOptionsModel;
-    extra: Record<string, any>;
-  }): CommandLineInput[] => {
+  (current: CommandLocalVars): CommandLineInput[] => {
     const { commandOpts, extra } = current;
     const { run, name } = commandOpts;
     const template = createTemplate(run);
@@ -61,10 +62,13 @@ const expandBatch1 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
     throw new Error('Should have at least one loop');
   }
 
-  const arr0 = getArray(ctx, loop0.values);
-  for (const id0 of arr0) {
-  }
-  batch.commands.flatMap(expandCommand(ctx, batch));
+  const arr0 = getArray(ctx, loop0.values).map((value) => ({
+    [loop0.name]: value,
+  }));
+  const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra) =>
+    batch.commands.map((commandOpts) => ({ commandOpts, extra }))
+  );
+  return commandLocalVars.flatMap(expandCommand(ctx, batch));
 };
 
 const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
@@ -72,6 +76,8 @@ const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   switch (numberOfLoops) {
     case 0:
       return expandBatchN(ctx, batch, {});
+    case 1:
+      return expandBatch1(ctx, batch);
 
     default:
       throw new Error('Too many for each loops');
