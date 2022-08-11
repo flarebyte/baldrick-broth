@@ -21,6 +21,7 @@ const getArray = (_ctx: Ctx, _name: string): any[] => [];
 
 const createTemplate = (run: string) =>
   Handlebars.compile(run, { noEscape: true });
+
 const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
   (current: {
@@ -44,19 +45,18 @@ const expandCommand =
     }));
     return lineInputs;
   };
-const expandBatch0 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] =>
-  batch.commands
-    .map((commandOpts) => ({ commandOpts, extra: {} }))
-    .flatMap(expandCommand(ctx, batch));
 
 const expandBatchN = (
   ctx: Ctx,
   batch: BatchStepModel,
   extra: Record<string, any>
 ): CommandLineInput[] =>
-  batch.commands.flatMap(expandCommand(ctx, batch, extra));
+  batch.commands
+    .map((commandOpts) => ({ commandOpts, extra }))
+    .flatMap(expandCommand(ctx, batch));
+
 const expandBatch1 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
-  const loop0 = batch.each[0];
+  const loop0 = batch.each === undefined ? undefined : batch.each[0];
   if (loop0 === undefined) {
     throw new Error('Should have at least one loop');
   }
@@ -71,7 +71,7 @@ const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   const numberOfLoops = batch.each === undefined ? 0 : batch.each.length;
   switch (numberOfLoops) {
     case 0:
-      return expandBatch0(ctx, batch);
+      return expandBatchN(ctx, batch, {});
 
     default:
       throw new Error('Too many for each loops');

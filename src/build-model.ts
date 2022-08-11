@@ -68,7 +68,7 @@ const binary = z.object({
 const valuesLoopEach = z.string().min(1).max(300);
 
 const loopEach = z.object({
-  value: customKey,
+  name: customKey,
   values: valuesLoopEach,
 });
 const binaries = z.record(customKey, binary);
@@ -189,7 +189,7 @@ const batchStep = z.strictObject({
   ...metadataStep,
   before: z.array(anyBeforeStep),
   if: varValue.optional(),
-  each: z.array(loopEach).min(1).max(12).default([]),
+  each: z.array(loopEach).min(1).max(3).optional(),
   onFinish: z.array(onBatchStepFinish).min(1).optional(),
   commands: commands,
 });
