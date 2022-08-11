@@ -189,7 +189,7 @@ const batchStep = z.strictObject({
   ...metadataStep,
   before: z.array(anyBeforeStep),
   if: varValue.optional(),
-  each: z.array(loopEach).min(1).max(12).optional(),
+  each: z.array(loopEach).min(1).max(12).default([]),
   onFinish: z.array(onBatchStepFinish).min(1).optional(),
   commands: commands,
 });
