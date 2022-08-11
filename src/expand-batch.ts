@@ -71,6 +71,27 @@ const expandBatch1 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   return commandLocalVars.flatMap(expandCommand(ctx, batch));
 };
 
+const expandBatch2 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
+  if (batch.each === undefined) {
+    throw new Error('batch.each should not be undefined');
+  }
+  const [loop0, loop1] = batch.each;
+  if (loop0 === undefined || loop1 === undefined) {
+    throw new Error('The two first items of each should be defined');
+  }
+
+  const arr0 = getArray(ctx, loop0.values).map((value) => ({
+    [loop0.name]: value,
+  }));
+  const arr1 = getArray(ctx, loop1.values).map((value) => ({
+    [loop1.name]: value,
+  }));
+  const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra) =>
+    batch.commands.map((commandOpts) => ({ commandOpts, extra }))
+  );
+  return commandLocalVars.flatMap(expandCommand(ctx, batch));
+};
+
 const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   const numberOfLoops = batch.each === undefined ? 0 : batch.each.length;
   switch (numberOfLoops) {
@@ -78,6 +99,8 @@ const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
       return expandBatchN(ctx, batch, {});
     case 1:
       return expandBatch1(ctx, batch);
+    case 2:
+      return expandBatch2(ctx, batch);
 
     default:
       throw new Error('Too many for each loops');
