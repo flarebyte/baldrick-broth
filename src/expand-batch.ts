@@ -7,6 +7,7 @@ import {
   TaskModel,
 } from './build-model.js';
 import { CommandLineInput } from './execution.js';
+import { stringCustomKey } from './field-validation.js';
 
 type AnyRootsetValue = string | boolean | Record<string, string>[] | JsonValue;
 
@@ -23,7 +24,7 @@ type ExpandedCommandLineInputs =
       inputs: CommandLineInput[];
     }
   | {
-      status: 'error';
+      status: 'failure';
       messages: string[];
     };
 
@@ -49,6 +50,13 @@ const expandCommand =
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
     const expandedName = nameTemplate(templateCtx).trim();
+    const validatedName = stringCustomKey.safeParse(expandedName);
+    if (!validatedName.success) {
+      return {
+        status: 'failure',
+        messages: [`Expanded name was not supported: ${expandedName}`],
+      };
+    }
     const lineInputs: CommandLineInput[] = lines.map((line) => ({
       line,
       name: expandedName,
@@ -60,12 +68,12 @@ const expandCommand =
 const mergeExpandedCommandLineInputs = (
   inputsArray: ExpandedCommandLineInputs[]
 ): ExpandedCommandLineInputs => {
-  const inputsWithErrors = inputsArray.filter((i) => i.status === 'error');
+  const inputsWithErrors = inputsArray.filter((i) => i.status === 'failure');
   if (inputsWithErrors.length > 0) {
     const messages = inputsWithErrors.flatMap((i) =>
-      i.status === 'error' ? i.messages : []
+      i.status === 'failure' ? i.messages : []
     );
-    return { status: 'error', messages };
+    return { status: 'failure', messages };
   }
   const inputs = inputsArray.flatMap((i) =>
     i.status === 'success' ? i.inputs : []
@@ -88,7 +96,7 @@ const expandBatch1 = (
 ): ExpandedCommandLineInputs => {
   const loop0 = batch.each === undefined ? undefined : batch.each[0];
   if (loop0 === undefined) {
-    return { status: 'error', messages: ['Should have at least one loop'] };
+    return { status: 'failure', messages: ['Should have at least one loop'] };
   }
 
   const arr0 = getArray(ctx, loop0.values).map((value) => ({
@@ -107,14 +115,14 @@ const expandBatch2 = (
 ): ExpandedCommandLineInputs => {
   if (batch.each === undefined) {
     return {
-      status: 'error',
+      status: 'failure',
       messages: ['batch.each should not be undefined'],
     };
   }
   const [loop0, loop1] = batch.each;
   if (loop0 === undefined || loop1 === undefined) {
     return {
-      status: 'error',
+      status: 'failure',
       messages: ['The two first items of each should be defined'],
     };
   }
