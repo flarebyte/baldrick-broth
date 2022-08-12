@@ -86,13 +86,17 @@ const expandBatch2 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   const arr1 = getArray(ctx, loop1.values).map((value) => ({
     [loop1.name]: value,
   }));
-  const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra) =>
-    batch.commands.map((commandOpts) => ({ commandOpts, extra }))
+  const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra0) =>
+    arr1
+      .map((extra1) => ({ ...extra0, ...extra1 }))
+      .flatMap((extra) =>
+        batch.commands.map((commandOpts) => ({ commandOpts, extra }))
+      )
   );
   return commandLocalVars.flatMap(expandCommand(ctx, batch));
 };
 
-const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
+export const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   const numberOfLoops = batch.each === undefined ? 0 : batch.each.length;
   switch (numberOfLoops) {
     case 0:
