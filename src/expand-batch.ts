@@ -17,6 +17,16 @@ interface Ctx {
   data: Record<string, BatchValues>;
 }
 
+type ExpandedCommandLineInputs =
+  | {
+      status: 'success';
+      inputs: CommandLineInput[];
+    }
+  | {
+      status: 'error';
+      messages: string[];
+    };
+
 const getArray = (_ctx: Ctx, _name: string): any[] => [];
 
 const createTemplate = (run: string) =>
@@ -28,7 +38,7 @@ type CommandLocalVars = {
 };
 const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
-  (current: CommandLocalVars): CommandLineInput[] => {
+  (current: CommandLocalVars): ExpandedCommandLineInputs => {
     const { commandOpts, extra } = current;
     const { run, name } = commandOpts;
     const template = createTemplate(run);
@@ -44,22 +54,41 @@ const expandCommand =
       name: expandedName,
       opts: commandOpts,
     }));
-    return lineInputs;
+    return { status: 'success', inputs: lineInputs };
   };
 
+const mergeExpandedCommandLineInputs = (
+  inputsArray: ExpandedCommandLineInputs[]
+): ExpandedCommandLineInputs => {
+  const inputsWithErrors = inputsArray.filter((i) => i.status === 'error');
+  if (inputsWithErrors.length > 0) {
+    const messages = inputsWithErrors.flatMap((i) =>
+      i.status === 'error' ? i.messages : []
+    );
+    return { status: 'error', messages };
+  }
+  const inputs = inputsArray.flatMap((i) =>
+    i.status === 'success' ? i.inputs : []
+  );
+  return { status: 'success', inputs };
+};
 const expandBatchN = (
   ctx: Ctx,
   batch: BatchStepModel,
   extra: Record<string, any>
-): CommandLineInput[] =>
-  batch.commands
+): ExpandedCommandLineInputs => {
+  const expanded = batch.commands
     .map((commandOpts) => ({ commandOpts, extra }))
-    .flatMap(expandCommand(ctx, batch));
-
-const expandBatch1 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
+    .map(expandCommand(ctx, batch));
+  return mergeExpandedCommandLineInputs(expanded);
+};
+const expandBatch1 = (
+  ctx: Ctx,
+  batch: BatchStepModel
+): ExpandedCommandLineInputs => {
   const loop0 = batch.each === undefined ? undefined : batch.each[0];
   if (loop0 === undefined) {
-    throw new Error('Should have at least one loop');
+    return { status: 'error', messages: ['Should have at least one loop'] };
   }
 
   const arr0 = getArray(ctx, loop0.values).map((value) => ({
@@ -68,16 +97,26 @@ const expandBatch1 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
   const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra) =>
     batch.commands.map((commandOpts) => ({ commandOpts, extra }))
   );
-  return commandLocalVars.flatMap(expandCommand(ctx, batch));
+  const expanded = commandLocalVars.flatMap(expandCommand(ctx, batch));
+  return mergeExpandedCommandLineInputs(expanded);
 };
 
-const expandBatch2 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
+const expandBatch2 = (
+  ctx: Ctx,
+  batch: BatchStepModel
+): ExpandedCommandLineInputs => {
   if (batch.each === undefined) {
-    throw new Error('batch.each should not be undefined');
+    return {
+      status: 'error',
+      messages: ['batch.each should not be undefined'],
+    };
   }
   const [loop0, loop1] = batch.each;
   if (loop0 === undefined || loop1 === undefined) {
-    throw new Error('The two first items of each should be defined');
+    return {
+      status: 'error',
+      messages: ['The two first items of each should be defined'],
+    };
   }
 
   const arr0 = getArray(ctx, loop0.values).map((value) => ({
@@ -93,10 +132,14 @@ const expandBatch2 = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
         batch.commands.map((commandOpts) => ({ commandOpts, extra }))
       )
   );
-  return commandLocalVars.flatMap(expandCommand(ctx, batch));
+  const expanded = commandLocalVars.flatMap(expandCommand(ctx, batch));
+  return mergeExpandedCommandLineInputs(expanded);
 };
 
-export const expandBatch = (ctx: Ctx, batch: BatchStepModel): CommandLineInput[] => {
+export const expandBatch = (
+  ctx: Ctx,
+  batch: BatchStepModel
+): ExpandedCommandLineInputs => {
   const numberOfLoops = batch.each === undefined ? 0 : batch.each.length;
   switch (numberOfLoops) {
     case 0:
