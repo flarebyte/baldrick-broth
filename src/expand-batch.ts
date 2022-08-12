@@ -48,7 +48,7 @@ const expandCommand =
       .split('\n')
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
-    const expandedName = nameTemplate(templateCtx).trim(); //TODO: check for multiple lines and throw if multiple ?
+    const expandedName = nameTemplate(templateCtx).trim();
     const lineInputs: CommandLineInput[] = lines.map((line) => ({
       line,
       name: expandedName,

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { customKey, stringTitle, stringDescription, stringMotivation, varValue, stringUrl } from './field-validation.js';
+import { stringCustomKey, stringTitle, stringDescription, stringMotivation, varValue, stringUrl } from './field-validation.js';
 
 /**JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
@@ -26,7 +26,7 @@ const onShellCommandFinish = z.enum([
 ]);
 
 const metadataStep = {
-  name: customKey,
+  name: stringCustomKey,
   title: stringTitle.optional(),
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
@@ -54,10 +54,10 @@ const binary = z.object({
 const valuesLoopEach = z.string().min(1).max(300);
 
 const loopEach = z.object({
-  name: customKey,
+  name: stringCustomKey,
   values: valuesLoopEach,
 });
-const binaries = z.record(customKey, binary);
+const binaries = z.record(stringCustomKey, binary);
 
 const variableStep = z.strictObject({
   a: z.literal('var'),
@@ -190,21 +190,21 @@ const task = z.object({
   title: stringTitle,
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
-  parameters: z.record(customKey, parameter),
+  parameters: z.record(stringCustomKey, parameter),
   steps,
   finally: steps.optional(),
 });
 const domain = z.object({
   title: stringTitle,
   description: stringDescription.optional(),
-  tasks: z.record(customKey, task),
+  tasks: z.record(stringCustomKey, task),
 });
 export const schema = z
   .object({
     engine,
     binaries,
     model: jsonishSchema,
-    workflows: z.record(customKey, domain),
+    workflows: z.record(stringCustomKey, domain),
   })
   .strict();
 

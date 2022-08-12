@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const isSingleLine = (value: string) => value.split(/[\n\r]/).length <= 1;
 
-export const customKey = z
+export const stringCustomKey = z
   .string()
   .min(1)
   .max(30)
