@@ -1,33 +1,19 @@
 import { z } from 'zod';
+import { customKey, stringTitle, stringDescription, stringMotivation, varValue, stringUrl } from './field-validation.js';
 
-const customKey = z
-  .string()
-  .min(1)
-  .max(30)
-  .regex(/[a-z][\d_a-z]+/);
-
-const varValue = z
-  .string()
-  .min(1)
-  .max(300)
-  .regex(/(([\d._a-z]+)|(\[\d+]))+/);
+/**JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
 type Json = Literal | { [key: string]: Json } | Json[];
 const jsonishSchema: z.ZodType<Json> = z.lazy(() =>
   z.union([literalSchema, z.array(jsonishSchema), z.record(jsonishSchema)])
 );
-
 const engine = z
   .object({
     defaultShell: z.string(),
     telemetry: z.object({ verbosity: z.string(), filepath: z.string() }),
   })
   .optional();
-const stringTitle = z.string().trim().min(1).max(60);
-const stringDescription = z.string().trim().min(1).max(300);
-const stringMotivation = z.string().trim().min(1).max(300);
-const stringUrl = z.string().url().max(300);
 const onBatchStepFinish = z.enum(['exit', 'silent']);
 
 const onShellCommandFinish = z.enum([
