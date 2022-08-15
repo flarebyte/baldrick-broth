@@ -1271,11 +1271,6 @@ baldrick-dev-ts@^0.17.0:
     vfile-reporter "^7.0.3"
     vfile-reporter-json "^3.1.0"
 
-baldrick-tsconfig-es2020@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/baldrick-tsconfig-es2020/-/baldrick-tsconfig-es2020-0.9.0.tgz#f95eeef610d19041802d0e8d89429cc7e0fcefbf"
-  integrity sha512-FwJGcXk2q3+3g33HNFoXGo0xX6xCwHNofTZjUbdLubIR5QKQInaFwRPaGLJrLnPqrtWffIBQbMdloXHhRoEO6A==
-
 baldrick-tsconfig-es2021@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/baldrick-tsconfig-es2021/-/baldrick-tsconfig-es2021-0.5.0.tgz#8236474db44b7bb45ccaa04922cb43fb9feb87ee"

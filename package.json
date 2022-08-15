@@ -60,6 +60,7 @@
     "cli": "node --loader ts-node/esm src/cli.mts"
   },
   "dependencies": {
+    "baldrick-tsconfig-es2021": "^0.5.0",
     "commander": "^9.4.0",
     "execa": "^6.1.0",
     "handlebars": "^4.7.7",
@@ -73,7 +74,6 @@
   "devDependencies": {
     "@types/papaparse": "^5.3.3",
     "baldrick-dev-ts": "^0.17.0",
-    "baldrick-tsconfig-es2020": "^0.9.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
