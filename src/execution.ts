@@ -80,7 +80,7 @@ const parseJson = (content: string): JsonValue | undefined => {
   try {
     const parsed: JsonValue = JSON.parse(content);
     return parsed;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };
@@ -88,7 +88,7 @@ const parseYaml = (content: string): JsonValue | undefined => {
   try {
     const parsed: JsonValue = YAML.parse(content);
     return parsed;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };
@@ -103,7 +103,7 @@ const parseCsv = (content: string): Record<string, string>[] | undefined => {
       return undefined;
     }
     return data;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };

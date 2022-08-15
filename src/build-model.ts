@@ -1,5 +1,12 @@
 import { z } from 'zod';
-import { stringCustomKey, stringTitle, stringDescription, stringMotivation, varValue, stringUrl } from './field-validation.js';
+import {
+  stringCustomKey,
+  stringTitle,
+  stringDescription,
+  stringMotivation,
+  varValue,
+  stringUrl,
+} from './field-validation.js';
 
 /**JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
