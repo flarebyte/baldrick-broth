@@ -1,15 +1,7 @@
 import { Command } from 'commander';
-import { BuildModel, BuildModelValidation, TaskModel } from './build-model.js';
+import { BuildModelValidation } from './build-model.js';
+import { createTaskAction } from './create-task-action.js';
 import { version } from './version.js';
-
-const createTaskAction =
-  (buildModel: BuildModel, taskModel: TaskModel) => (opts: any) =>
-    console.log(
-      'createTaskAction',
-      opts,
-      Object.keys(buildModel.binaries),
-      taskModel.title
-    );
 
 export const createCommands = (
   program: Command,
