@@ -4,18 +4,32 @@
  */
 
 const assertSuccess = (test, message) => {
-    if (test) {
-        echo(`✅ OK: ${message}\n---\n`)
-    } else {
-        echo(`❌ KO: ${message}\n---\n`)
-    }
-}
+  if (test) {
+    echo(`✅ OK: ${message}`);
+  } else {
+    echo(`❌ KO: ${message}`);
+  }
+};
 
-process.env.BALDRICK_BROTH_BUILD_FILE='script/fixture/.baldrick-broth/dev.yaml'
-await $`rm -rf report/shell-tests`
-await $`mkdir -p report/shell-tests`
+process.env.BALDRICK_BROTH_BUILD_FILE =
+  'script/fixture/.baldrick-broth/dev.yaml';
 
-const helpCli = await $`yarn cli --help`
-assertSuccess(`${helpCli}`.includes('CLI for build automation'), 'broth --help')
-await $`yarn cli test generate --help`
-await $`yarn cli test generate -c blue`
+const runCommand = async (command) => {
+  echo(`Starting broth ${command.run} ...`);
+  const running = await $`yarn cli ${command.run}`;
+  assertSuccess(`${running}`.includes(command.expect), `broth ${command.run}`);
+  echo('\n-----\n');
+};
+
+await $`rm -rf report/shell-tests`;
+await $`mkdir -p report/shell-tests`;
+
+const commands = [
+  { run: ['--help'], expect: 'CLI for build automation' },
+  { run: ['test', 'generate', '--help'], expect: 'Generate code' },
+  { run: ['test', 'generate', '-c', 'blue'], expect: 'Generate code' },
+];
+
+await runCommand(commands[0]);
+await runCommand(commands[1]);
+await runCommand(commands[2]);
