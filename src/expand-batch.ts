@@ -1,22 +1,11 @@
 import Handlebars from 'handlebars';
-import { JsonValue } from 'type-fest';
+import { Ctx } from './batch-model.js';
 import {
   BatchStepModel,
-  BuildModel,
   CommandOptionsModel,
-  TaskModel,
 } from './build-model.js';
 import { CommandLineInput } from './execution.js';
 import { stringCustomKey } from './field-validation.js';
-
-type AnyRootsetValue = string | boolean | Record<string, string>[] | JsonValue;
-
-type BatchValues = Record<string, AnyRootsetValue>;
-interface Ctx {
-  build: BuildModel;
-  task: TaskModel;
-  data: Record<string, BatchValues>;
-}
 
 type ExpandedCommandLineInputs =
   | {

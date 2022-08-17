@@ -1,8 +1,8 @@
-import { BuildModel, TaskModel } from './build-model.js';
+import { Ctx } from './batch-model.js';
 
-export const createTaskAction = (buildModel: BuildModel, taskModel: TaskModel) => (opts: any) => console.log(
+export const createTaskAction = (ctx: Ctx) => (opts: any) => console.log(
   'createTaskAction',
   opts,
-  Object.keys(buildModel.binaries),
-  taskModel.title
+  Object.keys(ctx.build.binaries),
+  ctx.task.title
 );

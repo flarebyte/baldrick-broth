@@ -32,7 +32,7 @@ export const createCommands = (
         }
         const taskCommand = workflowCmd.command(taskId);
         taskCommand.description(task.title);
-        taskCommand.action(createTaskAction(value, task));
+        taskCommand.action(createTaskAction({ build: value, task, data: {} }));
         for (const parameterId in task.parameters) {
           const parameter = task.parameters[parameterId];
           if (parameter === undefined) {
