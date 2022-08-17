@@ -30,6 +30,8 @@ const commands = [
   { run: ['test', 'generate', '-c', 'blue'], expect: 'Generate code' },
 ];
 
-await runCommand(commands[0]);
-await runCommand(commands[1]);
-await runCommand(commands[2]);
+const commandPromises = commands.map(runCommand)
+for await (const command of commandPromises) {
+    command
+}
+
