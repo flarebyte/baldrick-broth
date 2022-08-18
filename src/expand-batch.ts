@@ -1,9 +1,6 @@
 import Handlebars from 'handlebars';
 import { Ctx } from './batch-model.js';
-import {
-  BatchStepModel,
-  CommandOptionsModel,
-} from './build-model.js';
+import { BatchStepModel, CommandOptionsModel } from './build-model.js';
 import { CommandLineInput } from './execution.js';
 import { stringCustomKey } from './field-validation.js';
 
@@ -100,15 +97,15 @@ const expandBatch1 = (
 
 const expandBatch2 = (
   ctx: Ctx,
-  batch: BatchStepModel
+  batchStep: BatchStepModel
 ): ExpandedCommandLineInputs => {
-  if (batch.each === undefined) {
+  if (batchStep.each === undefined) {
     return {
       status: 'failure',
       messages: ['batch.each should not be undefined'],
     };
   }
-  const [loop0, loop1] = batch.each;
+  const [loop0, loop1] = batchStep.each;
   if (loop0 === undefined || loop1 === undefined) {
     return {
       status: 'failure',
@@ -126,25 +123,26 @@ const expandBatch2 = (
     arr1
       .map((extra1) => ({ ...extra0, ...extra1 }))
       .flatMap((extra) =>
-        batch.commands.map((commandOpts) => ({ commandOpts, extra }))
+        batchStep.commands.map((commandOpts) => ({ commandOpts, extra }))
       )
   );
-  const expanded = commandLocalVars.flatMap(expandCommand(ctx, batch));
+  const expanded = commandLocalVars.flatMap(expandCommand(ctx, batchStep));
   return mergeExpandedCommandLineInputs(expanded);
 };
 
-export const expandBatch = (
+export const expandBatchStep = (
   ctx: Ctx,
-  batch: BatchStepModel
+  batchStep: BatchStepModel
 ): ExpandedCommandLineInputs => {
-  const numberOfLoops = batch.each === undefined ? 0 : batch.each.length;
+  const numberOfLoops =
+    batchStep.each === undefined ? 0 : batchStep.each.length;
   switch (numberOfLoops) {
     case 0:
-      return expandBatchN(ctx, batch, {});
+      return expandBatchN(ctx, batchStep, {});
     case 1:
-      return expandBatch1(ctx, batch);
+      return expandBatch1(ctx, batchStep);
     case 2:
-      return expandBatch2(ctx, batch);
+      return expandBatch2(ctx, batchStep);
 
     default:
       throw new Error('Too many for each loops');
