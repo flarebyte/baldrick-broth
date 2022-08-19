@@ -1,5 +1,5 @@
 import { execaCommand } from 'execa';
-import { JsonValue } from 'type-fest';
+import type { JsonValue } from 'type-fest';
 import YAML from 'yaml';
 import CSV from 'papaparse';
 import { CommandOptionsModel } from './build-model.js';

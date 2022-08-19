@@ -15,7 +15,7 @@ const createCommand = (name: string) => ({
   onSuccess: ['trim'],
   onFailure: ['exit'],
 });
-const createBatchStep = (name: string, before: any[]) => ({
+const createBatchStep = (name: string, before: any[] | undefined = undefined) => ({
   a: 'batch',
   name,
   before,
@@ -74,7 +74,7 @@ export const buildModelExample = {
             },
           },
           steps: [createBatchStep('calculate', [varStep('githubAccount')])],
-          finally: [createBatchStep('finish', [])],
+          finally: [createBatchStep('finish')],
         },
       },
     },

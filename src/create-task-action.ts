@@ -1,8 +1,8 @@
 import { Listr } from 'listr2';
 import type { ListrTask } from 'listr2';
 import winston from 'winston';
-import { Ctx } from './batch-model.js';
-import { BatchStepModel } from './build-model.js';
+import type { Ctx } from './batch-model.js';
+import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 

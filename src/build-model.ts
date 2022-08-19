@@ -180,7 +180,7 @@ const anyBeforeStep = z.discriminatedUnion('a', [
 const batchStep = z.strictObject({
   a: z.literal('batch'),
   ...metadataStep,
-  before: z.array(anyBeforeStep),
+  before: z.array(anyBeforeStep).min(1).max(20).optional(),
   if: varValue.optional(),
   each: z.array(loopEach).min(1).max(3).optional(),
   onFinish: z.array(onBatchStepFinish).min(1).optional(),

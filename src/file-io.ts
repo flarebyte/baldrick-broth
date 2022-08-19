@@ -5,7 +5,7 @@ import { LoadingStatus } from './model.js';
 export const readYaml = async (filename: string): Promise<LoadingStatus> => {
   let content;
   try {
-    content = await fs.readFile(filename, { encoding: 'utf-8' });
+    content = await fs.readFile(filename, { encoding: 'utf8' });
   } catch {
     return {
       status: 'file-not-found',
