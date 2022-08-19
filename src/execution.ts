@@ -107,7 +107,10 @@ const parseCsv = (content: string): Record<string, string>[] | undefined => {
     return undefined;
   }
 };
-const executeCommandLine = async (
+/**
+ * Executes a a command after template expansion
+ */
+export const executeCommandLine = async (
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
@@ -174,6 +177,3 @@ const executeCommandLine = async (
     };
   }
 };
-
-export const executeCommandLines = (commandLines: CommandLineInput[]) =>
-  commandLines.map(executeCommandLine);

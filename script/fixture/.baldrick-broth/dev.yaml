@@ -56,3 +56,20 @@ workflows:
                   - trim
                 onFailure:
                   - exit
+              - name: echo2
+                title: simple echo2
+                run: echo "{{githubAccount}} and {{color}}"
+                onSuccess:
+                  - trim
+                onFailure:
+                  - exit
+          - a: batch
+            name: list files
+            title: List files
+            commands:
+              - name: list source files
+                run: ls src/*.ts
+                onSuccess:
+                  - trim
+                onFailure:
+                  - exit
