@@ -1,19 +1,10 @@
 import { Listr } from 'listr2';
 import type { ListrTask } from 'listr2';
-import winston from 'winston';
 import type { Ctx } from './batch-model.js';
 import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
-
-const currentTaskLogger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new winston.transports.File({ filename: 'temp/log/baldrick-broth.log' }),
-  ],
-});
+import { createLineActionLogger, currentTaskLogger } from './logging.js';
 
 type BatchStepAction =
   | {
@@ -61,7 +52,7 @@ const toCommandLineAction = (
   const commandTask: ListrTask = {
     title: commandLineInput.name,
     task: async (_, task): Promise<void> => {
-      const lineActionLogger = currentTaskLogger.child({
+      const lineActionLogger = createLineActionLogger({
         command: commandLineInput.name,
       });
       task.output = commandLineInput.line;
