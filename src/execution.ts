@@ -114,8 +114,10 @@ export const executeCommandLine = async (
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
+
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
-    await execaCommand(line);
+    await execaCommand(line, { reject: false });
+
   const { onSuccess, onFailure } = opts;
   const status = toStatus({ exitCode, failed, isCanceled, timedOut, killed });
 

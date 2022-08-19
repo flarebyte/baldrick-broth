@@ -54,7 +54,7 @@ workflows:
                 run: echo "{{githubAccount}} and {{color}}"
               - name: echo2
                 title: simple echo2
-                run: echo "{{githubAccount}} and {{color}}"
+                run: echo "{{build.name}}"
                 onSuccess:
                   - trim
                 onFailure:
@@ -64,4 +64,4 @@ workflows:
             title: List files
             commands:
               - name: list source files
-                run: ls src/*.ts
+                run: brew --help

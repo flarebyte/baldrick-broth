@@ -4,7 +4,7 @@ import type { Ctx } from './batch-model.js';
 import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
-import { createLineActionLogger, currentTaskLogger } from './logging.js';
+import { createLineActionLogger, replayLogToConsole } from './logging.js';
 
 type BatchStepAction =
   | {
@@ -53,7 +53,8 @@ const toCommandLineAction = (
     title: commandLineInput.name,
     task: async (_, task): Promise<void> => {
       const lineActionLogger = createLineActionLogger({
-        command: commandLineInput.name,
+        name: commandLineInput.name,
+        command: commandLineInput.line,
       });
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(commandLineInput);
@@ -103,8 +104,8 @@ export const createTaskAction = (ctx: Ctx) => async (_opts: any) => {
   } else {
     const mainTask = new Listr<Ctx>(listPossibleActions.batchTasks);
     try {
-      const context = await mainTask.run(ctx);
-      console.log('final-context', JSON.stringify(context.data));
+      await mainTask.run(ctx);
+      await replayLogToConsole();
     } catch (e: any) {
       console.log('Failure ', e);
     }
