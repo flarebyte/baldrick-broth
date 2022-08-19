@@ -41,8 +41,8 @@ const metadataStep = {
 const lineShell = z.string().min(1).max(300);
 const advancedShell = z.object({
   ...metadataStep,
-  onFailure: z.array(onShellCommandFinish).min(1).default([]),
-  onSuccess: z.array(onShellCommandFinish).min(1).default([]),
+  onFailure: z.array(onShellCommandFinish).min(1).default(['exit']),
+  onSuccess: z.array(onShellCommandFinish).min(1).default(['trim']),
   name: z.string().min(1).max(300),
 
   if: varValue.optional(),
