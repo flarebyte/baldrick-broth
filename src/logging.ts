@@ -5,7 +5,10 @@ export const currentTaskLogger = winston.createLogger({
   format: winston.format.json(),
   defaultMeta: { service: 'user-service' },
   transports: [
-    new winston.transports.File({ filename: 'temp/log/baldrick-broth.log' }),
+    new winston.transports.File({
+      filename: 'temp/log/baldrick-broth.log',
+      options: { flags: 'w' },
+    }),
   ],
 });
 
