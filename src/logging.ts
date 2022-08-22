@@ -11,28 +11,12 @@ export const currentTaskLogger = winston.createLogger({
   defaultMeta: { service: 'user-service' },
   transports: [
     new winston.transports.File({
-      filename: 'temp/log/baldrick-broth-log.json',
-      options: { flags: 'w' },
-      format: winston.format.json(),
-    }),
-    new winston.transports.File({
       filename: 'temp/log/baldrick-broth-log.txt',
       options: { flags: 'w' },
       format: consoleLikeFormat,
     }),
   ],
 });
-
-export const createLineActionLogger = (opts: {
-  name: string;
-  command: string;
-}) => {
-  const { name, command } = opts;
-  return currentTaskLogger.child({
-    name,
-    command,
-  });
-};
 
 export const replayLogToConsole = async () => {
   try {

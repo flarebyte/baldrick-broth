@@ -64,4 +64,4 @@ workflows:
             title: List files
             commands:
               - name: list source files
-                run: brew --help
+                run: pwd

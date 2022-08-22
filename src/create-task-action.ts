@@ -4,7 +4,7 @@ import type { Ctx } from './batch-model.js';
 import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
-import { createLineActionLogger, replayLogToConsole } from './logging.js';
+import { currentTaskLogger, replayLogToConsole } from './logging.js';
 
 type BatchStepAction =
   | {
@@ -52,18 +52,14 @@ const toCommandLineAction = (
   const commandTask: ListrTask = {
     title: commandLineInput.name,
     task: async (_, task): Promise<void> => {
-      const lineActionLogger = createLineActionLogger({
-        name: commandLineInput.name,
-        command: commandLineInput.line,
-      });
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(commandLineInput);
       await sleep(2000);
       if (cmdLineResult.status === 'string') {
-        lineActionLogger.info(cmdLineResult.value);
+        currentTaskLogger.info(cmdLineResult.value);
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failed') {
-        lineActionLogger.error(
+        currentTaskLogger.info(
           [cmdLineResult.stdout, cmdLineResult.stderr].join('\n\n')
         );
         task.output = 'KO';
