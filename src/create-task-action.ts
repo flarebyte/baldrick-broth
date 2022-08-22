@@ -4,7 +4,11 @@ import type { Ctx } from './batch-model.js';
 import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
-import { currentTaskLogger, replayLogToConsole } from './logging.js';
+import {
+  currentTaskLogger,
+  replayLogToConsole,
+  telemetryTaskLogger,
+} from './logging.js';
 
 type BatchStepAction =
   | {
@@ -101,6 +105,8 @@ const toBatchStepAction = (
 };
 
 export const createTaskAction = (ctx: Ctx) => async (_opts: any) => {
+  const started = process.hrtime();
+  const date = new Date();
   const listPossibleActions = mergeBatchStepAction(
     ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
   );
@@ -110,6 +116,19 @@ export const createTaskAction = (ctx: Ctx) => async (_opts: any) => {
     const mainTask = new Listr<Ctx>(listPossibleActions.batchTasks);
     try {
       await mainTask.run(ctx);
+      const finished = process.hrtime(started);
+      date.getMonth;
+      telemetryTaskLogger.info(
+        [
+          ctx.task.title,
+          date.getFullYear(),
+          date.getMonth() + 1,
+          date.getDate(),
+          date.getDay(),
+          finished[0],
+          finished[0],
+        ].join(',')
+      );
       await replayLogToConsole();
     } catch (e: any) {
       console.log('Failure ', e);
