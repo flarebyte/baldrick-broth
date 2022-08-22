@@ -125,8 +125,7 @@ export const createTaskAction = (ctx: Ctx) => async (_opts: any) => {
           date.getMonth() + 1,
           date.getDate(),
           date.getDay(),
-          finished[0],
-          finished[0],
+          finished[0]
         ].join(',')
       );
       await replayLogToConsole();

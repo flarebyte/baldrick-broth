@@ -43,7 +43,7 @@ const advancedShell = z.object({
   ...metadataStep,
   onFailure: z.array(onShellCommandFinish).min(1).default(['exit']),
   onSuccess: z.array(onShellCommandFinish).min(1).default(['trim']),
-  name: z.string().min(1).max(300),
+  name: lineShell,
 
   if: varValue.optional(),
   run: lineShell,
@@ -194,6 +194,7 @@ const parameter = z.object({
   choices: z.array(z.string().min(1).max(300)).min(1).max(30).optional(),
 });
 const task = z.object({
+  name: z.string().max(1).optional().default(''),
   title: stringTitle,
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
