@@ -8,7 +8,6 @@ const consoleLikeFormat = printf(({ message }) => {
 
 export const currentTaskLogger = winston.createLogger({
   level: 'info',
-  defaultMeta: { service: 'user-service' },
   transports: [
     new winston.transports.File({
       filename: 'temp/log/baldrick-broth-log.txt',

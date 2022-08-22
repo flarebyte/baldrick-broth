@@ -64,4 +64,4 @@ workflows:
             title: List files
             commands:
               - name: list source files
-                run: pwd
+                run: yarn lint

@@ -31,6 +31,12 @@ function sleep(ms: number) {
     setTimeout(resolve, ms);
   });
 }
+
+const startStepTitle = (batchStep: BatchStepModel): string => {
+  const title = batchStep.title ? batchStep.title : batchStep.name;
+  const underline = '-'.repeat(title.length + 1);
+  return `${title}:\n${underline}`;
+};
 const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
   const withErrors = stepActions.filter((i) => i.status === 'failure');
   if (withErrors.length > 0) {
@@ -54,7 +60,7 @@ const toCommandLineAction = (
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(commandLineInput);
-      await sleep(2000);
+      await sleep(500);
       if (cmdLineResult.status === 'string') {
         currentTaskLogger.info(cmdLineResult.value);
         task.output = 'OK';
@@ -64,7 +70,7 @@ const toCommandLineAction = (
         );
         task.output = 'KO';
       }
-      await sleep(2000);
+      await sleep(500);
     },
   };
   return commandTask;
@@ -86,7 +92,10 @@ const toBatchStepAction = (
   );
   const batchTask: ListrTask = {
     title,
-    task: async (_, task) => task.newListr(commandTasks),
+    task: async (_, task) => {
+      currentTaskLogger.info(startStepTitle(batchStep));
+      return task.newListr(commandTasks);
+    },
   };
   return { status: 'success', batchTask };
 };
