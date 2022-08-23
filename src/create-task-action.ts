@@ -8,7 +8,9 @@ import {
   currentTaskLogger,
   replayLogToConsole,
   telemetryTaskLogger,
+  telemetryTaskRefLogger,
 } from './logging.js';
+import { info } from 'winston';
 
 type BatchStepAction =
   | {
@@ -122,12 +124,26 @@ export const createTaskAction = (ctx: Ctx) => async (_opts: any) => {
         [
           ctx.task.name,
           date.getFullYear(),
-          date.getMonth() + 1,
+          date.getMonth(),
           date.getDate(),
           date.getDay(),
           finished[0],
         ].join(',')
       );
+      for (const workflowKey in ctx.build.workflows) {
+        const tasks = Object.keys(
+          ctx.build.workflows[workflowKey]?.tasks || {}
+        );
+        for (const taskId of tasks) {
+          telemetryTaskRefLogger.info(
+            [
+              `${workflowKey}.${taskId}`,
+              date.getFullYear(),
+              date.getMonth(),
+            ].join(',')
+          );
+        }
+      }
       await replayLogToConsole();
     } catch (e: any) {
       console.log('Failure ', e);

@@ -27,6 +27,16 @@ export const telemetryTaskLogger = winston.createLogger({
   ],
 });
 
+export const telemetryTaskRefLogger = winston.createLogger({
+  level: 'info',
+  transports: [
+    new winston.transports.File({
+      filename: 'temp/log/baldrick-broth-telemetry-ref.csv',
+      format: consoleLikeFormat,
+    }),
+  ],
+});
+
 export const replayLogToConsole = async () => {
   try {
     const currentLog = await readFile('temp/log/baldrick-broth-log.txt', {
