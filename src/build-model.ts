@@ -18,7 +18,11 @@ const jsonishSchema: z.ZodType<Json> = z.lazy(() =>
 const engine = z
   .object({
     defaultShell: z.string(),
-    telemetry: z.object({ verbosity: z.string(), filepath: z.string() }),
+    telemetry: z.object({
+      name: z.string().min(1).max(40).optional(),
+      verbosity: z.string(),
+      filepath: z.string(),
+    }),
   })
   .optional();
 const onBatchStepFinish = z.enum(['exit', 'silent']);
@@ -191,7 +195,6 @@ const parameter = z.object({
   description: stringDescription,
   flags: z.string().min(1).max(80),
   default: z.string().min(1).max(300).optional(),
-  choices: z.array(z.string().min(1).max(300)).min(1).max(30).optional(),
 });
 const task = z.object({
   name: z.string().max(1).default(''),
