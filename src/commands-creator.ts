@@ -36,7 +36,6 @@ export const createCommands = (
           createTaskAction({
             build: value,
             task: { ...task, name: `${workflowKey}.${taskId}` },
-            data: {},
           })
         );
         for (const parameterId in task.parameters) {

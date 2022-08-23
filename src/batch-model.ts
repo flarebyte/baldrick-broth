@@ -8,3 +8,5 @@ export interface Ctx {
   task: TaskModel;
   data: Record<string, BatchValues>;
 }
+
+export type BuildCtx = Pick<Ctx, 'build' | 'task'>;

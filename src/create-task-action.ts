@@ -1,6 +1,6 @@
 import { Listr } from 'listr2';
 import type { ListrTask } from 'listr2';
-import type { Ctx } from './batch-model.js';
+import type { BuildCtx, Ctx } from './batch-model.js';
 import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
@@ -106,7 +106,8 @@ const toBatchStepAction = (
   return { status: 'success', batchTask };
 };
 
-export const createTaskAction = (ctx: Ctx) => async (_opts: any) => {
+export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
+  const ctx: Ctx = { ...buildCtx,  data: {}}
   const started = process.hrtime();
   const date = new Date();
   const listPossibleActions = mergeBatchStepAction(
