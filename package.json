@@ -62,6 +62,7 @@
   "dependencies": {
     "baldrick-tsconfig-es2021": "^0.5.0",
     "commander": "^9.4.0",
+    "dot-prop": "^7.2.0",
     "execa": "^6.1.0",
     "handlebars": "^4.7.7",
     "listr2": "^5.0.2",
