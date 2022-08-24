@@ -1,6 +1,7 @@
+import path from 'node:path';
 import { Listr } from 'listr2';
 import type { ListrTask } from 'listr2';
-import type { BuildCtx, Ctx } from './batch-model.js';
+import type { BuildCtx, Ctx, RuntimeContext } from './batch-model.js';
 import type { BatchStepModel } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
@@ -10,7 +11,6 @@ import {
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
-import { info } from 'winston';
 
 type BatchStepAction =
   | {
@@ -107,9 +107,18 @@ const toBatchStepAction = (
 };
 
 export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
-  const ctx: Ctx = { ...buildCtx,  data: {}}
+  const pwd = process.cwd();
+  const telemetryName = buildCtx.build.engine?.telemetry.name;
+  const projectName =
+    telemetryName === undefined ? path.basename(pwd) : telemetryName;
+  const runtime: RuntimeContext = {
+    pwd,
+    project: {
+      name: projectName,
+    },
+  };
+  const ctx: Ctx = { ...buildCtx, runtime, data: {} };
   const started = process.hrtime();
-  const date = new Date();
   const listPossibleActions = mergeBatchStepAction(
     ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
   );
@@ -119,35 +128,40 @@ export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
     const mainTask = new Listr<Ctx>(listPossibleActions.batchTasks);
     try {
       await mainTask.run(ctx);
-      const finished = process.hrtime(started);
-      date.getMonth;
-      telemetryTaskLogger.info(
-        [
-          ctx.task.name,
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          date.getDay(),
-          finished[0],
-        ].join(',')
-      );
-      for (const workflowKey in ctx.build.workflows) {
-        const tasks = Object.keys(
-          ctx.build.workflows[workflowKey]?.tasks || {}
-        );
-        for (const taskId of tasks) {
-          telemetryTaskRefLogger.info(
-            [
-              `${workflowKey}.${taskId}`,
-              date.getFullYear(),
-              date.getMonth(),
-            ].join(',')
-          );
-        }
-      }
+      logTaskStatistics(started, ctx);
       await replayLogToConsole();
     } catch (e: any) {
       console.log('Failure ', e);
     }
   }
 };
+function logTaskStatistics(started: [number, number], ctx: Ctx) {
+  const date = new Date();
+  const finished = process.hrtime(started);
+  date.getMonth;
+  telemetryTaskLogger.info(
+    [
+      ctx.runtime.project,
+      ctx.task.name,
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getDay(),
+      finished[0],
+    ].join(',')
+  );
+  // Create a reference file for available tasks
+  for (const workflowKey in ctx.build.workflows) {
+    const tasks = Object.keys(ctx.build.workflows[workflowKey]?.tasks || {});
+    for (const taskId of tasks) {
+      telemetryTaskRefLogger.info(
+        [
+          ctx.runtime.project,
+          `${workflowKey}.${taskId}`,
+          date.getFullYear(),
+          date.getMonth(),
+        ].join(',')
+      );
+    }
+  }
+}
