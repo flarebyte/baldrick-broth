@@ -73,6 +73,12 @@ const exampleBatchStep: BatchStepModel = {
       name: 'notFalse',
       value: 'should.not.exist',
     },
+    {
+      a: 'split-string',
+      name: 'splitted',
+      separator: ' ',
+      value: 'task.description',
+    },
   ],
   commands: [],
 };
@@ -96,6 +102,10 @@ describe('basic-execution', () => {
           "everyImpossibleFalsy" => false,
           "notTrue" => false,
           "notFalse" => true,
+          "splitted" => Array [
+            "Generate",
+            "code",
+          ],
         },
       }
     `);
