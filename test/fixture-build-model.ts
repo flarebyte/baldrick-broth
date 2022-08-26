@@ -1,3 +1,11 @@
+import type {
+  AnyBasicStepModel,
+  BatchStepModel,
+  BuildModel,
+  CommandOptionsModel,
+  TaskModel,
+} from '../src/build-model.js';
+
 const createBinary = (name: string) => ({
   title: `Title of ${name}`,
   description: `Description of ${name}`,
@@ -9,13 +17,16 @@ const createBinary = (name: string) => ({
   },
 });
 
-const createCommand = (name: string) => ({
+const createCommand = (name: string): CommandOptionsModel => ({
   run: `${name} {{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}} {{color}}`,
   name: `${name}{{color}}`,
   onSuccess: ['trim'],
   onFailure: ['exit'],
 });
-const createBatchStep = (name: string, before: any[] | undefined = undefined) => ({
+const createBatchStep = (
+  name: string,
+  before: any[] | undefined = undefined
+): BatchStepModel => ({
   a: 'batch',
   name,
   before,
@@ -24,14 +35,31 @@ const createBatchStep = (name: string, before: any[] | undefined = undefined) =>
   commands: [createCommand('cat')],
 });
 
-const varStep = (name: string) => ({
+const varStep = (name: string): AnyBasicStepModel => ({
   a: 'var',
 
   name,
   title: `Set variable ${name}`,
   value: `model.${name}`,
 });
-export const buildModelExample = {
+
+export const generateTask: TaskModel = {
+  name: 'generate',
+  title: 'Generate code',
+  description: 'Generate code',
+  motivation: 'Generate code',
+
+  parameters: {
+    only: {
+      description: 'only run this',
+      flags: '-p, --pizza-type <type>',
+    },
+  },
+  steps: [createBatchStep('calculate', [varStep('githubAccount')])],
+  finally: [createBatchStep('finish')],
+};
+
+export const buildModelExample: BuildModel = {
   engine: {
     defaultShell: 'sh',
     telemetry: {
@@ -62,20 +90,7 @@ export const buildModelExample = {
       title: 'Test your library',
       description: 'Test your library for defects',
       tasks: {
-        generate: {
-          title: 'Generate code',
-          description: 'Generate code',
-          motivation: 'Generate code',
-
-          parameters: {
-            only: {
-              description: 'only run this',
-              flags: '-p, --pizza-type <type>',
-            },
-          },
-          steps: [createBatchStep('calculate', [varStep('githubAccount')])],
-          finally: [createBatchStep('finish')],
-        },
+        generate: generateTask,
       },
     },
   },
