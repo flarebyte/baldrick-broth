@@ -1,8 +1,7 @@
-
-import type { Ctx } from "./batch-model.js";
-import type { AnyBeforeStepModel, BatchStepModel } from "./build-model.js";
-import { setDataValue } from "./data-value-utils.js";
-import { getProperty } from 'dot-prop'
+import type { AnyDataValue, Ctx } from './batch-model.js';
+import type { AnyBasicStepModel, BatchStepModel } from './build-model.js';
+import { setDataValue } from './data-value-utils.js';
+import { getProperty } from 'dot-prop';
 
 type BasicExecution =
   | {
@@ -11,19 +10,135 @@ type BasicExecution =
     }
   | {
       status: 'failure';
-      messages: string[];
+      message: string;
     };
 
-const basicExecution2 = (ctx: Ctx, batchStep: BatchStepModel, beforeStep: AnyBeforeStepModel): BasicExecution => {
-    const { a, name} = beforeStep;
-    if (a === 'var') {
-        const value = getProperty(ctx, beforeStep.value)
-        if (typeof value === 'string' || typeof value === 'number')
-        setDataValue(ctx, beforeStep.name, value)
+const getSupportedProperty = (
+  ctx: Ctx,
+  valuePath: string
+): AnyDataValue | undefined => {
+  const value = getProperty(ctx, valuePath);
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    typeof value === 'object'
+  ) {
+    return value;
+  } else return undefined;
+};
+
+const isFalsy = (value: unknown): boolean =>
+  value === false ||
+  value === undefined ||
+  value === null ||
+  value === 0 ||
+  (typeof value === 'string' && value.trim().length === 0) ||
+  (Array.isArray(value) && value.length === 0);
+
+const isTruthy = (value: unknown): boolean => !isFalsy(value);
+
+const getPropertyList = (
+  ctx: Ctx,
+  valuePaths: string[]
+): (AnyDataValue | undefined)[] =>
+  valuePaths.map((path) => getSupportedProperty(ctx, path));
+
+const asStringOrBlank = (value: unknown): string =>
+  typeof value === 'string' ? value : '';
+
+const asAnyArray = (value: unknown): AnyDataValue[] =>
+  Array.isArray(value) ? value : [];
+
+const basicStepExecution = (
+  ctx: Ctx,
+  basicStep: AnyBasicStepModel
+): BasicExecution => {
+  const { a } = basicStep;
+  const success: BasicExecution = { status: 'success', ctx };
+  switch (a) {
+    case 'var':
+      const value = getSupportedProperty(ctx, basicStep.value);
+
+      setDataValue(ctx, basicStep.name, value);
+      return success;
+    case 'some-truthy':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values).some(isTruthy)
+      );
+      return success;
+    case 'some-falsy':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values).some(isFalsy)
+      );
+      return success;
+    case 'every-truthy':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values).every(isTruthy)
+      );
+      return success;
+    case 'every-falsy':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values).every(isFalsy)
+      );
+      return success;
+    case 'not':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        isFalsy(getSupportedProperty(ctx, basicStep.value))
+      );
+      return success;
+    case 'join-array':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values)
+          .map(asStringOrBlank)
+          .join(basicStep.separator)
+      );
+      return success;
+    case 'split-string':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        asStringOrBlank(getSupportedProperty(ctx, basicStep.value)).split(
+          basicStep.separator
+        )
+      );
+      return success;
+    case 'concat-array':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values).flatMap(asAnyArray)
+      );
+      return success;
+  }
+
+  return success;
+};
+
+export const basicExecution = (
+  ctx: Ctx,
+  batchStep: BatchStepModel
+): BasicExecution => {
+  if (batchStep.before === undefined) {
+    return { status: 'success', ctx };
+  }
+  for (const basicStep of batchStep.before) {
+    const result = basicStepExecution(ctx, basicStep);
+    if (result.status === 'failure') {
+      return result;
     }
-    return ctx;
-}
-
-const basicExecution = (ctx: Ctx, batchStep: BatchStepModel): BasicExecution => {
-
-}
+  }
+  return { status: 'success', ctx };
+};

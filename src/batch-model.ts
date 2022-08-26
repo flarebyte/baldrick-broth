@@ -1,7 +1,7 @@
 import type { JsonValue } from 'type-fest';
 import type { BuildModel, TaskModel } from './build-model.js';
 
-export type AnyDataValue = string | boolean | Map<string, string>[] | JsonValue;
+export type AnyDataValue = string | boolean | number | JsonValue;
 export type BatchValues = Map<string, AnyDataValue>;
 
 export interface RuntimeContext {

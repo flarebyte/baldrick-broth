@@ -70,7 +70,15 @@ const toCommandLineAction = (
       if (cmdLineResult.status === 'string') {
         currentTaskLogger.info(cmdLineResult.value);
         task.output = 'OK';
-      } else if (cmdLineResult.status === 'failed') {
+      } else if (
+        cmdLineResult.status === 'failed' ||
+        cmdLineResult.status === 'canceled' ||
+        cmdLineResult.status === 'timeout' ||
+        cmdLineResult.status === 'killed' ||
+        cmdLineResult.status === 'parse-json-failed' ||
+        cmdLineResult.status === 'parse-yaml-failed' ||
+        cmdLineResult.status === 'parse-csv-failed'
+      ) {
         currentTaskLogger.info(
           [cmdLineResult.stdout, cmdLineResult.stderr].join('\n\n')
         );

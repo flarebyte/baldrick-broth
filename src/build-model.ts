@@ -228,7 +228,7 @@ export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
 export type BatchStepModel = z.infer<typeof batchStep>;
 export type CommandOptionsModel = z.infer<typeof advancedShell>;
-export type AnyBeforeStepModel= z.infer<typeof anyBeforeStep>;
+export type AnyBasicStepModel= z.infer<typeof anyBeforeStep>;
 
 export type BuildModelValidation =
   | {
