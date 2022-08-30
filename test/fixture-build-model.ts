@@ -36,7 +36,7 @@ const createBatchStep = (
 });
 
 const varStep = (name: string): AnyBasicStepModel => ({
-  a: 'var',
+  a: 'get-property',
 
   name,
   title: `Set variable ${name}`,
@@ -44,7 +44,7 @@ const varStep = (name: string): AnyBasicStepModel => ({
 });
 
 export const generateTask: TaskModel = {
-  name: 'generate',
+  name: 'g',
   title: 'Generate code',
   description: 'Generate code',
   motivation: 'Generate code',
