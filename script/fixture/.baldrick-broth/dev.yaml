@@ -44,7 +44,7 @@ workflows:
             name: calculate
             title: Run calculate
             before:
-              - a: var
+              - a: get-property
                 name: githubAccount
                 title: Set variable githubAccount
                 value: model.githubAccount

@@ -70,8 +70,8 @@ const loopEach = z.object({
 });
 const binaries = z.record(stringCustomKey, binary);
 
-const variableStep = z.strictObject({
-  a: z.literal('var'),
+const getPropertyStep = z.strictObject({
+  a: z.literal('get-property'),
   ...metadataStep,
   value: varValue,
 });
@@ -102,13 +102,6 @@ const stringArrayStep = z.strictObject({
 const concatArrayStep = z.strictObject({
   a: z.literal('concat-array'),
   ...metadataStep,
-  values: z.array(varValue).min(1).max(20),
-});
-
-const joinArrayStep = z.strictObject({
-  a: z.literal('join-array'),
-  ...metadataStep,
-  separator: z.string().min(1).max(80).default(' '),
   values: z.array(varValue).min(1).max(20),
 });
 
@@ -167,10 +160,9 @@ const invertObjectStep = z.strictObject({
   value: varValue,
 });
 const anyBeforeStep = z.discriminatedUnion('a', [
-  variableStep,
+  getPropertyStep,
   stringArrayStep,
   concatArrayStep,
-  joinArrayStep,
   splitStringStep,
   someTruthyArrayStep,
   someFalsyArrayStep,

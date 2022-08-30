@@ -19,7 +19,7 @@ const exampleBatchStep: BatchStepModel = {
   a: 'batch',
   before: [
     {
-      a: 'var',
+      a: 'get-property',
       name: 'readProp',
       value: 'runtime.project.name',
     },
@@ -78,6 +78,11 @@ const exampleBatchStep: BatchStepModel = {
       name: 'splitted',
       separator: ' ',
       value: 'task.description',
+    },
+    {
+      a: 'get-property',
+      name: 'readPropCopy',
+      value: 'data.generate.readProp',
     },
   ],
   commands: [],

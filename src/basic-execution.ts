@@ -97,15 +97,6 @@ const basicStepExecution = (
         isFalsy(getSupportedProperty(ctx, basicStep.value))
       );
       return success;
-    case 'join-array':
-      setDataValue(
-        ctx,
-        basicStep.name,
-        getPropertyList(ctx, basicStep.values)
-          .map(asStringOrBlank)
-          .join(basicStep.separator)
-      );
-      return success;
     case 'split-string':
       setDataValue(
         ctx,
