@@ -1,0 +1,19 @@
+---
+testing:
+  style: function a
+  import: .src/batch-model.ts
+  function: safeParseBuild
+cases:
+  abstract-parsing:
+    a: snapshot
+    title: abstract with object crumble
+    params:
+      - from: file
+        filename: spec/fixtures/valid-build.json
+        parser: JSON
+    # result:
+    #   transform:
+    #     - style: function a
+    #       import: spec/helper.js
+    #       function: crumbleAbstractor
+    snapshot: YAML

@@ -95,3 +95,5 @@ export const buildModelExample: BuildModel = {
     },
   },
 };
+
+console.log(JSON.stringify(buildModelExample))
