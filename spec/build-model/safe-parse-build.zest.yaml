@@ -11,9 +11,9 @@ cases:
       - from: file
         filename: spec/fixtures/valid-build.json
         parser: JSON
-    # result:
-    #   transform:
-    #     - style: function a
-    #       import: spec/helper.js
-    #       function: crumbleAbstractor
+    result:
+      transform:
+        - style: function a
+          import: ./spec/helper.js
+          function: crumbleAbstractor
     snapshot: YAML

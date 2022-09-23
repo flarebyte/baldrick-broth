@@ -1,84 +1,72 @@
-status: valid
-value:
-  engine:
-    defaultShell: sh
-    telemetry:
-      verbosity: off
-      filepath: logs/telemetry.csv
-  binaries:
-    sh:
-      title: Title of sh
-      description: Description of sh
-      motivation: Motivation of sh
-      homepage: https://website.com/sh
-      shell:
-        run: sh
-        diagnosis: sh --version
-    elm:
-      title: Title of elm
-      description: Description of elm
-      motivation: Motivation of elm
-      homepage: https://website.com/elm
-      shell:
-        run: elm
-        diagnosis: elm --version
-  model:
-    githubAccount: github-account-fixme
-    projectName: project-name-fixme
-    copyright:
-      holder: copyright-holder-fixme
-      startYear: 2022
-    license: BSD3
-    project_yaml: script/data/project.yaml
-    project_schema: ./script/schema/project.schema.json
-    generate_sh: script/generate.sh
-    colors:
-      - green
-      - orange
-      - blue
-    animals:
-      - cat
-      - dog
-  workflows:
-    test:
-      title: Test your library
-      description: Test your library for defects
-      tasks:
-        generate:
-          name: g
-          title: Generate code
-          description: Generate code
-          motivation: Generate code
-          parameters:
-            only:
-              description: only run this
-              flags: -p, --pizza-type <type>
-          steps:
-            - a: batch
-              name: calculate
-              title: Run calculate shell step
-              before:
-                - a: get-property
-                  name: githubAccount
-                  title: Set variable githubAccount
-                  value: model.githubAccount
-              commands:
-                - name: cat{{color}}
-                  onFailure:
-                    - exit
-                  onSuccess:
-                    - trim
-                  run: cat {{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}}
-                    {{color}}
-          finally:
-            - a: batch
-              name: finish
-              title: Run finish shell step
-              commands:
-                - name: cat{{color}}
-                  onFailure:
-                    - exit
-                  onSuccess:
-                    - trim
-                  run: cat {{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}}
-                    {{color}}
+- path: status
+  kind: string
+- path: value.engine.defaultShell
+  kind: string
+- path: value.engine.telemetry.verbosity
+  kind: string
+- path: value.engine.telemetry.filepath
+  kind: string
+- path: value.binaries.sh.title
+  kind: string
+- path: value.binaries.sh.description
+  kind: string
+- path: value.binaries.sh.motivation
+  kind: string
+- path: value.binaries.sh.homepage
+  kind: string
+- path: value.binaries.sh.shell.run
+  kind: string
+- path: value.binaries.sh.shell.diagnosis
+  kind: string
+- path: value.binaries.elm.title
+  kind: string
+- path: value.binaries.elm.description
+  kind: string
+- path: value.binaries.elm.motivation
+  kind: string
+- path: value.binaries.elm.homepage
+  kind: string
+- path: value.binaries.elm.shell.run
+  kind: string
+- path: value.binaries.elm.shell.diagnosis
+  kind: string
+- path: value.model.githubAccount
+  kind: string
+- path: value.model.projectName
+  kind: string
+- path: value.model.license
+  kind: string
+- path: value.model.project_yaml
+  kind: string
+- path: value.model.project_schema
+  kind: string
+- path: value.model.generate_sh
+  kind: string
+- path: value.model.colors
+  kind: array/string
+- path: value.model.animals
+  kind: array/string
+- path: value.model.copyright.holder
+  kind: string
+- path: value.model.copyright.startYear
+  kind: number
+- path: value.workflows.test.title
+  kind: string
+- path: value.workflows.test.description
+  kind: string
+- path: value.workflows.test.tasks.generate.name
+  kind: string
+- path: value.workflows.test.tasks.generate.title
+  kind: string
+- path: value.workflows.test.tasks.generate.description
+  kind: string
+- path: value.workflows.test.tasks.generate.motivation
+  kind: string
+- path: value.workflows.test.tasks.generate.steps
+  kind: array/object
+- path: value.workflows.test.tasks.generate.finally
+  kind: array/object
+- path: value.workflows.test.tasks.generate.parameters.only.description
+  kind: string
+- path: value.workflows.test.tasks.generate.parameters.only.flags
+  kind: string
