@@ -1,7 +1,7 @@
 ---
 testing:
   style: function a
-  import: .src/batch-model.ts
+  import: ./src/build-model.ts
   function: safeParseBuild
 cases:
   abstract-parsing:

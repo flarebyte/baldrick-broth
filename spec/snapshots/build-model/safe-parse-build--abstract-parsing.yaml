@@ -1,0 +1,84 @@
+status: valid
+value:
+  engine:
+    defaultShell: sh
+    telemetry:
+      verbosity: off
+      filepath: logs/telemetry.csv
+  binaries:
+    sh:
+      title: Title of sh
+      description: Description of sh
+      motivation: Motivation of sh
+      homepage: https://website.com/sh
+      shell:
+        run: sh
+        diagnosis: sh --version
+    elm:
+      title: Title of elm
+      description: Description of elm
+      motivation: Motivation of elm
+      homepage: https://website.com/elm
+      shell:
+        run: elm
+        diagnosis: elm --version
+  model:
+    githubAccount: github-account-fixme
+    projectName: project-name-fixme
+    copyright:
+      holder: copyright-holder-fixme
+      startYear: 2022
+    license: BSD3
+    project_yaml: script/data/project.yaml
+    project_schema: ./script/schema/project.schema.json
+    generate_sh: script/generate.sh
+    colors:
+      - green
+      - orange
+      - blue
+    animals:
+      - cat
+      - dog
+  workflows:
+    test:
+      title: Test your library
+      description: Test your library for defects
+      tasks:
+        generate:
+          name: g
+          title: Generate code
+          description: Generate code
+          motivation: Generate code
+          parameters:
+            only:
+              description: only run this
+              flags: -p, --pizza-type <type>
+          steps:
+            - a: batch
+              name: calculate
+              title: Run calculate shell step
+              before:
+                - a: get-property
+                  name: githubAccount
+                  title: Set variable githubAccount
+                  value: model.githubAccount
+              commands:
+                - name: cat{{color}}
+                  onFailure:
+                    - exit
+                  onSuccess:
+                    - trim
+                  run: cat {{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}}
+                    {{color}}
+          finally:
+            - a: batch
+              name: finish
+              title: Run finish shell step
+              commands:
+                - name: cat{{color}}
+                  onFailure:
+                    - exit
+                  onSuccess:
+                    - trim
+                  run: cat {{whisker}} render {{project_yaml}} {{generate_hbs}} {{generate_sh}}
+                    {{color}}

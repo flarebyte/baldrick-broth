@@ -1283,10 +1283,10 @@ baldrick-tsconfig-es2021@^0.5.0:
   resolved "https://registry.yarnpkg.com/baldrick-tsconfig-es2021/-/baldrick-tsconfig-es2021-0.5.0.tgz#8236474db44b7bb45ccaa04922cb43fb9feb87ee"
   integrity sha512-4zrMW55LZogYR0gMyhfQLpCZo3mBtdtnC7gNo1OP6m8+3Qm6X3li4qve19EejeYk45fq+HXBZM+WkB89yBUUtA==
 
-baldrick-zest-engine@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/baldrick-zest-engine/-/baldrick-zest-engine-0.5.0.tgz#fcdffec2b8574822066cd24253f86598385c2647"
-  integrity sha512-ueRF8JTxnclsJskdiu29VeRs4pu0oOa0DjhchPSX1kexyuuQWQs6V5Gx1B4jwg9G4nlCGMSrQEs1/yE3Uw388Q==
+baldrick-zest-engine@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/baldrick-zest-engine/-/baldrick-zest-engine-0.6.0.tgz#5ee2a5cecab93befdaba8e03797770660e71852f"
+  integrity sha512-LJeAj0K028xFk6ycX/qBTcIWzK5Qx3VU5y1st5yaeu8EikmixAHoHrvpz3xPaGvtllUU3XN0BHJO5056p6mgfg==
   dependencies:
     chalk "^5.0.1"
     jest-diff "^29.0.2"

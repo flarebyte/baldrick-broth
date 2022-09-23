@@ -81,6 +81,15 @@ const writeContent = async (
   await writeFile(path, stringContent);
 };
 
+async function doImport<A>(path: string) {
+  try {
+    const func: A = await import(path);
+    return func;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const config = {
   ...baseConfig,
   mochaJsonReport: true,
@@ -90,6 +99,7 @@ const config = {
       parsers: ['YAML', 'JSON', 'Text'],
       readContent,
       writeContent,
+      doImport,
     },
     filename: {
       getMochaFilename,
@@ -102,4 +112,3 @@ await run({
   ...config,
   specFile: 'spec/build-model/safe-parse-build.zest.yaml',
 });
-
