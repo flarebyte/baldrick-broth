@@ -14,6 +14,6 @@ cases:
     result:
       transform:
         - style: function a
-          import: ./spec/helper.js
-          function: crumbleAbstractor
+          import: baldrick-zest-mess
+          function: abstract
     snapshot: YAML

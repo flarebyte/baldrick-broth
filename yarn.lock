@@ -1283,20 +1283,20 @@ baldrick-tsconfig-es2021@^0.5.0:
   resolved "https://registry.yarnpkg.com/baldrick-tsconfig-es2021/-/baldrick-tsconfig-es2021-0.5.0.tgz#8236474db44b7bb45ccaa04922cb43fb9feb87ee"
   integrity sha512-4zrMW55LZogYR0gMyhfQLpCZo3mBtdtnC7gNo1OP6m8+3Qm6X3li4qve19EejeYk45fq+HXBZM+WkB89yBUUtA==
 
-baldrick-zest-engine@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/baldrick-zest-engine/-/baldrick-zest-engine-0.6.0.tgz#5ee2a5cecab93befdaba8e03797770660e71852f"
-  integrity sha512-LJeAj0K028xFk6ycX/qBTcIWzK5Qx3VU5y1st5yaeu8EikmixAHoHrvpz3xPaGvtllUU3XN0BHJO5056p6mgfg==
+baldrick-zest-engine@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/baldrick-zest-engine/-/baldrick-zest-engine-0.7.0.tgz#bf4c19bd89f72f3a3c5bc140b846600013922060"
+  integrity sha512-L9WHW2xi881RDLq0vbPnB7+R7h20Hy4hSxoXennPjrgtrjaAwkPrwLl3G06c3vPeBU54s/opMJoT88NzTT0szQ==
   dependencies:
     chalk "^5.0.1"
     jest-diff "^29.0.2"
     yaml "^2.1.1"
     zod "^3.18.0"
 
-baldrick-zest-mess@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.5.0.tgz#f0da1559e473059fb44059dfc10f0dc2f5e580fa"
-  integrity sha512-msIy70ZfjwtSMxbhkGit7XsMw3xBZ1N1tSXhBEZEIFwEqneAYKtqW4XQ/J0eJXm2YZrQFYsGu3bZdN3gCv4MZA==
+baldrick-zest-mess@^0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.9.0.tgz#bb2315e559105f8c9f464b138fc441aba6090ae6"
+  integrity sha512-3RgdXCoX76q1FgmXkIhwZwbmJ+miq7rbUGI+pf9GxFKzpr/CypV1XEaQwq201ELN+emwB0Hy1NtbriPc7AzL1A==
   dependencies:
     object-crumble "^0.6.6"
     zod-to-json-schema "^3.18.1"
