@@ -77,7 +77,7 @@
     "baldrick-dev-ts": "^0.17.0",
     "baldrick-tsconfig-es2021": "^0.5.0",
     "baldrick-zest-engine": "^0.7.0",
-    "baldrick-zest-mess": "^0.9.0",
+    "baldrick-zest-mess": "^0.10.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.4"
   },
