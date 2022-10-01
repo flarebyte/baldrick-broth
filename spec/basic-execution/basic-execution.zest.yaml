@@ -1,0 +1,17 @@
+---
+testing:
+  style: function a b
+  import: ./src/basic-execution.ts
+  function: basicExecution
+cases:
+  basic:
+    a: snapshot
+    title: some basic execution on the context
+    params:
+      - from: file
+        filename: spec/fixtures/context.json
+        parser: JSON
+      - from: file
+        filename: spec/fixtures/batch-step.json
+        parser: JSON
+    snapshot: YAML

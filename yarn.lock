@@ -1293,10 +1293,10 @@ baldrick-zest-engine@^0.7.0:
     yaml "^2.1.1"
     zod "^3.18.0"
 
-baldrick-zest-mess@^0.10.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.11.0.tgz#73891cefa11c1ca6f67d5e815bf341ffa737b8b2"
-  integrity sha512-gryqBHrDrTTukkX/QcK+G2K5QhKvilg80j/+iQAQ7/sqlNWtl5MScGHIePxLUUhDka00LdbYME+dc2I4KcSctg==
+baldrick-zest-mess@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.12.0.tgz#ef0d1cd849df4a311598a9a8e136a1d1d6cb71b6"
+  integrity sha512-P4bqvzg3LmQKjamIONrZsAXSL/27pp/JIEea9n3zJ4ujDe81JAEixlDc8Kh0k7nSbE//Lr0JRkmJR4A+G5tjrQ==
   dependencies:
     object-crumble "^0.6.6"
     zod-to-json-schema "^3.18.1"

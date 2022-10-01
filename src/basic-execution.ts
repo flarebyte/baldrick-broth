@@ -1,7 +1,7 @@
 import type { AnyDataValue, Ctx } from './batch-model.js';
 import type { AnyBasicStepModel, BatchStepModel } from './build-model.js';
 import { setDataValue } from './data-value-utils.js';
-import { getProperty } from 'dot-prop';
+// import { getProperty } from 'dot-prop';
 
 type BasicExecution =
   | {
@@ -17,7 +17,7 @@ const getSupportedProperty = (
   ctx: Ctx,
   valuePath: string
 ): AnyDataValue | undefined => {
-  const value = getProperty(ctx, valuePath);
+  const value = ctx.data.get('temp')?.get(valuePath)// getProperty(ctx, valuePath);
   if (
     typeof value === 'string' ||
     typeof value === 'number' ||
@@ -57,7 +57,7 @@ const basicStepExecution = (
   const { a } = basicStep;
   const success: BasicExecution = { status: 'success', ctx };
   switch (a) {
-    case 'var':
+    case 'get-property':
       const value = getSupportedProperty(ctx, basicStep.value);
 
       setDataValue(ctx, basicStep.name, value);

@@ -4,19 +4,21 @@ testing:
   import: ./src/build-model.ts
   function: safeParseBuild
 cases:
-  # abstract-parsing:
-  #   a: snapshot
-  #   title: abstract with object crumble
-  #   params:
-  #     - from: file
-  #       filename: spec/fixtures/valid-build.json
-  #       parser: JSON
-  #   result:
-  #     transform:
-  #       - style: function a
-  #         import: baldrick-zest-mess
-  #         function: abstract
-  #   snapshot: YAML
+  abstract-parsing:
+    a: snapshot
+    title: abstract with object crumble
+    params:
+      - from: file
+        filename: spec/fixtures/valid-build.json
+        parser: JSON
+    result:
+      transform:
+        - style: config -> function a
+          import: baldrick-zest-mess
+          function: abstract
+          config:
+           output: if status equals valid then abstract else pass
+    snapshot: YAML
   invalid-too-large:
     a: snapshot
     title: Test edge cases that will produce errors
@@ -31,7 +33,7 @@ cases:
       config:
         signature: A
         mutation: string => large
-        output: if status equals failure then pass else abstract
+        output: if status equals invalid then pass else count
       table:
         - path: engine.defaultShell
         - path: engine.telemetry.verbosity

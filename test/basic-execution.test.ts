@@ -13,7 +13,6 @@ const ctx: Ctx = {
   },
   data: new Map(),
 };
-
 const exampleBatchStep: BatchStepModel = {
   name: 'example-batch-step',
   a: 'batch',
@@ -87,6 +86,8 @@ const exampleBatchStep: BatchStepModel = {
   ],
   commands: [],
 };
+
+console.log(JSON.stringify(exampleBatchStep))
 
 describe('basic-execution', () => {
   it('should provide basic execution', () => {

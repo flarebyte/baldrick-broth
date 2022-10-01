@@ -1,0 +1,65 @@
+{
+  "name": "example-batch-step",
+  "a": "batch",
+  "before": [
+    {
+      "a": "get-property",
+      "name": "readProp",
+      "value": "runtime.project.name"
+    },
+    {
+      "a": "some-truthy",
+      "name": "someTruthy",
+      "values": ["runtime.project.name", "should.not.exist"]
+    },
+    {
+      "a": "some-truthy",
+      "name": "someImpossibleTruthy",
+      "values": ["should.not.exist.either", "should.not.exist"]
+    },
+    {
+      "a": "some-falsy",
+      "name": "someFalsy",
+      "values": ["runtime.project.name", "should.not.exist"]
+    },
+    {
+      "a": "some-falsy",
+      "name": "someImpossibleFalsy",
+      "values": ["runtime.project.name", "runtime.pwd"]
+    },
+    {
+      "a": "every-truthy",
+      "name": "everyTruthy",
+      "values": ["runtime.project.name", "runtime.pwd"]
+    },
+    {
+      "a": "every-falsy",
+      "name": "everyFalsy",
+      "values": ["should.not.exist.either", "should.not.exist"]
+    },
+    {
+      "a": "every-truthy",
+      "name": "everyImpossibleTruthy",
+      "values": ["runtime.project.name", "should.not.exist"]
+    },
+    {
+      "a": "every-falsy",
+      "name": "everyImpossibleFalsy",
+      "values": ["runtime.project.name", "should.not.exist"]
+    },
+    { "a": "not", "name": "notTrue", "value": "runtime.project.name" },
+    { "a": "not", "name": "notFalse", "value": "should.not.exist" },
+    {
+      "a": "split-string",
+      "name": "splitted",
+      "separator": " ",
+      "value": "task.description"
+    },
+    {
+      "a": "get-property",
+      "name": "readPropCopy",
+      "value": "data.generate.readProp"
+    }
+  ],
+  "commands": []
+}

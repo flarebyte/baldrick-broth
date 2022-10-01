@@ -6,9 +6,17 @@ async function doImport<A>(path: string) {
   return func;
 }
 
-const config = defaultZestConfig({
-  inject: { doImport },
-  specFile: 'spec/build-model/safe-parse-build.zest.yaml',
-});
+const toConfig = (specFile: string) =>
+  defaultZestConfig({
+    inject: { doImport },
+    specFile,
+  });
 
-await run(config);
+const configs = [
+  'spec/build-model/safe-parse-build.zest.yaml',
+  'spec/basic-execution/basic-execution.zest.yaml',
+].map(toConfig);
+
+for (const config of configs) {
+  await run(config);
+}
