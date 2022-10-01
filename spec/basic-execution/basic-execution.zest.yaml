@@ -14,4 +14,4 @@ cases:
       - from: file
         filename: spec/fixtures/batch-step.json
         parser: JSON
-    snapshot: YAML
+    snapshot: JS

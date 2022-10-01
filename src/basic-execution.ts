@@ -1,7 +1,7 @@
 import type { AnyDataValue, Ctx } from './batch-model.js';
 import type { AnyBasicStepModel, BatchStepModel } from './build-model.js';
 import { setDataValue } from './data-value-utils.js';
-// import { getProperty } from 'dot-prop';
+import { getProperty } from 'dot-prop';
 
 type BasicExecution =
   | {
@@ -13,11 +13,33 @@ type BasicExecution =
       message: string;
     };
 
+const getDataProperty = (
+  valuePath: string,
+  value?: Map<string, AnyDataValue>
+): AnyDataValue | undefined => {
+  if (value === undefined) {
+    return undefined;
+  }
+  const [data_prefix, first, second] = valuePath.split('.');
+  if (
+    data_prefix === undefined ||
+    data_prefix !== 'data' ||
+    first === undefined ||
+    second === undefined
+  ) {
+    return undefined;
+  }
+  return value.get(`${first}.${second}`);
+};
 const getSupportedProperty = (
   ctx: Ctx,
   valuePath: string
 ): AnyDataValue | undefined => {
-  const value = ctx.data.get('temp')?.get(valuePath)// getProperty(ctx, valuePath);
+  console.log(valuePath);
+  const isInsideData = valuePath.startsWith('data.');
+  const value = isInsideData
+    ? getDataProperty(valuePath, ctx.data)
+    : getProperty(ctx, valuePath);
   if (
     typeof value === 'string' ||
     typeof value === 'number' ||
@@ -51,15 +73,17 @@ const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
 const basicStepExecution = (
-  ctx: Ctx,
+  ctxRef: Ctx,
   basicStep: AnyBasicStepModel
 ): BasicExecution => {
+  const ctx = ctxRef.data === undefined ? { ... ctxRef, data: new Map<string, AnyDataValue>()} : ctxRef
   const { a } = basicStep;
   const success: BasicExecution = { status: 'success', ctx };
   switch (a) {
     case 'get-property':
+      console.log('here');
       const value = getSupportedProperty(ctx, basicStep.value);
-
+      console.log('>>', value);
       setDataValue(ctx, basicStep.name, value);
       return success;
     case 'some-truthy':
