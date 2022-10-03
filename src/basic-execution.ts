@@ -35,7 +35,6 @@ const getSupportedProperty = (
   ctx: Ctx,
   valuePath: string
 ): AnyDataValue | undefined => {
-  console.log(valuePath);
   const isInsideData = valuePath.startsWith('data.');
   const value = isInsideData
     ? getDataProperty(valuePath, ctx.data)
@@ -72,18 +71,38 @@ const asStringOrBlank = (value: unknown): string =>
 const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
+const ensureDataMap = (value: unknown): Map<string, AnyDataValue> => {
+  if (value === undefined || value === null) {
+    return new Map<string, AnyDataValue>();
+  }
+  if (typeof value === 'object') {
+    const keys = Object.keys(value);
+    if (keys.length === 0) {
+      return new Map<string, AnyDataValue>();
+    }
+    const newMap = new Map<string, AnyDataValue>();
+    const entries = Object.entries(value);
+    for (const [key, v] of entries) {
+      newMap.set(key, `${v}`);
+    }
+    return newMap;
+  }
+  throw new Error(`Unexpected type for data map: ${typeof value}`);
+};
+
 const basicStepExecution = (
   ctxRef: Ctx,
   basicStep: AnyBasicStepModel
 ): BasicExecution => {
-  const ctx = ctxRef.data === undefined ? { ... ctxRef, data: new Map<string, AnyDataValue>()} : ctxRef
+  const ctx =
+    ctxRef.data === undefined
+      ? { ...ctxRef, data: ensureDataMap(ctxRef.data) }
+      : ctxRef;
   const { a } = basicStep;
   const success: BasicExecution = { status: 'success', ctx };
   switch (a) {
     case 'get-property':
-      console.log('here');
       const value = getSupportedProperty(ctx, basicStep.value);
-      console.log('>>', value);
       setDataValue(ctx, basicStep.name, value);
       return success;
     case 'some-truthy':
