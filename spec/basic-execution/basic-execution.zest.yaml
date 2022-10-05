@@ -11,7 +11,13 @@ cases:
       - from: file
         filename: spec/fixtures/context.json
         parser: JSON
+        transform:
+          - style: config -> function a
+            import: ./src/build-model.ts
+            function: unsafeParse
+            config:
+              model: context           
       - from: file
         filename: spec/fixtures/batch-step.json
         parser: JSON
-    snapshot: JS
+    snapshot: YAML

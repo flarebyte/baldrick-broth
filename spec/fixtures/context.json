@@ -143,5 +143,8 @@
   "runtime": {
     "pwd": "/usr/path/baldrick-broth",
     "project": { "name": "baldrick-broth" }
+  },
+  "data": {
+    "status": "created"
   }
 }

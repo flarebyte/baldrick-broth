@@ -214,25 +214,24 @@ export const schema = z
   })
   .strict();
 
-  const runtimeContext = z.object({
-    pwd: stringPath,
-    project: z.object({
-      name: stringTitle,
-    })
-  });
-  const context = z
-  .object({
-    build: schema,
-    task,
-    runtime: runtimeContext,
-    data: z.record(stringPropPath, jsonishSchema)
-  })
+const runtimeContext = z.object({
+  pwd: stringPath,
+  project: z.object({
+    name: stringTitle,
+  }),
+});
+const context = z.object({
+  build: schema,
+  task,
+  runtime: runtimeContext,
+  data: z.record(stringPropPath, jsonishSchema),
+});
 
 export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
 export type BatchStepModel = z.infer<typeof batchStep>;
 export type CommandOptionsModel = z.infer<typeof advancedShell>;
-export type AnyBasicStepModel= z.infer<typeof anyBeforeStep>;
+export type AnyBasicStepModel = z.infer<typeof anyBeforeStep>;
 export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
 export type AnyDataValue = z.infer<typeof jsonishSchema>;
@@ -266,13 +265,11 @@ export const getSchema = (_name: 'default') => {
   return schema;
 };
 
-export const unsafeParse = (
-  name: 'context',
-  content: unknown
-) => {
-  if (name === 'context') {
-    context.parse(content);
-  }
-  
-  return `${name} is not supported`;
-};
+export const unsafeParse =
+  (config: Record<string, string>) => (content: unknown) => {
+    const name = config['model'];
+    if (name === 'context') {
+      context.parse(content);
+    }
+    return `${name} is not supported`;
+  };
