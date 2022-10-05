@@ -61,5 +61,10 @@
       "value": "data.generate.readProp"
     }
   ],
-  "commands": []
+  "commands": [
+    {
+      "name": "hello",
+      "run": "echo hello"
+    }
+  ]
 }

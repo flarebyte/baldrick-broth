@@ -16,8 +16,14 @@ cases:
             import: ./src/build-model.ts
             function: unsafeParse
             config:
-              model: context           
+              model: context        
       - from: file
         filename: spec/fixtures/batch-step.json
         parser: JSON
+        transform:
+          - style: config -> function a
+            import: ./src/build-model.ts
+            function: unsafeParse
+            config:
+              model: batchStep
     snapshot: YAML

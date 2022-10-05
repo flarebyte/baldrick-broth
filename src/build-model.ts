@@ -183,7 +183,7 @@ const batchStep = z.strictObject({
   if: varValue.optional(),
   each: z.array(loopEach).min(1).max(3).optional(),
   onFinish: z.array(onBatchStepFinish).min(1).optional(),
-  commands: commands,
+  commands,
 });
 const steps = z.array(batchStep).min(1);
 const parameter = z.object({
@@ -267,9 +267,12 @@ export const getSchema = (_name: 'default') => {
 
 export const unsafeParse =
   (config: Record<string, string>) => (content: unknown) => {
-    const name = config['model'];
+    const name = `${config['model']}`.trim();
     if (name === 'context') {
       context.parse(content);
+    }
+    if (name === 'batchStep') {
+      batchStep.parse(content);
     }
     return `${name} is not supported`;
   };
