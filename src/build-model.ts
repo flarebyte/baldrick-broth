@@ -270,9 +270,11 @@ export const unsafeParse =
     const name = `${config['model']}`.trim();
     if (name === 'context') {
       context.parse(content);
+      return content;
     }
     if (name === 'batchStep') {
       batchStep.parse(content);
+      return content;
     }
-    return `${name} is not supported`;
+    return `${name} is not supported (979839)`;
   };

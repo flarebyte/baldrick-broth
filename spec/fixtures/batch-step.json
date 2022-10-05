@@ -4,61 +4,61 @@
   "before": [
     {
       "a": "get-property",
-      "name": "readProp",
+      "name": "get-property",
       "value": "runtime.project.name"
     },
     {
       "a": "some-truthy",
-      "name": "someTruthy",
+      "name": "some-truthy",
       "values": ["runtime.project.name", "should.not.exist"]
     },
     {
       "a": "some-truthy",
-      "name": "someImpossibleTruthy",
+      "name": "some-truthy false",
       "values": ["should.not.exist.either", "should.not.exist"]
     },
     {
       "a": "some-falsy",
-      "name": "someFalsy",
+      "name": "some-falsy",
       "values": ["runtime.project.name", "should.not.exist"]
     },
     {
       "a": "some-falsy",
-      "name": "someImpossibleFalsy",
+      "name": "some-falsy false",
       "values": ["runtime.project.name", "runtime.pwd"]
     },
     {
       "a": "every-truthy",
-      "name": "everyTruthy",
+      "name": "every-truthy",
       "values": ["runtime.project.name", "runtime.pwd"]
     },
     {
       "a": "every-falsy",
-      "name": "everyFalsy",
+      "name": "every-falsy",
       "values": ["should.not.exist.either", "should.not.exist"]
     },
     {
       "a": "every-truthy",
-      "name": "everyImpossibleTruthy",
+      "name": "every-truthy false",
       "values": ["runtime.project.name", "should.not.exist"]
     },
     {
       "a": "every-falsy",
-      "name": "everyImpossibleFalsy",
+      "name": "every-falsy false",
       "values": ["runtime.project.name", "should.not.exist"]
     },
-    { "a": "not", "name": "notTrue", "value": "runtime.project.name" },
-    { "a": "not", "name": "notFalse", "value": "should.not.exist" },
+    { "a": "not", "name": "not false", "value": "runtime.project.name" },
+    { "a": "not", "name": "not true", "value": "should.not.exist" },
     {
       "a": "split-string",
-      "name": "splitted",
+      "name": "split-string",
       "separator": " ",
       "value": "task.description"
     },
     {
       "a": "get-property",
-      "name": "readPropCopy",
-      "value": "data.generate.readProp"
+      "name": "get-property-previous",
+      "value": "data.g.get-property"
     }
   ],
   "commands": [

@@ -16,7 +16,7 @@ cases:
             import: ./src/build-model.ts
             function: unsafeParse
             config:
-              model: context        
+              model: context
       - from: file
         filename: spec/fixtures/batch-step.json
         parser: JSON
@@ -26,4 +26,11 @@ cases:
             function: unsafeParse
             config:
               model: batchStep
+    result:
+      transform:
+        - style: config -> function a
+          import: baldrick-zest-mess
+          function: findByPath
+          config:
+            path: ctx.data
     snapshot: YAML
