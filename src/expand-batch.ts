@@ -1,6 +1,5 @@
 import Handlebars from 'handlebars';
-import { Ctx } from './batch-model.js';
-import { BatchStepModel, CommandOptionsModel } from './build-model.js';
+import { BatchStepModel, CommandOptionsModel, Ctx } from './build-model.js';
 import { CommandLineInput } from './execution.js';
 import { stringCustomKey } from './field-validation.js';
 

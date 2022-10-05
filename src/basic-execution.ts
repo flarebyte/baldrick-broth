@@ -1,5 +1,4 @@
-import type { AnyDataValue, Ctx } from './batch-model.js';
-import type { AnyBasicStepModel, BatchStepModel } from './build-model.js';
+import type { AnyBasicStepModel, AnyDataValue, BatchStepModel, Ctx } from './build-model.js';
 import { setDataValue } from './data-value-utils.js';
 import { getProperty } from 'dot-prop';
 

@@ -21,6 +21,8 @@ export const stringTitle = z
 export const stringDescription = z.string().trim().min(1).max(300);
 export const stringMotivation = z.string().trim().min(1).max(300);
 export const stringUrl = z.string().url().max(300);
+export const stringPath = z.string().max(300);
+export const stringPropPath = z.string().max(300);
 
 export const safeParseField = (
   name: 'title' | 'filename' | string,

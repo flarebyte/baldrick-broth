@@ -6,8 +6,10 @@ import {
   stringMotivation,
   varValue,
   stringUrl,
+  stringPath,
+  stringPropPath,
 } from './field-validation.js';
-import { formatMessage } from './format-message.js';
+import { formatMessage, ValidationError } from './format-message.js';
 
 /**JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
@@ -212,16 +214,28 @@ export const schema = z
   })
   .strict();
 
-export interface ValidationError {
-  message: string;
-  path: string;
-}
+  const runtimeContext = z.object({
+    pwd: stringPath,
+    project: z.object({
+      name: stringTitle,
+    })
+  });
+  const context = z
+  .object({
+    build: schema,
+    task,
+    runtime: runtimeContext,
+    data: z.record(stringPropPath, jsonishSchema)
+  })
 
 export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
 export type BatchStepModel = z.infer<typeof batchStep>;
 export type CommandOptionsModel = z.infer<typeof advancedShell>;
 export type AnyBasicStepModel= z.infer<typeof anyBeforeStep>;
+export type Ctx = z.infer<typeof context>;
+export type RuntimeContext = z.infer<typeof runtimeContext>;
+export type AnyDataValue = z.infer<typeof jsonishSchema>;
 
 export type BuildModelValidation =
   | {
@@ -257,7 +271,7 @@ export const unsafeParse = (
   content: unknown
 ) => {
   if (name === 'context') {
-    stringTitle.parse(content);
+    context.parse(content);
   }
   
   return `${name} is not supported`;

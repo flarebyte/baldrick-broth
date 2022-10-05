@@ -1,4 +1,4 @@
-import type { Ctx, AnyDataValue } from './batch-model.js';
+import { AnyDataValue, Ctx } from "./build-model.js";
 
 export const setDataValue = (
   ctx: Ctx,

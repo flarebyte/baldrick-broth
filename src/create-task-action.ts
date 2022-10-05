@@ -1,8 +1,7 @@
 import path from 'node:path';
 import { Listr } from 'listr2';
 import type { ListrTask } from 'listr2';
-import type { BuildCtx, Ctx, RuntimeContext } from './batch-model.js';
-import type { BatchStepModel } from './build-model.js';
+import type { BatchStepModel, Ctx, RuntimeContext } from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
@@ -114,6 +113,7 @@ const toBatchStepAction = (
   return { status: 'success', batchTask };
 };
 
+type BuildCtx = Pick<Ctx, 'build' | 'task'>;
 export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
   const pwd = process.cwd();
   const telemetryName = buildCtx.build.engine?.telemetry.name;

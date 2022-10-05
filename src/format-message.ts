@@ -1,6 +1,9 @@
 import { z } from 'zod';
-import { ValidationError } from './build-model.js';
 
+export interface ValidationError {
+  message: string;
+  path: string;
+}
 export const formatMessage = (issue: z.ZodIssue): ValidationError => {
   const path = issue.path.join('.');
   switch (issue.code) {

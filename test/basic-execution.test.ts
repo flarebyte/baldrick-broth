@@ -1,6 +1,5 @@
 import { basicExecution } from '../src/basic-execution.js';
-import { Ctx } from '../src/batch-model.js';
-import { BatchStepModel } from '../src/build-model.js';
+import { BatchStepModel, Ctx } from '../src/build-model.js';
 import { buildModelExample, generateTask } from './fixture-build-model.js';
 const ctx: Ctx = {
   build: buildModelExample,
