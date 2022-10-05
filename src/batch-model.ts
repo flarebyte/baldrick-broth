@@ -14,7 +14,7 @@ export interface Ctx {
   build: BuildModel;
   task: TaskModel;
   runtime: RuntimeContext;
-  data?: Map<string, AnyDataValue>;
+  data: Record<string, AnyDataValue>;
 }
 
 export type BuildCtx = Pick<Ctx, 'build' | 'task'>;

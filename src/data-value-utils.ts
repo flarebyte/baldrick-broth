@@ -9,8 +9,8 @@ export const setDataValue = (
     throw new Error('ctx.data should have defined by now');
   }
   if (value === undefined) {
-    ctx.data.delete(`${ctx.task.name}.${key}`);
+    delete ctx.data[`${ctx.task.name}.${key}`]
   } else {
-    ctx.data.set(`${ctx.task.name}.${key}`, value);
+    ctx.data[`${ctx.task.name}.${key}`]= value;
   }
 };

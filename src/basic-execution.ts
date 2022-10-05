@@ -15,7 +15,7 @@ type BasicExecution =
 
 const getDataProperty = (
   valuePath: string,
-  value?: Map<string, AnyDataValue>
+  value?: Record<string, AnyDataValue>
 ): AnyDataValue | undefined => {
   if (value === undefined) {
     return undefined;
@@ -29,7 +29,7 @@ const getDataProperty = (
   ) {
     return undefined;
   }
-  return value.get(`${first}.${second}`);
+  return value[`${first}.${second}`];
 };
 const getSupportedProperty = (
   ctx: Ctx,
@@ -71,33 +71,10 @@ const asStringOrBlank = (value: unknown): string =>
 const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
-const ensureDataMap = (value: unknown): Map<string, AnyDataValue> => {
-  if (value === undefined || value === null) {
-    return new Map<string, AnyDataValue>();
-  }
-  if (typeof value === 'object') {
-    const keys = Object.keys(value);
-    if (keys.length === 0) {
-      return new Map<string, AnyDataValue>();
-    }
-    const newMap = new Map<string, AnyDataValue>();
-    const entries = Object.entries(value);
-    for (const [key, v] of entries) {
-      newMap.set(key, `${v}`);
-    }
-    return newMap;
-  }
-  throw new Error(`Unexpected type for data map: ${typeof value}`);
-};
-
 const basicStepExecution = (
-  ctxRef: Ctx,
+  ctx: Ctx,
   basicStep: AnyBasicStepModel
 ): BasicExecution => {
-  const ctx =
-    ctxRef.data === undefined
-      ? { ...ctxRef, data: ensureDataMap(ctxRef.data) }
-      : ctxRef;
   const { a } = basicStep;
   const success: BasicExecution = { status: 'success', ctx };
   switch (a) {

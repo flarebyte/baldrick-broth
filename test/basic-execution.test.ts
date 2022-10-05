@@ -11,7 +11,7 @@ const ctx: Ctx = {
       name: 'baldrick-broth',
     },
   },
-  data: new Map(),
+  data: { status: 'created'},
 };
 const exampleBatchStep: BatchStepModel = {
   name: 'example-batch-step',

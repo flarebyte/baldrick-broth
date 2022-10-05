@@ -125,7 +125,7 @@ export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
       name: projectName,
     },
   };
-  const ctx: Ctx = { ...buildCtx, runtime, data: new Map() };
+  const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created'} };
   const started = process.hrtime();
   const listPossibleActions = mergeBatchStepAction(
     ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
