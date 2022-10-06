@@ -9,8 +9,8 @@ cases:
     title: abstract with object crumble
     params:
       - from: file
-        filename: spec/fixtures/valid-build.json
-        parser: JSON
+        filename: spec/fixtures/build.yaml
+        parser: YAML
     result:
       transform:
         - style: config -> function a
@@ -24,8 +24,8 @@ cases:
     title: Test edge cases that will produce errors
     params:
       - from: file
-        filename: spec/fixtures/valid-build.json
-        parser: JSON
+        filename: spec/fixtures/build.yaml
+        parser: YAML
     tumble:
       style: config + table -> function
       import: baldrick-zest-mess

@@ -1,0 +1,62 @@
+name: example-batch-step
+a: batch
+before:
+  - a: get-property
+    name: get-property
+    value: runtime.project.name
+  - a: some-truthy
+    name: some-truthy
+    values:
+      - runtime.project.name
+      - should.not.exist
+  - a: some-truthy
+    name: some-truthy false
+    values:
+      - should.not.exist.either
+      - should.not.exist
+  - a: some-falsy
+    name: some-falsy
+    values:
+      - runtime.project.name
+      - should.not.exist
+  - a: some-falsy
+    name: some-falsy false
+    values:
+      - runtime.project.name
+      - runtime.pwd
+  - a: every-truthy
+    name: every-truthy
+    values:
+      - runtime.project.name
+      - runtime.pwd
+  - a: every-falsy
+    name: every-falsy
+    values:
+      - should.not.exist.either
+      - should.not.exist
+  - a: every-truthy
+    name: every-truthy false
+    values:
+      - runtime.project.name
+      - should.not.exist
+  - a: every-falsy
+    name: every-falsy false
+    values:
+      - runtime.project.name
+      - should.not.exist
+  - a: not
+    name: not false
+    value: runtime.project.name
+  - a: not
+    name: not true
+    value: should.not.exist
+  - a: split-string
+    name: split-string
+    separator: ' '
+    value: task.description
+  - a: get-property
+    name: get-property-previous
+    value: data.g.get-property
+commands:
+  - name: hello
+    run: echo hello

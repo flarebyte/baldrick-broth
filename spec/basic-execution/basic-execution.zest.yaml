@@ -9,8 +9,8 @@ cases:
     title: some basic execution on the context
     params:
       - from: file
-        filename: spec/fixtures/context.json
-        parser: JSON
+        filename: spec/fixtures/context.yaml
+        parser: YAML
         transform:
           - style: config -> function a
             import: ./src/build-model.ts
@@ -18,8 +18,8 @@ cases:
             config:
               model: context
       - from: file
-        filename: spec/fixtures/batch-step.json
-        parser: JSON
+        filename: spec/fixtures/batch-step.yaml
+        parser: YAML
         transform:
           - style: config -> function a
             import: ./src/build-model.ts
