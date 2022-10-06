@@ -1,6 +1,6 @@
 {
   "yaml.schemas": {
-    "script/fixture/.baldrick-broth/dev.schema.json": "script/fixture/.baldrick-broth/dev.yaml",
+    "spec/snapshots/build-model/get-schema--schema.json": "script/fixture/.baldrick-broth/dev.yaml",
     "script/fixture/.baldrick-broth/zest.schema.json": "**/*.zest.yaml"
   }
 }
