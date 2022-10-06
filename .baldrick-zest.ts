@@ -15,6 +15,7 @@ const toConfig = (specFile: string) =>
 const configs = [
   'spec/build-model/safe-parse-build.zest.yaml',
   'spec/basic-execution/basic-execution.zest.yaml',
+  'spec/build-model/get-schema.zest.yaml',
 ].map(toConfig);
 
 for (const config of configs) {

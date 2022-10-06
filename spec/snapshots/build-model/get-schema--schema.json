@@ -1,0 +1,787 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/baldrick-broth-schema",
+  "definitions": {
+    "baldrick-broth-schema": {
+      "type": "object",
+      "properties": {
+        "engine": {
+          "type": "object",
+          "properties": {
+            "defaultShell": {
+              "type": "string"
+            },
+            "telemetry": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                "verbosity": {
+                  "type": "string"
+                },
+                "filepath": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "verbosity",
+                "filepath"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "defaultShell",
+            "telemetry"
+          ],
+          "additionalProperties": false
+        },
+        "binaries": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "motivation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "homepage": {
+                "type": "string",
+                "format": "uri",
+                "maxLength": 300
+              },
+              "shell": {
+                "type": "object",
+                "properties": {
+                  "run": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "diagnosis": {
+                    "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/shell/properties/run"
+                  }
+                },
+                "required": [
+                  "run",
+                  "diagnosis"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "title",
+              "shell"
+            ],
+            "additionalProperties": false
+          },
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 30,
+            "pattern": "[a-z][\\d_a-z]+"
+          }
+        },
+        "model": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "boolean"
+                }
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/baldrick-broth-schema/properties/model"
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/baldrick-broth-schema/properties/model"
+              }
+            }
+          ]
+        },
+        "workflows": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/title"
+              },
+              "description": {
+                "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+              },
+              "tasks": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "maxLength": 1,
+                      "default": ""
+                    },
+                    "title": {
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/title"
+                    },
+                    "description": {
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                    },
+                    "motivation": {
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/motivation"
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "description": {
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                          },
+                          "flags": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80
+                          },
+                          "default": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          }
+                        },
+                        "required": [
+                          "description",
+                          "flags"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "propertyNames": {
+                        "minLength": 1,
+                        "maxLength": 30,
+                        "pattern": "[a-z][\\d_a-z]+"
+                      }
+                    },
+                    "steps": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "a": {
+                            "type": "string",
+                            "const": "batch"
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 30,
+                            "pattern": "[a-z][\\d_a-z]+"
+                          },
+                          "title": {
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/title"
+                          },
+                          "description": {
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                          },
+                          "motivation": {
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/motivation"
+                          },
+                          "before": {
+                            "type": "array",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "get-property"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "value": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "pattern": "(([\\d._a-z]+)|(\\[\\d+]))+"
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "value"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "string-array"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "value": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                    },
+                                    "onSuccess": {
+                                      "type": "string",
+                                      "enum": [
+                                        "sort",
+                                        "unique",
+                                        "filled",
+                                        "reverse"
+                                      ]
+                                    },
+                                    "filters": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "if": {
+                                            "type": "string",
+                                            "enum": [
+                                              "starts-with",
+                                              "ends-with",
+                                              "contains",
+                                              "equals",
+                                              "not starts-with",
+                                              "not ends-with",
+                                              "not contains",
+                                              "not equals"
+                                            ]
+                                          },
+                                          "anyOf": {
+                                            "type": "array",
+                                            "items": {
+                                              "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                            },
+                                            "minItems": 1,
+                                            "maxItems": 50
+                                          }
+                                        },
+                                        "required": [
+                                          "if",
+                                          "anyOf"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "value",
+                                    "onSuccess"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "concat-array"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "values": {
+                                      "type": "array",
+                                      "items": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "values"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "split-string"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "separator": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 80,
+                                      "default": " "
+                                    },
+                                    "value": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "value"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "some-truthy"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "values": {
+                                      "type": "array",
+                                      "items": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "values"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "some-falsy"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "values": {
+                                      "type": "array",
+                                      "items": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "values"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "every-truthy"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "values": {
+                                      "type": "array",
+                                      "items": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "values"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "every-falsy"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "values": {
+                                      "type": "array",
+                                      "items": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                      },
+                                      "minItems": 1,
+                                      "maxItems": 20
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "values"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "not"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "value": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "value"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "range"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "start": {
+                                      "type": "integer",
+                                      "default": 0
+                                    },
+                                    "end": {
+                                      "type": "integer"
+                                    },
+                                    "step": {
+                                      "type": "integer",
+                                      "default": 1
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "end"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "invert-object"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "value": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "value"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "minItems": 1,
+                            "maxItems": 20
+                          },
+                          "if": {
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                          },
+                          "each": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                },
+                                "values": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "values"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1,
+                            "maxItems": 3
+                          },
+                          "onFinish": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "exit",
+                                "silent"
+                              ]
+                            },
+                            "minItems": 1
+                          },
+                          "commands": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/shell/properties/run"
+                                },
+                                "title": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                },
+                                "description": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                },
+                                "motivation": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                },
+                                "onFailure": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "enum": [
+                                      "exit",
+                                      "silent",
+                                      "trim",
+                                      "json",
+                                      "yaml",
+                                      "csv"
+                                    ]
+                                  },
+                                  "minItems": 1,
+                                  "default": [
+                                    "exit"
+                                  ]
+                                },
+                                "onSuccess": {
+                                  "type": "array",
+                                  "items": {
+                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/commands/items/properties/onFailure/items"
+                                  },
+                                  "minItems": 1,
+                                  "default": [
+                                    "trim"
+                                  ]
+                                },
+                                "if": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                },
+                                "run": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/shell/properties/run"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "run"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "minItems": 1,
+                            "maxItems": 50
+                          }
+                        },
+                        "required": [
+                          "a",
+                          "name",
+                          "commands"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "minItems": 1
+                    },
+                    "finally": {
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps"
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "parameters",
+                    "steps"
+                  ],
+                  "additionalProperties": false
+                },
+                "propertyNames": {
+                  "minLength": 1,
+                  "maxLength": 30,
+                  "pattern": "[a-z][\\d_a-z]+"
+                }
+              }
+            },
+            "required": [
+              "title",
+              "tasks"
+            ],
+            "additionalProperties": false
+          },
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 30,
+            "pattern": "[a-z][\\d_a-z]+"
+          }
+        }
+      },
+      "required": [
+        "binaries",
+        "model",
+        "workflows"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
