@@ -32,5 +32,5 @@ cases:
           import: baldrick-zest-mess
           function: findByPath
           config:
-            path: ctx.data
+            path: value.data
     snapshot: YAML

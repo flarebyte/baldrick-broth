@@ -6,16 +6,9 @@ import type {
 } from './build-model.js';
 import { setDataValue } from './data-value-utils.js';
 import { getProperty } from 'dot-prop';
+import { Result, succeed } from './railway.js';
 
-type BasicExecution =
-  | {
-      status: 'success';
-      ctx: Ctx;
-    }
-  | {
-      status: 'failure';
-      message: string;
-    };
+type BasicExecution = Result<Ctx, { message: string}>
 
 const getDataProperty = (
   valuePath: string,
@@ -35,6 +28,7 @@ const getDataProperty = (
   }
   return value[`${first}.${second}`];
 };
+
 const getSupportedProperty = (
   ctx: Ctx,
   valuePath: string
@@ -80,7 +74,7 @@ const basicStepExecution = (
   basicStep: AnyBasicStepModel
 ): BasicExecution => {
   const { a } = basicStep;
-  const success: BasicExecution = { status: 'success', ctx };
+  const success: BasicExecution = succeed(ctx)
   switch (a) {
     case 'get-property':
       const value = getSupportedProperty(ctx, basicStep.value);
@@ -147,7 +141,7 @@ export const basicExecution = (
   batchStep: BatchStepModel
 ): BasicExecution => {
   if (batchStep.before === undefined) {
-    return { status: 'success', ctx };
+    return succeed(ctx);
   }
   for (const basicStep of batchStep.before) {
     const result = basicStepExecution(ctx, basicStep);
@@ -155,5 +149,5 @@ export const basicExecution = (
       return result;
     }
   }
-  return { status: 'success', ctx };
+  return succeed(ctx);
 };
