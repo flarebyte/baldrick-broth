@@ -1293,12 +1293,13 @@ baldrick-zest-engine@^0.7.0:
     yaml "^2.1.1"
     zod "^3.18.0"
 
-baldrick-zest-mess@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.14.0.tgz#3dc6db8115b7936381c858e094ffda40e6fe3140"
-  integrity sha512-bvEUwNgBcOHFJT3GuxwqwxCNPob/6nFV1TLjU4LZzArmtO4d1Xma8hp7mS0uH4GbmfFEzeko8Bae/akOPwtn0g==
+baldrick-zest-mess@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.16.0.tgz#24eb0838d1e5a28c7df2681a683763d9792b09e3"
+  integrity sha512-zwRFCa46XIPHqC8i3XwUaEYE+XebRVBEPCNQ3aNRYrFuXkMupZlrJ8nW3GAxOzhkly/4QbOPF7MtGsZ0o2eCjg==
   dependencies:
     dot-prop "^7.2.0"
+    fdir "^5.2.0"
     object-crumble "^0.6.6"
     zod-to-json-schema "^3.18.1"
 
@@ -2132,6 +2133,11 @@ fb-watchman@^2.0.0:
   integrity sha512-DkPJKQeY6kKwmuMretBhr7G6Vodr7bFwDYTXIkfG1gjvNpaxBTQV3PbXg6bR1c1UP4jPOX0jHUbbHANL9vRjVg==
   dependencies:
     bser "2.1.1"
+
+fdir@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/fdir/-/fdir-5.2.0.tgz#5b3d6ae282f8bc0ef48bf913d46f9e08496304ea"
+  integrity sha512-skyI2Laxtj9GYzmktPgY6DT8uswXq+VoxH26SskykvEhTSbi7tRM/787uZt/p8maxrQCJdzC90zX1btbxiJ6lw==
 
 fecha@^4.2.0:
   version "4.2.3"
