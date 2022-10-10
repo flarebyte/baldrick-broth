@@ -10,26 +10,11 @@ import {
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
+import { fail, Result, succeed } from './railway.js';
 
-type BatchStepAction =
-  | {
-      status: 'success';
-      batchTask: ListrTask;
-    }
-  | {
-      status: 'failure';
-      messages: string[];
-    };
+type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
-type BatchAction =
-  | {
-      status: 'success';
-      batchTasks: ListrTask[];
-    }
-  | {
-      status: 'failure';
-      messages: string[];
-    };
+type BatchAction = Result<ListrTask[], { messages: string[] }>;
 
 function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -46,14 +31,14 @@ const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
   const withErrors = stepActions.filter((i) => i.status === 'failure');
   if (withErrors.length > 0) {
     const messages = stepActions.flatMap((i) =>
-      i.status === 'failure' ? i.messages : []
+      i.status === 'failure' ? i.error.messages : []
     );
-    return { status: 'failure', messages };
+    return fail({ messages });
   }
   const batchTasks = stepActions.flatMap((i) =>
-    i.status === 'success' ? i.batchTask : []
+    i.status === 'success' ? i.value : []
   );
-  return { status: 'success', batchTasks };
+  return succeed(batchTasks);
 };
 
 const toCommandLineAction = (
@@ -98,7 +83,7 @@ const toBatchStepAction = (
     : batchStep.name;
   const commandsForStep = expandBatchStep(ctx, batchStep);
   if (commandsForStep.status === 'failure') {
-    return { status: 'failure', messages: commandsForStep.messages };
+    return fail({ messages: commandsForStep.messages });
   }
   const commandTasks = commandsForStep.inputs.map((input) =>
     toCommandLineAction(ctx, input)
@@ -110,7 +95,7 @@ const toBatchStepAction = (
       return task.newListr(commandTasks);
     },
   };
-  return { status: 'success', batchTask };
+  return succeed(batchTask);
 };
 
 type BuildCtx = Pick<Ctx, 'build' | 'task'>;
@@ -125,15 +110,15 @@ export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
       name: projectName,
     },
   };
-  const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created'} };
+  const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
   const started = process.hrtime();
   const listPossibleActions = mergeBatchStepAction(
     ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
   );
   if (listPossibleActions.status === 'failure') {
-    console.log('Failure ', listPossibleActions.messages);
+    console.log('Failure ', listPossibleActions.error.messages);
   } else {
-    const mainTask = new Listr<Ctx>(listPossibleActions.batchTasks);
+    const mainTask = new Listr<Ctx>(listPossibleActions.value);
     try {
       await mainTask.run(ctx);
       logTaskStatistics(started, ctx);
