@@ -83,9 +83,9 @@ const toBatchStepAction = (
     : batchStep.name;
   const commandsForStep = expandBatchStep(ctx, batchStep);
   if (commandsForStep.status === 'failure') {
-    return fail({ messages: commandsForStep.messages });
+    return fail({ messages: commandsForStep.error.messages });
   }
-  const commandTasks = commandsForStep.inputs.map((input) =>
+  const commandTasks = commandsForStep.value.map((input) =>
     toCommandLineAction(ctx, input)
   );
   const batchTask: ListrTask = {
