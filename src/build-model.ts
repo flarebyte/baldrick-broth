@@ -10,6 +10,7 @@ import {
   stringPropPath,
 } from './field-validation.js';
 import { formatMessage, ValidationError } from './format-message.js';
+import { Result, succeed, fail } from './railway.js';
 
 /**JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
@@ -349,29 +350,18 @@ export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
 export type AnyDataValue = z.infer<typeof jsonishSchema>;
 
-export type BuildModelValidation =
-  | {
-      status: 'valid';
-      value: BuildModel;
-    }
-  | {
-      status: 'invalid';
-      errors: ValidationError[];
-    };
+export type BuildModelValidation = Result<BuildModel, ValidationError[]>;
 
 export const safeParseBuild = (content: unknown): BuildModelValidation => {
   const result = schema.safeParse(content);
   if (result.success) {
-    return { status: 'valid', value: result.data };
+    return succeed(result.data);
   }
   const {
     error: { issues },
   } = result;
   const errors = issues.map(formatMessage);
-  return {
-    status: 'invalid',
-    errors,
-  };
+  return fail(errors);
 };
 
 export const getSchema = (_name: 'default') => {

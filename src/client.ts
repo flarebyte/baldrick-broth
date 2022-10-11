@@ -17,10 +17,10 @@ export async function runClient() {
       exitWithError(buildLoadingStatus.error.message);
     } else {
       const build = safeParseBuild(buildLoadingStatus.value);
-      if (build.status === 'invalid') {
+      if (build.status === 'failure') {
         exitWithError(
           `The baldrick-broth build file ${buildFilePath} does not respect the schema`,
-          build.errors
+          build.error
         );
       }
       const program = new Command();

@@ -17,7 +17,7 @@ cases:
           import: baldrick-zest-mess
           function: abstract
           config:
-           output: if status equals valid then abstract else pass
+           output: if status equals success then abstract else pass
     snapshot: YAML
   invalid-too-large:
     a: snapshot
@@ -33,7 +33,7 @@ cases:
       config:
         signature: A
         mutation: string => large
-        output: if status equals invalid then pass else count
+        output: if status equals failure then pass else count
       table:
         - path: engine.defaultShell
         - path: engine.telemetry.verbosity

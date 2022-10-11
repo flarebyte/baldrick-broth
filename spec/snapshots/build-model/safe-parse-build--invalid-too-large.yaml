@@ -1,103 +1,103 @@
 - title: "Path: engine.defaultShell, mutation: string => large"
   result:
-    count: "Words: 241, Characters 13333"
+    count: "Words: 241, Characters 13335"
 - title: "Path: engine.telemetry.verbosity, mutation: string => large"
   result:
-    count: "Words: 241, Characters 18332"
+    count: "Words: 241, Characters 18334"
 - title: "Path: engine.telemetry.filepath, mutation: string => large"
   result:
-    count: "Words: 241, Characters 93317"
+    count: "Words: 241, Characters 93319"
 - title: "Path: binaries.sh.title, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: binaries.sh.title
         message: The string for the field is too big; I would expect the maximum to be
           60
 - title: "Path: binaries.sh.description, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: binaries.sh.description
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: binaries.sh.motivation, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: binaries.sh.motivation
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: binaries.sh.homepage, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: binaries.sh.homepage
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: binaries.sh.shell.run, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: binaries.sh.shell.run
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: binaries.sh.shell.diagnosis, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: binaries.sh.shell.diagnosis
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: model.githubAccount, mutation: string => large"
   result:
-    count: "Words: 241, Characters 103315"
+    count: "Words: 241, Characters 103317"
 - title: "Path: workflows.test.title, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.title
         message: The string for the field is too big; I would expect the maximum to be
           60
 - title: "Path: workflows.test.description, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.description
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: workflows.test.tasks.generate.name, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.tasks.generate.name
         message: The string for the field is too big; I would expect the maximum to be 1
 - title: "Path: workflows.test.tasks.generate.title, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.tasks.generate.title
         message: The string for the field is too big; I would expect the maximum to be
           60
 - title: "Path: workflows.test.tasks.generate.description, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.tasks.generate.description
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: workflows.test.tasks.generate.motivation, mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.tasks.generate.motivation
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: workflows.test.tasks.generate.parameters.only.description,
     mutation: string => large"
   result:
-    status: invalid
-    errors:
+    status: failure
+    error:
       - path: workflows.test.tasks.generate.parameters.only.description
         message: The string for the field is too big; I would expect the maximum to be
           300

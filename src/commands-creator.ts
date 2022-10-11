@@ -13,7 +13,7 @@ export const createCommands = (
     .description('CLI for build automation and running tasks')
     .version(version);
 
-  if (buildModelValidation.status === 'valid') {
+  if (buildModelValidation.status === 'success') {
     const {
       value,
       value: { workflows },
