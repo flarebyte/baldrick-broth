@@ -12,24 +12,26 @@ const exitWithError = (message: string, value?: object) => {
 
 export async function runClient() {
   try {
-    const buildLoadingStatus = await readYaml(buildFilePath);
-    if (buildLoadingStatus.status === 'failure') {
-      exitWithError(buildLoadingStatus.error.message);
-    } else {
-      const build = safeParseBuild(buildLoadingStatus.value);
-      if (build.status === 'failure') {
-        exitWithError(
-          `The baldrick-broth build file ${buildFilePath} does not respect the schema`,
-          build.error
-        );
-      }
-      const program = new Command();
-      createCommands(program, build);
-      program.parseAsync();
-
-      console.log(`✓ baldrick-broth is done. Version ${version}`);
-    }
+    await unsafeRunClient();
+    console.log(`✓ baldrick-broth is done. Version ${version}`);
   } catch (error) {
     exitWithError((error instanceof Error && error.message) || `${error}`);
+  }
+}
+async function unsafeRunClient() {
+  const buildLoadingStatus = await readYaml(buildFilePath);
+  if (buildLoadingStatus.status === 'failure') {
+    exitWithError(buildLoadingStatus.error.message);
+  } else {
+    const build = safeParseBuild(buildLoadingStatus.value);
+    if (build.status === 'failure') {
+      exitWithError(
+        `The baldrick-broth build file ${buildFilePath} does not respect the schema`,
+        build.error
+      );
+    }
+    const program = new Command();
+    createCommands(program, build);
+    program.parseAsync();
   }
 }
