@@ -52,11 +52,10 @@ const toCommandLineAction = (
       const cmdLineResult = await executeCommandLine(commandLineInput);
       await sleep(500);
       if (cmdLineResult.status === 'success') {
-        currentTaskLogger.info(cmdLineResult.value);
+        const { value: { data} } = cmdLineResult;
+        currentTaskLogger.info(data);
         task.output = 'OK';
-      } else if (
-        cmdLineResult.status === 'failure'
-      ) {
+      } else if (cmdLineResult.status === 'failure') {
         currentTaskLogger.info(
           [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join('\n\n')
         );

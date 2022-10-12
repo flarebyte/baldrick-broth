@@ -34,21 +34,21 @@ type ExecuteCommandLineSuccess =
       format: 'string';
       line: string;
       name: string;
-      value: string;
+      data: string;
       onSuccess: CommandOptionsModel['onSuccess'];
     }
   | {
       format: 'json';
       line: string;
       name: string;
-      value: JsonValue;
+      data: JsonValue;
       onSuccess: CommandOptionsModel['onSuccess'];
     }
   | {
       format: 'csv';
       line: string;
       name: string;
-      value: Record<string, string>[];
+      data: Record<string, string>[];
       onSuccess: CommandOptionsModel['onSuccess'];
     };
 
@@ -130,8 +130,8 @@ export const executeCommandLine = async (
 
   if (status === 'success') {
     if (onSuccess.includes('json')) {
-      const value = parseJson(stdout);
-      if (value === undefined) {
+      const data = parseJson(stdout);
+      if (data === undefined) {
         return fail({
           category: 'parse-json-failed',
           line,
@@ -141,11 +141,11 @@ export const executeCommandLine = async (
           onFailure,
         });
       }
-      return succeed({ format: 'json', name, line, value, onSuccess });
+      return succeed({ format: 'json', name, line, data, onSuccess });
     }
     if (onSuccess.includes('yaml')) {
-      const value = parseYaml(stdout);
-      if (value === undefined) {
+      const data = parseYaml(stdout);
+      if (data === undefined) {
         return fail({
           category: 'parse-yaml-failed',
           line,
@@ -155,11 +155,11 @@ export const executeCommandLine = async (
           onFailure,
         });
       }
-      return succeed({ format: 'json', name, line, value, onSuccess });
+      return succeed({ format: 'json', name, line, data, onSuccess });
     }
     if (onSuccess.includes('csv')) {
-      const value = parseCsv(stdout);
-      if (value === undefined) {
+      const data = parseCsv(stdout);
+      if (data === undefined) {
         return fail({
           category: 'parse-csv-failed',
           line,
@@ -169,12 +169,12 @@ export const executeCommandLine = async (
           onFailure,
         });
       }
-      return succeed({ format: 'csv', name, line, value, onSuccess });
+      return succeed({ format: 'csv', name, line, data, onSuccess });
     }
 
-    const value = onSuccess.includes('trim') ? stdout.trim() : stdout;
+    const data = onSuccess.includes('trim') ? stdout.trim() : stdout;
 
-    return succeed({ format: 'string', name, line, value, onSuccess });
+    return succeed({ format: 'string', name, line, data, onSuccess });
   } else {
     return fail({
       category: 'failed',
