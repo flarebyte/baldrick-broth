@@ -3,8 +3,9 @@ import type { JsonValue } from 'type-fest';
 import YAML from 'yaml';
 import CSV from 'papaparse';
 import { CommandOptionsModel } from './build-model.js';
+import { Result, succeed } from './railway.js';
 
-type ExecuteCommandLineFailedStatus =
+type ExecuteCommandLineFailedCategory =
   | 'failed'
   | 'canceled'
   | 'timeout'
@@ -19,36 +20,42 @@ export interface CommandLineInput {
   opts: CommandOptionsModel;
 }
 
-type ExecuteCommandLineResult =
+type ExecuteCommandLineFailure = {
+  category: ExecuteCommandLineFailedCategory;
+  line: string;
+  stdout: string;
+  stderr: string;
+  exitCode: number;
+  onFailure: CommandOptionsModel['onFailure'];
+};
+
+type ExecuteCommandLineSuccess =
   | {
-      status: ExecuteCommandLineFailedStatus;
-      line: string;
-      stdout: string;
-      stderr: string;
-      exitCode: number;
-      onFailure: CommandOptionsModel['onFailure'];
-    }
-  | {
-      status: 'string';
+      format: 'string';
       line: string;
       name: string;
       value: string;
       onSuccess: CommandOptionsModel['onSuccess'];
     }
   | {
-      status: 'json';
+      format: 'json';
       line: string;
       name: string;
       value: JsonValue;
       onSuccess: CommandOptionsModel['onSuccess'];
     }
   | {
-      status: 'csv';
+      format: 'csv';
       line: string;
       name: string;
       value: Record<string, string>[];
       onSuccess: CommandOptionsModel['onSuccess'];
     };
+
+type ExecuteCommandLineResult = Result<
+  ExecuteCommandLineSuccess,
+  ExecuteCommandLineFailure
+>;
 
 const toStatus = (params: {
   exitCode: number;
@@ -56,7 +63,7 @@ const toStatus = (params: {
   isCanceled: boolean;
   timedOut: boolean;
   killed: boolean;
-}): ExecuteCommandLineFailedStatus | 'success' => {
+}): ExecuteCommandLineFailedCategory | 'success' => {
   const { exitCode, failed, isCanceled, timedOut, killed } = params;
   if (failed) {
     return 'failed';
@@ -125,57 +132,57 @@ export const executeCommandLine = async (
     if (onSuccess.includes('json')) {
       const value = parseJson(stdout);
       if (value === undefined) {
-        return {
-          status: 'parse-json-failed',
+        return fail({
+          category: 'parse-json-failed',
           line,
           stdout,
           stderr,
           exitCode,
           onFailure,
-        };
+        });
       }
-      return { status: 'json', name, line, value, onSuccess };
+      return succeed({ format: 'json', name, line, value, onSuccess });
     }
     if (onSuccess.includes('yaml')) {
       const value = parseYaml(stdout);
       if (value === undefined) {
-        return {
-          status: 'parse-yaml-failed',
+        return fail({
+          category: 'parse-yaml-failed',
           line,
           stdout,
           stderr,
           exitCode,
           onFailure,
-        };
+        });
       }
-      return { status: 'json', name, line, value, onSuccess };
+      return succeed({ format: 'json', name, line, value, onSuccess });
     }
     if (onSuccess.includes('csv')) {
       const value = parseCsv(stdout);
       if (value === undefined) {
-        return {
-          status: 'parse-csv-failed',
+        return fail({
+          category: 'parse-csv-failed',
           line,
           stdout,
           stderr,
           exitCode,
           onFailure,
-        };
+        });
       }
-      return { status: 'csv', name, line, value, onSuccess };
+      return succeed({ format: 'csv', name, line, value, onSuccess });
     }
 
     const value = onSuccess.includes('trim') ? stdout.trim() : stdout;
 
-    return { status: 'string', name, line, value, onSuccess };
+    return succeed({ format: 'string', name, line, value, onSuccess });
   } else {
-    return {
-      status: 'failed',
+    return fail({
+      category: 'failed',
       line,
       stdout,
       stderr,
       exitCode,
       onFailure,
-    };
+    });
   }
 };

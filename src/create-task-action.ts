@@ -51,20 +51,14 @@ const toCommandLineAction = (
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(commandLineInput);
       await sleep(500);
-      if (cmdLineResult.status === 'string') {
+      if (cmdLineResult.status === 'success') {
         currentTaskLogger.info(cmdLineResult.value);
         task.output = 'OK';
       } else if (
-        cmdLineResult.status === 'failed' ||
-        cmdLineResult.status === 'canceled' ||
-        cmdLineResult.status === 'timeout' ||
-        cmdLineResult.status === 'killed' ||
-        cmdLineResult.status === 'parse-json-failed' ||
-        cmdLineResult.status === 'parse-yaml-failed' ||
-        cmdLineResult.status === 'parse-csv-failed'
+        cmdLineResult.status === 'failure'
       ) {
         currentTaskLogger.info(
-          [cmdLineResult.stdout, cmdLineResult.stderr].join('\n\n')
+          [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join('\n\n')
         );
         task.output = 'KO';
       }
