@@ -1,0 +1,377 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$ref": "#/definitions/baldrick-zest-schema",
+    "definitions": {
+      "baldrick-zest-schema": {
+        "type": "object",
+        "properties": {
+          "testing": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "const": "function a b c"
+                  },
+                  "import": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300,
+                    "description": "A javascript import statement"
+                  },
+                  "function": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 50,
+                    "pattern": "[a-z][\\d_a-zA-Z]+",
+                    "description": "A function name"
+                  }
+                },
+                "required": [
+                  "style",
+                  "import",
+                  "function"
+                ],
+                "additionalProperties": false,
+                "description": "A function with 3 arguments"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "const": "function a b"
+                  },
+                  "import": {
+                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/import"
+                  },
+                  "function": {
+                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/function"
+                  }
+                },
+                "required": [
+                  "style",
+                  "import",
+                  "function"
+                ],
+                "additionalProperties": false,
+                "description": "A function with 2 arguments"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "const": "function a"
+                  },
+                  "import": {
+                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/import"
+                  },
+                  "function": {
+                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/function"
+                  }
+                },
+                "required": [
+                  "style",
+                  "import",
+                  "function"
+                ],
+                "additionalProperties": false,
+                "description": "A function with a single argument"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "style": {
+                    "type": "string",
+                    "const": "Class.method a"
+                  },
+                  "import": {
+                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/import"
+                  },
+                  "class": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 50,
+                    "pattern": "[A-Z][\\d_a-z]+",
+                    "description": "A class name"
+                  },
+                  "function": {
+                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/function"
+                  }
+                },
+                "required": [
+                  "style",
+                  "import",
+                  "class",
+                  "function"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "description": "Choice of function that is been tested"
+          },
+          "cases": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "a": {
+                      "type": "string",
+                      "const": "snapshot"
+                    },
+                    "skip": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60,
+                      "description": "Reason why the tests are been skipped"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 0,
+                      "default": ""
+                    },
+                    "title": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60,
+                      "description": "The title of the test use case"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "transform": {
+                          "type": "array",
+                          "items": {
+                            "anyOf": [
+                              {
+                                "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/2"
+                              },
+                              {
+                                "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/3"
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "style": {
+                                    "type": "string",
+                                    "const": "config -> function a"
+                                  },
+                                  "import": {
+                                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/import"
+                                  },
+                                  "function": {
+                                    "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/function"
+                                  },
+                                  "config": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300
+                                    },
+                                    "propertyNames": {
+                                      "minLength": 1,
+                                      "maxLength": 30,
+                                      "pattern": "[A-Za-z][a-zA-Z\\d_]+"
+                                    },
+                                    "description": "A configuration made of keys and values"
+                                  }
+                                },
+                                "required": [
+                                  "style",
+                                  "import",
+                                  "function",
+                                  "config"
+                                ],
+                                "additionalProperties": false,
+                                "description": "A higher order function that accepts configuration"
+                              }
+                            ],
+                            "description": "A choice of function"
+                          },
+                          "minItems": 1,
+                          "maxItems": 5,
+                          "description": "A list of transformers in order"
+                        }
+                      },
+                      "required": [
+                        "transform"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Add transformations on the result"
+                    },
+                    "snapshot": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 30,
+                      "pattern": "\\w+",
+                      "description": "The parsing format such as JSON or YAML",
+                      "default": "YAML"
+                    },
+                    "tumble": {
+                      "type": "object",
+                      "properties": {
+                        "style": {
+                          "type": "string",
+                          "const": "config + table -> function"
+                        },
+                        "import": {
+                          "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/import"
+                        },
+                        "function": {
+                          "$ref": "#/definitions/baldrick-zest-schema/properties/testing/anyOf/0/properties/function"
+                        },
+                        "config": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/result/properties/transform/items/anyOf/2/properties/config/additionalProperties"
+                          },
+                          "propertyNames": {
+                            "minLength": 1,
+                            "maxLength": 30,
+                            "pattern": "[A-Za-z][a-zA-Z\\d_]+"
+                          },
+                          "description": "A configuration made of keys and values"
+                        },
+                        "table": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/result/properties/transform/items/anyOf/2/properties/config/additionalProperties"
+                            },
+                            "propertyNames": {
+                              "minLength": 1,
+                              "maxLength": 30,
+                              "pattern": "[A-Za-z][a-zA-Z\\d_]+"
+                            }
+                          },
+                          "minItems": 1,
+                          "maxItems": 300,
+                          "description": "A table with rows of values"
+                        }
+                      },
+                      "required": [
+                        "style",
+                        "import",
+                        "function",
+                        "config",
+                        "table"
+                      ],
+                      "additionalProperties": false,
+                      "description": "A function that accepts configuration used for tumbling the code"
+                    },
+                    "params": {
+                      "type": "array",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "from": {
+                                "type": "string",
+                                "const": "file"
+                              },
+                              "filename": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "description": "A relative path to a filename"
+                              },
+                              "parser": {
+                                "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/snapshot",
+                                "default": "Text"
+                              },
+                              "transform": {
+                                "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/result/properties/transform"
+                              }
+                            },
+                            "required": [
+                              "from",
+                              "filename"
+                            ],
+                            "additionalProperties": false,
+                            "description": "A fixture from a file"
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "from": {
+                                "type": "string",
+                                "const": "string"
+                              },
+                              "value": {
+                                "type": "string",
+                                "description": "A string value that can be used by the function"
+                              },
+                              "transform": {
+                                "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/result/properties/transform"
+                              }
+                            },
+                            "required": [
+                              "from",
+                              "value"
+                            ],
+                            "additionalProperties": false,
+                            "description": "An input as a string"
+                          }
+                        ]
+                      },
+                      "minItems": 1,
+                      "maxItems": 3,
+                      "description": "A list of parameters expected by the function"
+                    }
+                  },
+                  "required": [
+                    "a",
+                    "title",
+                    "params"
+                  ],
+                  "additionalProperties": false,
+                  "description": "A test use case that will save the result as a snapshot"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "a": {
+                      "type": "string",
+                      "const": "todo"
+                    },
+                    "name": {
+                      "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/name"
+                    },
+                    "title": {
+                      "$ref": "#/definitions/baldrick-zest-schema/properties/cases/additionalProperties/anyOf/0/properties/title",
+                      "description": "A title for the TODO case"
+                    }
+                  },
+                  "required": [
+                    "a",
+                    "title"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The description for a future TODO test"
+                }
+              ],
+              "description": "A choice of test use case"
+            },
+            "propertyNames": {
+              "minLength": 1,
+              "maxLength": 30,
+              "pattern": "[A-Za-z][a-zA-Z\\d_]+"
+            }
+          }
+        },
+        "required": [
+          "testing",
+          "cases"
+        ],
+        "additionalProperties": false,
+        "description": "A list of tests for a given function"
+      }
+    }
+  }

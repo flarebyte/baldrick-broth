@@ -1,0 +1,67 @@
+---
+binaries:
+  sh:
+    title: Title of sh
+    description: Description of sh
+    motivation: Motivation of sh
+    homepage: https://website.com/sh
+    shell:
+      run: sh
+      diagnosis: sh --version
+
+model:
+  githubAccount: github-account-fixme
+  projectName: project-name-fixme
+  copyright:
+    holder: copyright-holder-fixme
+    startYear: 2022
+  license: BSD3
+  project_yaml: script/data/project.yaml
+  project_schema: './script/schema/project.schema.json'
+  generate_sh: script/generate.sh
+  colors:
+    - green
+    - orange
+    - blue
+  animals:
+    - cat
+    - dog
+workflows:
+  test:
+    title: Test your library
+    description: Test your library for defects
+    tasks:
+      generate:
+        title: Generate code
+        description: Generate code
+        motivation: Generate code
+        parameters:
+          color:
+            description: Color
+            flags: '-c, --color <type>'
+        steps:
+          - a: batch
+            name: calculate
+            title: Run calculate
+            before:
+              - a: get-property
+                name: githubAccount
+                title: Set variable githubAccount
+                value: model.githubAccount
+            commands:
+              - name: echo
+                title: simple echo
+                run: echo "{{githubAccount}} and {{color}}"
+              - name: echo2
+                title: simple echo2
+                run: echo "{{build.name}}"
+                onSuccess:
+                  - trim
+                onFailure:
+                  - exit
+          - a: batch
+            name: list files
+            title: List files
+            commands:
+              - name: list source files
+                run: yarn lint

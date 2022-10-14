@@ -1,0 +1,55 @@
+---
+testing:
+  style: function a
+  import: ./src/build-model.ts
+  function: safeParseBuild
+cases:
+  abstract-parsing:
+    a: snapshot
+    title: abstract with object crumble
+    params:
+      - from: file
+        filename: spec/fixtures/build.yaml
+        parser: YAML
+    result:
+      transform:
+        - style: config -> function a
+          import: baldrick-zest-mess
+          function: abstract
+          config:
+           output: if status equals success then abstract else pass
+    snapshot: YAML
+  invalid-too-large:
+    a: snapshot
+    title: Test edge cases that will produce errors
+    params:
+      - from: file
+        filename: spec/fixtures/build.yaml
+        parser: YAML
+    tumble:
+      style: config + table -> function
+      import: baldrick-zest-mess
+      function: crumble
+      config:
+        signature: A
+        mutation: string => large
+        output: if status equals failure then pass else count
+      table:
+        - path: engine.defaultShell
+        - path: engine.telemetry.verbosity
+        - path: engine.telemetry.filepath
+        - path: binaries.sh.title
+        - path: binaries.sh.description
+        - path: binaries.sh.motivation
+        - path: binaries.sh.homepage
+        - path: binaries.sh.shell.run
+        - path: binaries.sh.shell.diagnosis
+        - path: model.githubAccount
+        - path: workflows.test.title
+        - path: workflows.test.description
+        - path: workflows.test.tasks.generate.name
+        - path: workflows.test.tasks.generate.title
+        - path: workflows.test.tasks.generate.description
+        - path: workflows.test.tasks.generate.motivation
+        - path: workflows.test.tasks.generate.parameters.only.description
+    snapshot: YAML
