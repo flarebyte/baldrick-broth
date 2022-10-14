@@ -1,8 +1,11 @@
 import { Command } from 'commander';
-import { safeParseBuild } from './build-model.js';
+import { JsonObject } from 'type-fest';
+import { BuildModel, safeParseBuild } from './build-model.js';
 import { createCommands } from './commands-creator.js';
 import { buildFilePath } from './env-variables.js';
 import { readYaml } from './file-io.js';
+import { ValidationError } from './format-message.js';
+import { andThen } from './railway.js';
 import { version } from './version.js';
 
 const exitWithError = (message: string, value?: object) => {
@@ -18,20 +21,28 @@ export async function runClient() {
     exitWithError((error instanceof Error && error.message) || `${error}`);
   }
 }
+
+type RunClientFailure =
+  | { message: string; filename: string }
+  | ValidationError[];
+/**
+ * Run the client without trapping all exceptions
+ */
 async function unsafeRunClient() {
-  const buildLoadingStatus = await readYaml(buildFilePath);
-  if (buildLoadingStatus.status === 'failure') {
-    exitWithError(buildLoadingStatus.error.message);
-  } else {
-    const build = safeParseBuild(buildLoadingStatus.value);
-    if (build.status === 'failure') {
-      exitWithError(
-        `The baldrick-broth build file ${buildFilePath} does not respect the schema`,
-        build.error
-      );
-    }
+  const buildReadingResult = await readYaml(buildFilePath);
+  const buildModelResult = andThen<JsonObject, BuildModel, RunClientFailure>(
+    safeParseBuild
+  )(buildReadingResult);
+
+  if (buildModelResult.status === 'failure') {
+    exitWithError(
+      `Loading and parsing the baldrick-broth build file ${buildFilePath} failed`,
+      buildModelResult.error
+    );
+  }
+  if (buildModelResult.status === 'success') {
     const program = new Command();
-    createCommands(program, build);
+    createCommands(program, buildModelResult);
     program.parseAsync();
   }
 }
