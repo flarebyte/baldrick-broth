@@ -23,12 +23,12 @@ const jsonishSchema: z.ZodType<Json> = z
   .describe('Any JSON document without null values');
 const engine = z
   .object({
-    defaultShell: z.string(),
+    defaultShell: z.string().max(40).default('bash'),
     telemetry: z
       .object({
         name: z.string().min(1).max(40).optional(),
-        verbosity: z.string(),
-        filepath: z.string(),
+        verbosity: z.string().max(100),
+        filepath: stringPath,
       })
       .describe('Preferences for telemetry'),
   })
@@ -45,6 +45,15 @@ const onShellCommandFinish = z.enum([
   'csv',
 ]);
 
+const linkPage = z
+  .object({
+    title: stringTitle,
+    url: stringUrl,
+  })
+  .describe('Info about a link');
+
+const links = z.array(linkPage).optional().describe('A list of useful links');
+
 const metadataStep = {
   name: stringCustomKey.describe(
     'A short name that could be used a key or variable for the step'
@@ -52,6 +61,7 @@ const metadataStep = {
   title: stringTitle.optional(),
   description: stringDescription.optional(),
   motivation: stringMotivation.optional(),
+  links,
 };
 const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
@@ -88,17 +98,6 @@ const commands = z
   .max(50)
   .describe('A list of batch shell scripts to run');
 
-const binary = z
-  .object({
-    title: stringTitle,
-    description: stringDescription.optional(),
-    motivation: stringMotivation.optional(),
-    homepage: stringUrl.optional(),
-    shell: z
-      .object({ run: lineShell, diagnosis: lineShell })
-      .describe('A few commands to provide quick diagnosis and support'),
-  })
-  .describe('Settings for a binary executable used in the developer workflow');
 const valuesLoopEach = z.string().min(1).max(300);
 
 const loopEach = z
@@ -107,9 +106,6 @@ const loopEach = z
     values: valuesLoopEach,
   })
   .describe('Configuration of every loop');
-const binaries = z
-  .record(stringCustomKey, binary)
-  .describe('A list of executables used in the developer workflow');
 
 const getPropertyStep = z
   .strictObject({
@@ -321,7 +317,6 @@ const domain = z
 export const schema = z
   .object({
     engine,
-    binaries,
     model: jsonishSchema,
     workflows: z.record(stringCustomKey, domain),
   })

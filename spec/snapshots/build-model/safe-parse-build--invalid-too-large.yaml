@@ -1,57 +1,27 @@
 - title: "Path: engine.defaultShell, mutation: string => large"
   result:
-    count: "Words: 241, Characters 13335"
+    status: failure
+    error:
+      - path: engine.defaultShell
+        message: The string for the field is too big; I would expect the maximum to be
+          40
 - title: "Path: engine.telemetry.verbosity, mutation: string => large"
   result:
-    count: "Words: 241, Characters 18334"
+    status: failure
+    error:
+      - path: engine.telemetry.verbosity
+        message: The string for the field is too big; I would expect the maximum to be
+          100
 - title: "Path: engine.telemetry.filepath, mutation: string => large"
   result:
-    count: "Words: 241, Characters 93319"
-- title: "Path: binaries.sh.title, mutation: string => large"
-  result:
     status: failure
     error:
-      - path: binaries.sh.title
-        message: The string for the field is too big; I would expect the maximum to be
-          60
-- title: "Path: binaries.sh.description, mutation: string => large"
-  result:
-    status: failure
-    error:
-      - path: binaries.sh.description
-        message: The string for the field is too big; I would expect the maximum to be
-          300
-- title: "Path: binaries.sh.motivation, mutation: string => large"
-  result:
-    status: failure
-    error:
-      - path: binaries.sh.motivation
-        message: The string for the field is too big; I would expect the maximum to be
-          300
-- title: "Path: binaries.sh.homepage, mutation: string => large"
-  result:
-    status: failure
-    error:
-      - path: binaries.sh.homepage
-        message: The string for the field is too big; I would expect the maximum to be
-          300
-- title: "Path: binaries.sh.shell.run, mutation: string => large"
-  result:
-    status: failure
-    error:
-      - path: binaries.sh.shell.run
-        message: The string for the field is too big; I would expect the maximum to be
-          300
-- title: "Path: binaries.sh.shell.diagnosis, mutation: string => large"
-  result:
-    status: failure
-    error:
-      - path: binaries.sh.shell.diagnosis
+      - path: engine.telemetry.filepath
         message: The string for the field is too big; I would expect the maximum to be
           300
 - title: "Path: model.githubAccount, mutation: string => large"
   result:
-    count: "Words: 241, Characters 103317"
+    count: "Words: 188, Characters 102733"
 - title: "Path: workflows.test.title, mutation: string => large"
   result:
     status: failure

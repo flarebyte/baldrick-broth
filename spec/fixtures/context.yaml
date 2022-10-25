@@ -4,23 +4,6 @@ build:
     telemetry:
       verbosity: 'off'
       filepath: logs/telemetry.csv
-  binaries:
-    sh:
-      title: Title of sh
-      description: Description of sh
-      motivation: Motivation of sh
-      homepage: 'https://website.com/sh'
-      shell:
-        run: sh
-        diagnosis: sh --version
-    elm:
-      title: Title of elm
-      description: Description of elm
-      motivation: Motivation of elm
-      homepage: 'https://website.com/elm'
-      shell:
-        run: elm
-        diagnosis: elm --version
   model:
     githubAccount: github-account-fixme
     projectName: project-name-fixme

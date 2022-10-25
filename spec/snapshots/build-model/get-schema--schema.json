@@ -9,7 +9,9 @@
           "type": "object",
           "properties": {
             "defaultShell": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 40,
+              "default": "bash"
             },
             "telemetry": {
               "type": "object",
@@ -20,10 +22,13 @@
                   "maxLength": 40
                 },
                 "verbosity": {
-                  "type": "string"
+                  "type": "string",
+                  "maxLength": 100
                 },
                 "filepath": {
-                  "type": "string"
+                  "type": "string",
+                  "maxLength": 300,
+                  "description": "A relative path to a file"
                 }
               },
               "required": [
@@ -35,75 +40,10 @@
             }
           },
           "required": [
-            "defaultShell",
             "telemetry"
           ],
           "additionalProperties": false,
           "description": "Settings for the baldrick-broth engine"
-        },
-        "binaries": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 60,
-                "description": "A short title that summarizes this section of script"
-              },
-              "description": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 300,
-                "description": "The main purpose of this section of script"
-              },
-              "motivation": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 300,
-                "description": "The main reason why this section of script is needed"
-              },
-              "homepage": {
-                "type": "string",
-                "format": "uri",
-                "maxLength": 300,
-                "description": "A https link to a webpage"
-              },
-              "shell": {
-                "type": "object",
-                "properties": {
-                  "run": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 300,
-                    "description": "A line of shell script"
-                  },
-                  "diagnosis": {
-                    "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/shell/properties/run"
-                  }
-                },
-                "required": [
-                  "run",
-                  "diagnosis"
-                ],
-                "additionalProperties": false,
-                "description": "A few commands to provide quick diagnosis and support"
-              }
-            },
-            "required": [
-              "title",
-              "shell"
-            ],
-            "additionalProperties": false,
-            "description": "Settings for a binary executable used in the developer workflow"
-          },
-          "propertyNames": {
-            "minLength": 1,
-            "maxLength": 30,
-            "pattern": "[a-z][\\d_a-z]+"
-          },
-          "description": "A list of executables used in the developer workflow"
         },
         "model": {
           "anyOf": [
@@ -142,10 +82,16 @@
             "type": "object",
             "properties": {
               "title": {
-                "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/title"
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "description": "A short title that summarizes this section of script"
               },
               "description": {
-                "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300,
+                "description": "The main purpose of this section of script"
               },
               "tasks": {
                 "type": "object",
@@ -158,13 +104,16 @@
                       "default": ""
                     },
                     "title": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/title"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                     },
                     "description": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
                     },
                     "motivation": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/motivation"
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300,
+                      "description": "The main reason why this section of script is needed"
                     },
                     "parameters": {
                       "type": "object",
@@ -172,7 +121,7 @@
                         "type": "object",
                         "properties": {
                           "description": {
-                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
                           },
                           "flags": {
                             "type": "string",
@@ -215,13 +164,37 @@
                             "description": "A short name that could be used a key or variable for the step"
                           },
                           "title": {
-                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/title"
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                           },
                           "description": {
-                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/description"
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
                           },
                           "motivation": {
-                            "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/motivation"
+                            "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation"
+                          },
+                          "links": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "title": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri",
+                                  "maxLength": 300,
+                                  "description": "A https link to a webpage"
+                                }
+                              },
+                              "required": [
+                                "title",
+                                "url"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Info about a link"
+                            },
+                            "description": "A list of useful links"
                           },
                           "before": {
                             "type": "array",
@@ -245,6 +218,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "value": {
                                       "type": "string",
@@ -280,6 +256,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "value": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
@@ -362,6 +341,9 @@
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
                                     },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                    },
                                     "values": {
                                       "type": "array",
                                       "items": {
@@ -397,6 +379,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "separator": {
                                       "type": "string",
@@ -436,6 +421,9 @@
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
                                     },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                    },
                                     "values": {
                                       "type": "array",
                                       "items": {
@@ -471,6 +459,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "values": {
                                       "type": "array",
@@ -508,6 +499,9 @@
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
                                     },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                    },
                                     "values": {
                                       "type": "array",
                                       "items": {
@@ -543,6 +537,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "values": {
                                       "type": "array",
@@ -580,6 +577,9 @@
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
                                     },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                    },
                                     "value": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
                                     }
@@ -610,6 +610,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "start": {
                                       "type": "integer",
@@ -652,6 +655,9 @@
                                     },
                                     "motivation": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                     },
                                     "value": {
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
@@ -723,7 +729,10 @@
                               "type": "object",
                               "properties": {
                                 "name": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/shell/properties/run"
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 300,
+                                  "description": "A line of shell script"
                                 },
                                 "title": {
                                   "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
@@ -733,6 +742,9 @@
                                 },
                                 "motivation": {
                                   "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                },
+                                "links": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
                                 },
                                 "onFailure": {
                                   "type": "array",
@@ -769,7 +781,7 @@
                                   "description": "reference to JSON path that must be satisfied for the step to run"
                                 },
                                 "run": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/binaries/additionalProperties/properties/shell/properties/run"
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/commands/items/properties/name"
                                 }
                               },
                               "required": [
@@ -828,7 +840,6 @@
         }
       },
       "required": [
-        "binaries",
         "model",
         "workflows"
       ],

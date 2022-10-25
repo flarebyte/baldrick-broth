@@ -7,30 +7,6 @@ abstract:
     kind: string
   - path: value.engine.telemetry.filepath
     kind: string
-  - path: value.binaries.sh.title
-    kind: string
-  - path: value.binaries.sh.description
-    kind: string
-  - path: value.binaries.sh.motivation
-    kind: string
-  - path: value.binaries.sh.homepage
-    kind: string
-  - path: value.binaries.sh.shell.run
-    kind: string
-  - path: value.binaries.sh.shell.diagnosis
-    kind: string
-  - path: value.binaries.elm.title
-    kind: string
-  - path: value.binaries.elm.description
-    kind: string
-  - path: value.binaries.elm.motivation
-    kind: string
-  - path: value.binaries.elm.homepage
-    kind: string
-  - path: value.binaries.elm.shell.run
-    kind: string
-  - path: value.binaries.elm.shell.diagnosis
-    kind: string
   - path: value.model.githubAccount
     kind: string
   - path: value.model.projectName
