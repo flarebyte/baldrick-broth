@@ -1,14 +1,4 @@
 ---
-binaries:
-  sh:
-    title: Title of sh
-    description: Description of sh
-    motivation: Motivation of sh
-    homepage: https://website.com/sh
-    shell:
-      run: sh
-      diagnosis: sh --version
-
 model:
   githubAccount: github-account-fixme
   projectName: project-name-fixme
@@ -51,7 +41,7 @@ workflows:
             commands:
               - name: echo
                 title: simple echo
-                run: echo "{{githubAccount}} and {{color}}"
+                run: echo "template is {{githubAccount}} and {{color}}"
               - name: echo2
                 title: simple echo2
                 run: echo "{{build.name}}"
@@ -59,6 +49,12 @@ workflows:
                   - trim
                 onFailure:
                   - exit
+      lint:
+        title: Lint code
+        description: Lint code
+        motivation: Lint code
+        parameters: {}
+        steps:
           - a: batch
             name: list files
             title: List files

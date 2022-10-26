@@ -1,7 +1,7 @@
 import Handlebars from 'handlebars';
 import { BatchStepModel, CommandOptionsModel, Ctx } from './build-model.js';
 import { CommandLineInput } from './execution.js';
-import { stringCustomKey } from './field-validation.js';
+import { stringy } from './field-validation.js';
 import { Result, succeed } from './railway.js';
 
 type ExpandedCommandLineInputs = Result<
@@ -31,7 +31,7 @@ const expandCommand =
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
     const expandedName = nameTemplate(templateCtx).trim();
-    const validatedName = stringCustomKey.safeParse(expandedName);
+    const validatedName = stringy.customKey.safeParse(expandedName);
     if (!validatedName.success) {
       return fail({
         messages: [`Expanded name was not supported: ${expandedName}`],
