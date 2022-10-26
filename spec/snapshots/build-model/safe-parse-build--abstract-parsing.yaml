@@ -1,8 +1,6 @@
 abstract:
   - path: status
     kind: string
-  - path: value.engine.defaultShell
-    kind: string
   - path: value.engine.telemetry.verbosity
     kind: string
   - path: value.engine.telemetry.filepath

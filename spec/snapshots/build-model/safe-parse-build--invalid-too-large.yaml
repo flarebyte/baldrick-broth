@@ -1,10 +1,6 @@
 - title: "Path: engine.defaultShell, mutation: string => large"
   result:
-    status: failure
-    error:
-      - path: engine.defaultShell
-        message: The string for the field is too big; I would expect the maximum to be
-          40
+    count: "Words: 186, Characters 2724"
 - title: "Path: engine.telemetry.verbosity, mutation: string => large"
   result:
     status: failure
@@ -21,7 +17,7 @@
           300
 - title: "Path: model.githubAccount, mutation: string => large"
   result:
-    count: "Words: 188, Characters 102733"
+    count: "Words: 186, Characters 102704"
 - title: "Path: workflows.test.title, mutation: string => large"
   result:
     status: failure

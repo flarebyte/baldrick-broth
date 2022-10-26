@@ -1,7 +1,5 @@
 import { z } from 'zod';
-import {
-  stringy
-} from './field-validation.js';
+import { stringy } from './field-validation.js';
 import { formatMessage, ValidationError } from './format-message.js';
 import { Result, succeed, fail } from './railway.js';
 
@@ -16,7 +14,6 @@ const jsonishSchema: z.ZodType<Json> = z
   .describe('Any JSON document without null values');
 const engine = z
   .object({
-    defaultShell: z.string().max(40).default('bash'),
     telemetry: z
       .object({
         name: z.string().min(1).max(40).optional(),
@@ -267,6 +264,9 @@ const batchStep = z
     if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
+    stdin: stringy.varValue
+      .optional()
+      .describe('Provide stdin with a value read from a dot prop path'),
     each: z
       .array(loopEach)
       .min(1)
