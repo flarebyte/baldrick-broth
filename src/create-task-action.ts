@@ -127,7 +127,7 @@ function logTaskStatistics(started: [number, number], ctx: Ctx) {
   date.getMonth;
   telemetryTaskLogger.info(
     [
-      ctx.runtime.project,
+      ctx.runtime.project.name,
       ctx.task.name,
       date.getFullYear(),
       date.getMonth(),
@@ -142,7 +142,7 @@ function logTaskStatistics(started: [number, number], ctx: Ctx) {
     for (const taskId of tasks) {
       telemetryTaskRefLogger.info(
         [
-          ctx.runtime.project,
+          ctx.runtime.project.name,
           `${workflowKey}.${taskId}`,
           date.getFullYear(),
           date.getMonth(),
