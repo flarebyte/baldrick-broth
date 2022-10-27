@@ -9,7 +9,6 @@ export const createCommands = (
 ) => {
   program
     .name('baldrick-broth')
-    .alias('broth')
     .description('CLI for build automation and running tasks')
     .version(version);
 
@@ -35,7 +34,7 @@ export const createCommands = (
         taskCommand.action(
           createTaskAction({
             build: value,
-            task: { ...task, name: `${workflowKey}.${taskId}` },
+            task: { ...task, name: `${workflowKey}::${taskId}` },
           })
         );
         for (const parameterId in task.parameters) {

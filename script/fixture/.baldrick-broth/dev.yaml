@@ -37,14 +37,18 @@ workflows:
               - a: get-property
                 name: githubAccount
                 title: Set variable githubAccount
-                value: model.githubAccount
+                value: build.model.githubAccount
+              - a: get-property
+                name: githubAccount2
+                title: Set variable githubAccount
+                value: data.test::generate::githubAccount
             commands:
-              - name: echo
-                title: simple echo
-                run: echo "template is {{githubAccount}} and {{color}}"
-              - name: echo2
-                title: simple echo2
-                run: echo "{{build.name}}"
+              - name: first
+                title: First echo
+                run: echo "First is {{data.status}} and {{data.test::generate::githubAccount}} and {{build.model.license}}"
+              - name: second
+                title: Second echo with task.name
+                run: echo "Second {{task.name}}"
                 onSuccess:
                   - trim
                 onFailure:

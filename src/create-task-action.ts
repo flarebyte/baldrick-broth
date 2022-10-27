@@ -11,6 +11,7 @@ import {
   telemetryTaskRefLogger,
 } from './logging.js';
 import { fail, Result, succeed } from './railway.js';
+import { basicExecution } from './basic-execution.js';
 
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
@@ -52,7 +53,9 @@ const toCommandLineAction = (
       const cmdLineResult = await executeCommandLine(commandLineInput);
       await sleep(500);
       if (cmdLineResult.status === 'success') {
-        const { value: { data} } = cmdLineResult;
+        const {
+          value: { data },
+        } = cmdLineResult;
         currentTaskLogger.info(data);
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {
@@ -74,18 +77,28 @@ const toBatchStepAction = (
   const title = batchStep.title
     ? `${batchStep.title}: ${batchStep.name}`
     : batchStep.name;
-  const commandsForStep = expandBatchStep(ctx, batchStep);
-  if (commandsForStep.status === 'failure') {
-    return fail({ messages: commandsForStep.error.messages });
-  }
-  const commandTasks = commandsForStep.value.map((input) =>
-    toCommandLineAction(ctx, input)
-  );
+
   const batchTask: ListrTask = {
     title,
     task: async (_, task) => {
-      currentTaskLogger.info(startStepTitle(batchStep));
-      return task.newListr(commandTasks);
+      const basicExecutionResult = basicExecution(ctx, batchStep);
+      if (basicExecutionResult.status === 'failure') {
+        task.output = 'before: KO';
+      }
+      const commandsForStep = expandBatchStep(ctx, batchStep);
+      if (commandsForStep.status === 'failure') {
+        console.log({ messages: commandsForStep.error.messages });
+        task.output = 'KO';
+      }
+      if (commandsForStep.status === 'success') {
+        const commandTasks = commandsForStep.value.map((input) =>
+          toCommandLineAction(ctx, input)
+        );
+        currentTaskLogger.info(startStepTitle(batchStep));
+        return task.newListr([...commandTasks]);
+      } else {
+        return undefined;
+      }
     },
   };
   return succeed(batchTask);

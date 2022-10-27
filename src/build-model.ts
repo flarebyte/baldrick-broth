@@ -78,6 +78,10 @@ const advancedShell = z
       .describe(
         'reference to JSON path that must be satisfied for the step to run'
       ),
+    stdin: stringy.varValue
+      .optional()
+      .describe('Provide stdin with a value read from a dot prop path'),
+
     run: lineShell,
   })
   .describe('Configuration for the batch shell script');
@@ -264,9 +268,6 @@ const batchStep = z
     if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
-    stdin: stringy.varValue
-      .optional()
-      .describe('Provide stdin with a value read from a dot prop path'),
     each: z
       .array(loopEach)
       .min(1)

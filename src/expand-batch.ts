@@ -18,6 +18,9 @@ type CommandLocalVars = {
   commandOpts: CommandOptionsModel;
   extra: Record<string, any>;
 };
+
+const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
+
 const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
@@ -25,7 +28,12 @@ const expandCommand =
     const { run, name } = commandOpts;
     const template = createTemplate(run);
     const nameTemplate = createTemplate(name);
-    const templateCtx = { ...ctx, ...extra, batch, command: commandOpts };
+    const templateCtx = forceJson({
+      ...ctx,
+      ...extra,
+      batch,
+      command: commandOpts,
+    });
     const lines = template(templateCtx)
       .split('\n')
       .map((s) => s.trim())

@@ -8,7 +8,7 @@ import { setDataValue } from './data-value-utils.js';
 import { getProperty } from 'dot-prop';
 import { Result, succeed } from './railway.js';
 
-type BasicExecution = Result<Ctx, { message: string}>
+type BasicExecution = Result<Ctx, { message: string }>;
 
 const getDataProperty = (
   valuePath: string,
@@ -17,16 +17,20 @@ const getDataProperty = (
   if (value === undefined) {
     return undefined;
   }
-  const [data_prefix, first, second] = valuePath.split('.');
+  const [data_prefix, otherKeys] = valuePath.split('.');
   if (
     data_prefix === undefined ||
     data_prefix !== 'data' ||
-    first === undefined ||
-    second === undefined
+    otherKeys === undefined
   ) {
     return undefined;
   }
-  return value[`${first}.${second}`];
+
+  const [first, second, third] = otherKeys.split('::');
+  if (first === undefined || second === undefined || third === undefined) {
+    return undefined;
+  }
+  return value[`${first}::${second}::${third}`];
 };
 
 const getSupportedProperty = (
@@ -74,7 +78,7 @@ const basicStepExecution = (
   basicStep: AnyBasicStepModel
 ): BasicExecution => {
   const { a } = basicStep;
-  const success: BasicExecution = succeed(ctx)
+  const success: BasicExecution = succeed(ctx);
   switch (a) {
     case 'get-property':
       const value = getSupportedProperty(ctx, basicStep.value);
@@ -136,6 +140,9 @@ const basicStepExecution = (
   return success;
 };
 
+/**
+ * Transform the data with a list of supported operations
+ */
 export const basicExecution = (
   ctx: Ctx,
   batchStep: BatchStepModel

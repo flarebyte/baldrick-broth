@@ -677,10 +677,6 @@
                             "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
                             "description": "A condition that must be satisfied to enable the batch"
                           },
-                          "stdin": {
-                            "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
-                            "description": "Provide stdin with a value read from a dot prop path"
-                          },
                           "each": {
                             "type": "array",
                             "items": {
@@ -778,6 +774,10 @@
                                 "if": {
                                   "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
                                   "description": "reference to JSON path that must be satisfied for the step to run"
+                                },
+                                "stdin": {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
+                                  "description": "Provide stdin with a value read from a dot prop path"
                                 },
                                 "run": {
                                   "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/commands/items/properties/name"

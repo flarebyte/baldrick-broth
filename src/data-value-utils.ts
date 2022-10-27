@@ -1,4 +1,4 @@
-import { AnyDataValue, Ctx } from "./build-model.js";
+import { AnyDataValue, Ctx } from './build-model.js';
 
 export const setDataValue = (
   ctx: Ctx,
@@ -9,8 +9,8 @@ export const setDataValue = (
     throw new Error('ctx.data should have defined by now');
   }
   if (value === undefined) {
-    delete ctx.data[`${ctx.task.name}.${key}`]
+    delete ctx.data[`${ctx.task.name}::${key}`];
   } else {
-    ctx.data[`${ctx.task.name}.${key}`]= value;
+    ctx.data[`${ctx.task.name}::${key}`] = value;
   }
 };
