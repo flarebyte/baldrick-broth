@@ -28,10 +28,14 @@ const commands = [
   { run: ['--help'], expect: 'CLI for build automation' },
   { run: ['test', 'generate', '--help'], expect: 'Generate code' },
   {
-    run: ['test', 'generate', '--color', 'blue'],
+    run: ['test', 'generate'],
     expect: 'First is created and github-account-fixme and BSD3',
   },
   { run: ['test', 'lint'], expect: 'Run instructions ⇨ baldrick-dev-ts' },
+  {
+    run: ['test', 'color', '--color', 'blue'],
+    expect: 'Color is blue',
+  },
 ];
 
 const commandPromises = commands.map(runCommand);

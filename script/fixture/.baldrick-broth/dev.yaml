@@ -25,10 +25,7 @@ workflows:
         title: Generate code
         description: Generate code
         motivation: Generate code
-        parameters:
-          color:
-            description: Color
-            flags: '-c, --color <type>'
+        parameters: {}
         steps:
           - a: batch
             name: calculate
@@ -49,10 +46,22 @@ workflows:
               - name: second
                 title: Second echo with task.name
                 run: echo "Second {{task.name}}"
-                onSuccess:
-                  - trim
-                onFailure:
-                  - exit
+      color:
+        title: Generate code
+        description: Generate code
+        motivation: Generate code
+        parameters:
+          color:
+            description: Color
+            flags: '-c, --color <type>'
+        steps:
+          - a: batch
+            name: calculate
+            title: Run calculate
+            commands:
+              - name: confirm-color
+                title: Confirm color
+                run: echo "Color is {{build.name}}"
       lint:
         title: Lint code
         description: Lint code
