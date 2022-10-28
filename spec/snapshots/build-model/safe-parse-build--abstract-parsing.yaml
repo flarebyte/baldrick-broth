@@ -37,11 +37,9 @@ abstract:
     kind: string
   - path: value.workflows.test.tasks.generate.motivation
     kind: string
+  - path: value.workflows.test.tasks.generate.parameters
+    kind: array/object
   - path: value.workflows.test.tasks.generate.steps
     kind: array/object
   - path: value.workflows.test.tasks.generate.finally
     kind: array/object
-  - path: value.workflows.test.tasks.generate.parameters.only.description
-    kind: string
-  - path: value.workflows.test.tasks.generate.parameters.only.flags
-    kind: string

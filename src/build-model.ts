@@ -296,7 +296,7 @@ const task = z
     title: stringy.title,
     description: stringy.description.optional(),
     motivation: stringy.motivation.optional(),
-    parameters: z.record(stringy.customKey, parameter),
+    parameters: z.array(parameter).max(20).optional(),
     steps,
     finally: steps.optional(),
   })

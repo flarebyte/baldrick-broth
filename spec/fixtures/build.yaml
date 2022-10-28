@@ -1,5 +1,4 @@
 engine:
-  defaultShell: zsh
   telemetry:
     verbosity: 'off'
     filepath: logs/telemetry.csv
@@ -31,8 +30,7 @@ workflows:
         description: Generate code
         motivation: Generate code
         parameters:
-          only:
-            description: only run this
+          - description: only run this
             flags: '-p, --pizza-type <type>'
         steps:
           - a: batch

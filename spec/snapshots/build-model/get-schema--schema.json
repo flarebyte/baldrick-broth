@@ -111,8 +111,8 @@
                       "description": "The main reason why this section of script is needed"
                     },
                     "parameters": {
-                      "type": "object",
-                      "additionalProperties": {
+                      "type": "array",
+                      "items": {
                         "type": "object",
                         "properties": {
                           "description": {
@@ -136,11 +136,7 @@
                         "additionalProperties": false,
                         "description": "Settings for a task parameter"
                       },
-                      "propertyNames": {
-                        "minLength": 1,
-                        "maxLength": 30,
-                        "pattern": "[a-z][\\d_a-z]+"
-                      }
+                      "maxItems": 20
                     },
                     "steps": {
                       "type": "array",
@@ -811,7 +807,6 @@
                   },
                   "required": [
                     "title",
-                    "parameters",
                     "steps"
                   ],
                   "additionalProperties": false,

@@ -37,16 +37,14 @@ export const createCommands = (
             task: { ...task, name: `${workflowKey}::${taskId}` },
           })
         );
-        for (const parameterId in task.parameters) {
-          const parameter = task.parameters[parameterId];
-          if (parameter === undefined) {
-            continue;
+        if (task.parameters !== undefined) {
+          for (const parameter of task.parameters) {
+            taskCommand.option(
+              parameter.flags,
+              parameter.description,
+              parameter.default
+            );
           }
-          taskCommand.option(
-            parameter.flags,
-            parameter.description,
-            parameter.default
-          );
         }
       }
     }

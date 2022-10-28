@@ -49,11 +49,9 @@ workflows:
       color:
         title: Print some colors
         parameters:
-          coloring:
-            description: Color
+          - description: Color
             flags: '-c, --color <type>'
-          decision:
-            description: decision
+          - description: decision
             flags: '-y, --yes'
         steps:
           - a: batch
@@ -75,7 +73,6 @@ workflows:
         title: Lint code
         description: Lint code
         motivation: Lint code
-        parameters: {}
         steps:
           - a: batch
             name: list files
