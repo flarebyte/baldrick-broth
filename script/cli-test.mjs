@@ -33,7 +33,7 @@ const commands = [
   },
   { run: ['test', 'lint'], expect: 'Run instructions ⇨ baldrick-dev-ts' },
   {
-    run: ['test', 'color', '--color', 'blue'],
+    run: ['test', 'color', '--color', 'blue', '--yes'],
     expect: 'Color is blue',
   },
 ];

@@ -110,5 +110,6 @@ runtime:
   pwd: /usr/path/baldrick-broth
   project:
     name: baldrick-broth
+  parameters: {}
 data:
   status: created

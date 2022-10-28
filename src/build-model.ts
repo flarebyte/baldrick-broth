@@ -322,6 +322,7 @@ const runtimeContext = z.object({
   project: z.object({
     name: stringy.title,
   }),
+  parameters: z.record(z.string(), z.string().or(z.boolean())),
 });
 const context = z.object({
   build: schema,

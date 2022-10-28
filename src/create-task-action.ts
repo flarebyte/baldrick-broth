@@ -12,6 +12,7 @@ import {
 } from './logging.js';
 import { fail, Result, succeed } from './railway.js';
 import { basicExecution } from './basic-execution.js';
+import { getSupportedProperty, isTruthy } from './data-value-utils.js';
 
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
@@ -43,11 +44,19 @@ const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
 };
 
 const toCommandLineAction = (
-  _ctx: Ctx,
+  ctx: Ctx,
   commandLineInput: CommandLineInput
 ): ListrTask => {
   const commandTask: ListrTask = {
     title: commandLineInput.name,
+    enabled: (_) => {
+      const ifPath = commandLineInput.opts.if;
+      if (ifPath === undefined) {
+        return true;
+      }
+      const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
+      return shouldEnable;
+    },
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(commandLineInput);
@@ -105,35 +114,38 @@ const toBatchStepAction = (
 };
 
 type BuildCtx = Pick<Ctx, 'build' | 'task'>;
-export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
-  const pwd = process.cwd();
-  const telemetryName = buildCtx.build.engine?.telemetry.name;
-  const projectName =
-    telemetryName === undefined ? path.basename(pwd) : telemetryName;
-  const runtime: RuntimeContext = {
-    pwd,
-    project: {
-      name: projectName,
-    },
-  };
-  const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
-  const started = process.hrtime();
-  const listPossibleActions = mergeBatchStepAction(
-    ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
-  );
-  if (listPossibleActions.status === 'failure') {
-    console.log('Failure ', listPossibleActions.error.messages);
-  } else {
-    const mainTask = new Listr<Ctx>(listPossibleActions.value);
-    try {
-      await mainTask.run(ctx);
-      logTaskStatistics(started, ctx);
-      await replayLogToConsole();
-    } catch (e: any) {
-      console.log('Failure ', e);
+export const createTaskAction =
+  (buildCtx: BuildCtx) =>
+  async (parameters: Record<string, string | boolean>) => {
+    const pwd = process.cwd();
+    const telemetryName = buildCtx.build.engine?.telemetry.name;
+    const projectName =
+      telemetryName === undefined ? path.basename(pwd) : telemetryName;
+    const runtime: RuntimeContext = {
+      pwd,
+      project: {
+        name: projectName,
+      },
+      parameters,
+    };
+    const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
+    const started = process.hrtime();
+    const listPossibleActions = mergeBatchStepAction(
+      ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
+    );
+    if (listPossibleActions.status === 'failure') {
+      console.log('Failure ', listPossibleActions.error.messages);
+    } else {
+      const mainTask = new Listr<Ctx>(listPossibleActions.value);
+      try {
+        await mainTask.run(ctx);
+        logTaskStatistics(started, ctx);
+        await replayLogToConsole();
+      } catch (e: any) {
+        console.log('Failure ', e);
+      }
     }
-  }
-};
+  };
 function logTaskStatistics(started: [number, number], ctx: Ctx) {
   const date = new Date();
   const finished = process.hrtime(started);

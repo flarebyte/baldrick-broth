@@ -47,13 +47,14 @@ workflows:
                 title: Second echo with task.name
                 run: echo "Second {{task.name}}"
       color:
-        title: Generate code
-        description: Generate code
-        motivation: Generate code
+        title: Print some colors
         parameters:
-          color:
+          coloring:
             description: Color
             flags: '-c, --color <type>'
+          decision:
+            description: decision
+            flags: '-y, --yes'
         steps:
           - a: batch
             name: calculate
@@ -61,7 +62,15 @@ workflows:
             commands:
               - name: confirm-color
                 title: Confirm color
-                run: echo "Color is {{build.name}}"
+                run: echo "Color is {{runtime.parameters.color}} and yes is {{runtime.parameters.yes}}"
+              - name: check-yes
+                title: Check if statement
+                if: runtime.parameters.yes
+                run: echo "if statement is printed"
+              - name: always-no
+                title: Check always no statement
+                if: runtime.parameters.unknown
+                run: echo "should never be printed"
       lint:
         title: Lint code
         description: Lint code
