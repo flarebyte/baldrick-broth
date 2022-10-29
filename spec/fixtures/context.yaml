@@ -1,6 +1,5 @@
 build:
   engine:
-    defaultShell: sh
     telemetry:
       verbosity: 'off'
       filepath: logs/telemetry.csv
@@ -32,8 +31,7 @@ build:
           description: Generate code
           motivation: Generate code
           parameters:
-            only:
-              description: only run this
+            - description: only run this
               flags: '-p, --pizza-type <type>'
           steps:
             - a: batch
@@ -72,8 +70,7 @@ task:
   description: Generate code
   motivation: Generate code
   parameters:
-    only:
-      description: only run this
+    - description: only run this
       flags: '-p, --pizza-type <type>'
   steps:
     - a: batch

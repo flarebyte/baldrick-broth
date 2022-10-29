@@ -25,7 +25,6 @@ workflows:
         title: Generate code
         description: Generate code
         motivation: Generate code
-        parameters: {}
         steps:
           - a: batch
             name: calculate

@@ -1,0 +1,15 @@
+status: created
+g::get-property: baldrick-broth
+g::some-truthy: true
+g::some-truthy false: false
+g::some-falsy: true
+g::some-falsy false: false
+g::every-truthy: true
+g::every-falsy: true
+g::every-truthy false: false
+g::every-falsy false: false
+g::not false: false
+g::not true: true
+g::split-string:
+  - Generate
+  - code

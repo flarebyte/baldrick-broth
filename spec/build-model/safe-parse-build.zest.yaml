@@ -35,7 +35,6 @@ cases:
         mutation: string => large
         output: if status equals failure then pass else count
       table:
-        - path: engine.defaultShell
         - path: engine.telemetry.verbosity
         - path: engine.telemetry.filepath
         - path: model.githubAccount
@@ -45,5 +44,4 @@ cases:
         - path: workflows.test.tasks.generate.title
         - path: workflows.test.tasks.generate.description
         - path: workflows.test.tasks.generate.motivation
-        - path: workflows.test.tasks.generate.parameters.only.description
     snapshot: YAML
