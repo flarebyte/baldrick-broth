@@ -2,8 +2,9 @@ import { execaCommand } from 'execa';
 import type { JsonValue } from 'type-fest';
 import YAML from 'yaml';
 import CSV from 'papaparse';
-import { CommandOptionsModel } from './build-model.js';
+import { CommandOptionsModel, Ctx } from './build-model.js';
 import { Result, succeed } from './railway.js';
+import { getSupportedProperty } from './data-value-utils.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -114,18 +115,27 @@ const parseCsv = (content: string): Record<string, string>[] | undefined => {
     return undefined;
   }
 };
+
+const forceString = (value: unknown): string =>
+  typeof value === 'string' ? value : JSON.stringify(value, null, 2);
+
 /**
  * Executes a a command after template expansion
  */
 export const executeCommandLine = async (
+  ctx: Ctx,
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
+  const { onSuccess, onFailure, stdin } = opts;
 
+  const maybeStdin =
+    stdin === undefined
+      ? {}
+      : { input: forceString(getSupportedProperty(ctx, stdin)) };
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
-    await execaCommand(line, { reject: false });
+    await execaCommand(line, { reject: false, ...maybeStdin });
 
-  const { onSuccess, onFailure } = opts;
   const status = toStatus({ exitCode, failed, isCanceled, timedOut, killed });
 
   if (status === 'success') {

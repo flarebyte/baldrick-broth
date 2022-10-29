@@ -68,10 +68,22 @@ workflows:
                 title: Check always no statement
                 if: runtime.parameters.unknown
                 run: echo "should never be printed"
+      stdin:
+        title: Check stdin
+        description: Check stdin is working
+        steps:
+          - a: batch
+            name: main
+            title: Check std in
+            commands:
+              - name: code_of_conduct
+                run: cat CODE_OF_CONDUCT.md
+              - name: head
+                stdin: build.model.githubAccount
+                run: head -n 3
       lint:
         title: Lint code
         description: Lint code
-        motivation: Lint code
         steps:
           - a: batch
             name: list files

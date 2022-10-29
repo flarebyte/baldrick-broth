@@ -59,7 +59,7 @@ const toCommandLineAction = (
     },
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
-      const cmdLineResult = await executeCommandLine(commandLineInput);
+      const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
       await sleep(500);
       if (cmdLineResult.status === 'success') {
         const {
