@@ -27,11 +27,22 @@ await $`mkdir -p report/shell-tests`;
 const commands = [
   { run: ['--help'], expect: 'CLI for build automation' },
   { run: ['test', 'generate', '--help'], expect: 'Generate code' },
-  { run: ['test', 'generate', '-c', 'blue'], expect: 'Generate code' },
+  {
+    run: ['test', 'generate'],
+    expect: 'First is created and github-account-fixme and BSD3',
+  },
+  { run: ['test', 'lint'], expect: 'Run instructions ⇨ baldrick-dev-ts' },
+  {
+    run: ['test', 'color', '--color', 'blue', '--yes'],
+    expect: 'Color is blue',
+  },
+  {
+    run: ['test', 'stdin'],
+    expect: 'Contributor Covenant Code',
+  },
 ];
 
-const commandPromises = commands.map(runCommand)
+const commandPromises = commands.map(runCommand);
 for await (const command of commandPromises) {
-    command
+  command;
 }
-

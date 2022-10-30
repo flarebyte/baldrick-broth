@@ -1,9 +1,9 @@
 import YAML from 'yaml';
 import fs from 'node:fs/promises';
-import type { JsonObject } from 'type-fest';
 import { Result } from './railway.js';
+import { AnyDataValue } from './build-model.js';
 export type LoadingStatus = Result<
-  JsonObject,
+  AnyDataValue,
   { message: string; filename: string }
 >;
 

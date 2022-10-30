@@ -1,8 +1,8 @@
 import Handlebars from 'handlebars';
 import { BatchStepModel, CommandOptionsModel, Ctx } from './build-model.js';
 import { CommandLineInput } from './execution.js';
-import { stringCustomKey } from './field-validation.js';
-import { Result, succeed } from './railway.js';
+import { stringy } from './field-validation.js';
+import { Result, succeed, fail } from './railway.js';
 
 type ExpandedCommandLineInputs = Result<
   CommandLineInput[],
@@ -18,6 +18,9 @@ type CommandLocalVars = {
   commandOpts: CommandOptionsModel;
   extra: Record<string, any>;
 };
+
+const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
+
 const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
@@ -25,13 +28,18 @@ const expandCommand =
     const { run, name } = commandOpts;
     const template = createTemplate(run);
     const nameTemplate = createTemplate(name);
-    const templateCtx = { ...ctx, ...extra, batch, command: commandOpts };
+    const templateCtx = forceJson({
+      ...ctx,
+      ...extra,
+      batch,
+      command: commandOpts,
+    });
     const lines = template(templateCtx)
       .split('\n')
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
     const expandedName = nameTemplate(templateCtx).trim();
-    const validatedName = stringCustomKey.safeParse(expandedName);
+    const validatedName = stringy.customKey.safeParse(expandedName);
     if (!validatedName.success) {
       return fail({
         messages: [`Expanded name was not supported: ${expandedName}`],

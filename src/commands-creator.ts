@@ -9,7 +9,6 @@ export const createCommands = (
 ) => {
   program
     .name('baldrick-broth')
-    .alias('broth')
     .description('CLI for build automation and running tasks')
     .version(version);
 
@@ -35,19 +34,17 @@ export const createCommands = (
         taskCommand.action(
           createTaskAction({
             build: value,
-            task: { ...task, name: `${workflowKey}.${taskId}` },
+            task: { ...task, name: `${workflowKey}::${taskId}` },
           })
         );
-        for (const parameterId in task.parameters) {
-          const parameter = task.parameters[parameterId];
-          if (parameter === undefined) {
-            continue;
+        if (task.parameters !== undefined) {
+          for (const parameter of task.parameters) {
+            taskCommand.option(
+              parameter.flags,
+              parameter.description,
+              parameter.default
+            );
           }
-          taskCommand.option(
-            parameter.flags,
-            parameter.description,
-            parameter.default
-          );
         }
       }
     }

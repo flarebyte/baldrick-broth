@@ -1,14 +1,5 @@
 import { z } from 'zod';
-import {
-  stringCustomKey,
-  stringTitle,
-  stringDescription,
-  stringMotivation,
-  varValue,
-  stringUrl,
-  stringPath,
-  stringPropPath,
-} from './field-validation.js';
+import { stringy } from './field-validation.js';
 import { formatMessage, ValidationError } from './format-message.js';
 import { Result, succeed, fail } from './railway.js';
 
@@ -23,12 +14,11 @@ const jsonishSchema: z.ZodType<Json> = z
   .describe('Any JSON document without null values');
 const engine = z
   .object({
-    defaultShell: z.string(),
     telemetry: z
       .object({
         name: z.string().min(1).max(40).optional(),
-        verbosity: z.string(),
-        filepath: z.string(),
+        verbosity: z.string().max(100),
+        filepath: stringy.path,
       })
       .describe('Preferences for telemetry'),
   })
@@ -43,15 +33,26 @@ const onShellCommandFinish = z.enum([
   'json',
   'yaml',
   'csv',
+  'save'
 ]);
 
+const linkPage = z
+  .object({
+    title: stringy.title,
+    url: stringy.url,
+  })
+  .describe('Info about a link');
+
+const links = z.array(linkPage).optional().describe('A list of useful links');
+
 const metadataStep = {
-  name: stringCustomKey.describe(
+  name: stringy.customKey.describe(
     'A short name that could be used a key or variable for the step'
   ),
-  title: stringTitle.optional(),
-  description: stringDescription.optional(),
-  motivation: stringMotivation.optional(),
+  title: stringy.title.optional(),
+  description: stringy.description.optional(),
+  motivation: stringy.motivation.optional(),
+  links,
 };
 const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
@@ -73,11 +74,15 @@ const advancedShell = z
       ),
     name: lineShell,
 
-    if: varValue
+    if: stringy.varValue
       .optional()
       .describe(
         'reference to JSON path that must be satisfied for the step to run'
       ),
+    stdin: stringy.varValue
+      .optional()
+      .describe('Provide stdin with a value read from a dot prop path'),
+
     run: lineShell,
   })
   .describe('Configuration for the batch shell script');
@@ -88,34 +93,20 @@ const commands = z
   .max(50)
   .describe('A list of batch shell scripts to run');
 
-const binary = z
-  .object({
-    title: stringTitle,
-    description: stringDescription.optional(),
-    motivation: stringMotivation.optional(),
-    homepage: stringUrl.optional(),
-    shell: z
-      .object({ run: lineShell, diagnosis: lineShell })
-      .describe('A few commands to provide quick diagnosis and support'),
-  })
-  .describe('Settings for a binary executable used in the developer workflow');
 const valuesLoopEach = z.string().min(1).max(300);
 
 const loopEach = z
   .object({
-    name: stringCustomKey,
+    name: stringy.customKey,
     values: valuesLoopEach,
   })
   .describe('Configuration of every loop');
-const binaries = z
-  .record(stringCustomKey, binary)
-  .describe('A list of executables used in the developer workflow');
 
 const getPropertyStep = z
   .strictObject({
     a: z.literal('get-property'),
     ...metadataStep,
-    value: varValue,
+    value: stringy.varValue,
   })
   .describe('Get a property using a dot prop path');
 
@@ -136,7 +127,7 @@ const stringArrayFilterBy = z
       ])
       .describe('Filter criteria'),
     anyOf: z
-      .array(varValue)
+      .array(stringy.varValue)
       .min(1)
       .max(50)
       .describe('A list of references to match against'),
@@ -146,7 +137,7 @@ const stringArrayStep = z
   .strictObject({
     a: z.literal('string-array'),
     ...metadataStep,
-    value: varValue,
+    value: stringy.varValue,
     onSuccess: onStringArraySuccess,
     filters: z
       .array(stringArrayFilterBy)
@@ -161,7 +152,7 @@ const concatArrayStep = z
   .strictObject({
     a: z.literal('concat-array'),
     ...metadataStep,
-    values: z.array(varValue).min(1).max(20),
+    values: z.array(stringy.varValue).min(1).max(20),
   })
   .describe('Concatenate several arrays together');
 
@@ -175,7 +166,7 @@ const splitStringStep = z
       .max(80)
       .default(' ')
       .describe('A separator to split the string'),
-    value: varValue,
+    value: stringy.varValue,
   })
   .describe('Split a string into multiple strings');
 
@@ -184,7 +175,7 @@ const someTruthyArrayStep = z
     a: z.literal('some-truthy'),
     ...metadataStep,
 
-    values: z.array(varValue).min(1).max(20),
+    values: z.array(stringy.varValue).min(1).max(20),
   })
   .describe('Return true if at least one of values is truthy');
 
@@ -193,7 +184,7 @@ const someFalsyArrayStep = z
     a: z.literal('some-falsy'),
     ...metadataStep,
 
-    values: z.array(varValue).min(1).max(20),
+    values: z.array(stringy.varValue).min(1).max(20),
   })
   .describe('Return true if at least one of values is falsy');
 const everyTruthyArrayStep = z
@@ -201,7 +192,7 @@ const everyTruthyArrayStep = z
     a: z.literal('every-truthy'),
     ...metadataStep,
 
-    values: z.array(varValue).min(1).max(20),
+    values: z.array(stringy.varValue).min(1).max(20),
   })
   .describe('Return true if all the values are truthy');
 
@@ -210,7 +201,7 @@ const everyFalsyArrayStep = z
     a: z.literal('every-falsy'),
     ...metadataStep,
 
-    values: z.array(varValue).min(1).max(20),
+    values: z.array(stringy.varValue).min(1).max(20),
   })
   .describe('Return true if all the values are falsy');
 
@@ -219,7 +210,7 @@ const notStep = z
     a: z.literal('not'),
     ...metadataStep,
 
-    value: varValue,
+    value: stringy.varValue,
   })
   .describe('Return the opposite boolean value');
 
@@ -246,7 +237,7 @@ const invertObjectStep = z
     a: z.literal('invert-object'),
     ...metadataStep,
 
-    value: varValue,
+    value: stringy.varValue,
   })
   .describe('Invert keys and values into a new object');
 const anyBeforeStep = z
@@ -275,7 +266,7 @@ const batchStep = z
       .max(20)
       .optional()
       .describe('A list of operations to run before end'),
-    if: varValue
+    if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
     each: z
@@ -295,7 +286,7 @@ const batchStep = z
 const steps = z.array(batchStep).min(1);
 const parameter = z
   .object({
-    description: stringDescription,
+    description: stringy.description,
     flags: z.string().min(1).max(80),
     default: z.string().min(1).max(300).optional(),
   })
@@ -303,42 +294,42 @@ const parameter = z
 const task = z
   .object({
     name: z.string().max(1).default(''),
-    title: stringTitle,
-    description: stringDescription.optional(),
-    motivation: stringMotivation.optional(),
-    parameters: z.record(stringCustomKey, parameter),
+    title: stringy.title,
+    description: stringy.description.optional(),
+    motivation: stringy.motivation.optional(),
+    parameters: z.array(parameter).max(20).optional(),
     steps,
     finally: steps.optional(),
   })
   .describe('Settings for a task');
 const domain = z
   .object({
-    title: stringTitle,
-    description: stringDescription.optional(),
-    tasks: z.record(stringCustomKey, task),
+    title: stringy.title,
+    description: stringy.description.optional(),
+    tasks: z.record(stringy.customKey, task),
   })
   .describe('A domain for a list of tasks');
 export const schema = z
   .object({
     engine,
-    binaries,
     model: jsonishSchema,
-    workflows: z.record(stringCustomKey, domain),
+    workflows: z.record(stringy.customKey, domain),
   })
   .describe('Settings for a baldrick-broth file')
   .strict();
 
 const runtimeContext = z.object({
-  pwd: stringPath,
+  pwd: stringy.path,
   project: z.object({
-    name: stringTitle,
+    name: stringy.title,
   }),
+  parameters: z.record(z.string(), z.string().or(z.boolean())),
 });
 const context = z.object({
   build: schema,
   task,
   runtime: runtimeContext,
-  data: z.record(stringPropPath, jsonishSchema),
+  data: z.record(stringy.propPath, jsonishSchema),
 });
 
 export type BuildModel = z.infer<typeof schema>;

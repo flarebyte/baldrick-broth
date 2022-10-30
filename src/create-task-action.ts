@@ -11,6 +11,12 @@ import {
   telemetryTaskRefLogger,
 } from './logging.js';
 import { fail, Result, succeed } from './railway.js';
+import { basicExecution } from './basic-execution.js';
+import {
+  getSupportedProperty,
+  isTruthy,
+  setDataValue,
+} from './data-value-utils.js';
 
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
@@ -42,23 +48,44 @@ const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
 };
 
 const toCommandLineAction = (
-  _ctx: Ctx,
+  ctx: Ctx,
   commandLineInput: CommandLineInput
 ): ListrTask => {
   const commandTask: ListrTask = {
     title: commandLineInput.name,
+    enabled: (_) => {
+      const ifPath = commandLineInput.opts.if;
+      if (ifPath === undefined) {
+        return true;
+      }
+      const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
+      return shouldEnable;
+    },
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
-      const cmdLineResult = await executeCommandLine(commandLineInput);
+      const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
+      const shouldSave = commandLineInput.opts.onSuccess.includes('save');
+      const shouldBeSilent = commandLineInput.opts.onSuccess.includes('silent');
       await sleep(500);
       if (cmdLineResult.status === 'success') {
-        const { value: { data} } = cmdLineResult;
-        currentTaskLogger.info(data);
+        const {
+          value: { data },
+        } = cmdLineResult;
+        if (shouldSave) {
+          setDataValue(ctx, commandLineInput.name, data);
+        }
+        if (!shouldBeSilent) {
+          currentTaskLogger.info(data);
+        }
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {
-        currentTaskLogger.info(
-          [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join('\n\n')
-        );
+        if (!shouldBeSilent) {
+          currentTaskLogger.info(
+            [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join(
+              '\n\n'
+            )
+          );
+        }
         task.output = 'KO';
       }
       await sleep(500);
@@ -74,60 +101,73 @@ const toBatchStepAction = (
   const title = batchStep.title
     ? `${batchStep.title}: ${batchStep.name}`
     : batchStep.name;
-  const commandsForStep = expandBatchStep(ctx, batchStep);
-  if (commandsForStep.status === 'failure') {
-    return fail({ messages: commandsForStep.error.messages });
-  }
-  const commandTasks = commandsForStep.value.map((input) =>
-    toCommandLineAction(ctx, input)
-  );
+
   const batchTask: ListrTask = {
     title,
     task: async (_, task) => {
-      currentTaskLogger.info(startStepTitle(batchStep));
-      return task.newListr(commandTasks);
+      const basicExecutionResult = basicExecution(ctx, batchStep);
+      if (basicExecutionResult.status === 'failure') {
+        task.output = 'before: KO';
+      }
+      const commandsForStep = expandBatchStep(ctx, batchStep);
+      if (commandsForStep.status === 'failure') {
+        console.log({ messages: commandsForStep.error.messages });
+        task.output = 'KO';
+      }
+      if (commandsForStep.status === 'success') {
+        const commandTasks = commandsForStep.value.map((input) =>
+          toCommandLineAction(ctx, input)
+        );
+        currentTaskLogger.info(startStepTitle(batchStep));
+        return task.newListr([...commandTasks]);
+      } else {
+        return undefined;
+      }
     },
   };
   return succeed(batchTask);
 };
 
 type BuildCtx = Pick<Ctx, 'build' | 'task'>;
-export const createTaskAction = (buildCtx: BuildCtx) => async (_opts: any) => {
-  const pwd = process.cwd();
-  const telemetryName = buildCtx.build.engine?.telemetry.name;
-  const projectName =
-    telemetryName === undefined ? path.basename(pwd) : telemetryName;
-  const runtime: RuntimeContext = {
-    pwd,
-    project: {
-      name: projectName,
-    },
-  };
-  const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
-  const started = process.hrtime();
-  const listPossibleActions = mergeBatchStepAction(
-    ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
-  );
-  if (listPossibleActions.status === 'failure') {
-    console.log('Failure ', listPossibleActions.error.messages);
-  } else {
-    const mainTask = new Listr<Ctx>(listPossibleActions.value);
-    try {
-      await mainTask.run(ctx);
-      logTaskStatistics(started, ctx);
-      await replayLogToConsole();
-    } catch (e: any) {
-      console.log('Failure ', e);
+export const createTaskAction =
+  (buildCtx: BuildCtx) =>
+  async (parameters: Record<string, string | boolean>) => {
+    const pwd = process.cwd();
+    const telemetryName = buildCtx.build.engine?.telemetry.name;
+    const projectName =
+      telemetryName === undefined ? path.basename(pwd) : telemetryName;
+    const runtime: RuntimeContext = {
+      pwd,
+      project: {
+        name: projectName,
+      },
+      parameters,
+    };
+    const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
+    const started = process.hrtime();
+    const listPossibleActions = mergeBatchStepAction(
+      ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
+    );
+    if (listPossibleActions.status === 'failure') {
+      console.log('Failure ', listPossibleActions.error.messages);
+    } else {
+      const mainTask = new Listr<Ctx>(listPossibleActions.value);
+      try {
+        await mainTask.run(ctx);
+        logTaskStatistics(started, ctx);
+        await replayLogToConsole();
+      } catch (e: any) {
+        console.log('Failure ', e);
+      }
     }
-  }
-};
+  };
 function logTaskStatistics(started: [number, number], ctx: Ctx) {
   const date = new Date();
   const finished = process.hrtime(started);
   date.getMonth;
   telemetryTaskLogger.info(
     [
-      ctx.runtime.project,
+      ctx.runtime.project.name,
       ctx.task.name,
       date.getFullYear(),
       date.getMonth(),
@@ -142,7 +182,7 @@ function logTaskStatistics(started: [number, number], ctx: Ctx) {
     for (const taskId of tasks) {
       telemetryTaskRefLogger.info(
         [
-          ctx.runtime.project,
+          ctx.runtime.project.name,
           `${workflowKey}.${taskId}`,
           date.getFullYear(),
           date.getMonth(),

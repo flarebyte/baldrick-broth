@@ -1,14 +1,4 @@
 ---
-binaries:
-  sh:
-    title: Title of sh
-    description: Description of sh
-    motivation: Motivation of sh
-    homepage: https://website.com/sh
-    shell:
-      run: sh
-      diagnosis: sh --version
-
 model:
   githubAccount: github-account-fixme
   projectName: project-name-fixme
@@ -35,10 +25,6 @@ workflows:
         title: Generate code
         description: Generate code
         motivation: Generate code
-        parameters:
-          color:
-            description: Color
-            flags: '-c, --color <type>'
         steps:
           - a: batch
             name: calculate
@@ -47,18 +33,61 @@ workflows:
               - a: get-property
                 name: githubAccount
                 title: Set variable githubAccount
-                value: model.githubAccount
+                value: build.model.githubAccount
+              - a: get-property
+                name: githubAccount2
+                title: Set variable githubAccount
+                value: data.test::generate::githubAccount
             commands:
-              - name: echo
-                title: simple echo
-                run: echo "{{githubAccount}} and {{color}}"
-              - name: echo2
-                title: simple echo2
-                run: echo "{{build.name}}"
+              - name: first
+                title: First echo
+                run: echo "First is {{data.status}} and {{data.test::generate::githubAccount}} and {{build.model.license}}"
+              - name: second
+                title: Second echo with task.name
+                run: echo "Second {{task.name}}"
+      color:
+        title: Print some colors
+        parameters:
+          - description: Color
+            flags: '-c, --color <type>'
+          - description: decision
+            flags: '-y, --yes'
+        steps:
+          - a: batch
+            name: calculate
+            title: Run calculate
+            commands:
+              - name: confirm-color
+                title: Confirm color
+                run: echo "Color is {{runtime.parameters.color}} and yes is {{runtime.parameters.yes}}"
+              - name: check-yes
+                title: Check if statement
+                if: runtime.parameters.yes
+                run: echo "if statement is printed"
+              - name: always-no
+                title: Check always no statement
+                if: runtime.parameters.unknown
+                run: echo "should never be printed"
+      stdin:
+        title: Check stdin
+        description: Check stdin is working
+        steps:
+          - a: batch
+            name: main
+            title: Check std in
+            commands:
+              - name: code_of_conduct
+                run: cat CODE_OF_CONDUCT.md
                 onSuccess:
-                  - trim
-                onFailure:
-                  - exit
+                  - save
+                  - silent
+              - name: head
+                stdin: data.test::stdin::code_of_conduct
+                run: head -n 5
+      lint:
+        title: Lint code
+        description: Lint code
+        steps:
           - a: batch
             name: list files
             title: List files
