@@ -80,6 +80,7 @@ workflows:
                 run: cat CODE_OF_CONDUCT.md
                 onSuccess:
                   - save
+                  - silent
               - name: head
                 stdin: data.test::stdin::code_of_conduct
                 run: head -n 5

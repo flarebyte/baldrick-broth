@@ -38,7 +38,7 @@ const commands = [
   },
   {
     run: ['test', 'stdin'],
-    expect: 'Something cool',
+    expect: 'Contributor Covenant Code',
   },
 ];
 

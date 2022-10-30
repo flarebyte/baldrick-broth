@@ -65,6 +65,7 @@ const toCommandLineAction = (
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
       const shouldSave = commandLineInput.opts.onSuccess.includes('save');
+      const shouldBeSilent = commandLineInput.opts.onSuccess.includes('silent');
       await sleep(500);
       if (cmdLineResult.status === 'success') {
         const {
@@ -73,12 +74,18 @@ const toCommandLineAction = (
         if (shouldSave) {
           setDataValue(ctx, commandLineInput.name, data);
         }
-        currentTaskLogger.info(data);
+        if (!shouldBeSilent) {
+          currentTaskLogger.info(data);
+        }
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {
-        currentTaskLogger.info(
-          [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join('\n\n')
-        );
+        if (!shouldBeSilent) {
+          currentTaskLogger.info(
+            [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join(
+              '\n\n'
+            )
+          );
+        }
         task.output = 'KO';
       }
       await sleep(500);
