@@ -1,6 +1,5 @@
 import { Command } from 'commander';
-import { JsonObject } from 'type-fest';
-import { BuildModel, safeParseBuild } from './build-model.js';
+import { AnyDataValue, BuildModel, safeParseBuild } from './build-model.js';
 import { createCommands } from './commands-creator.js';
 import { buildFilePath } from './env-variables.js';
 import { readYaml } from './file-io.js';
@@ -30,7 +29,7 @@ type RunClientFailure =
  */
 async function unsafeRunClient() {
   const buildReadingResult = await readYaml(buildFilePath);
-  const buildModelResult = andThen<JsonObject, BuildModel, RunClientFailure>(
+  const buildModelResult = andThen<AnyDataValue, BuildModel, RunClientFailure>(
     safeParseBuild
   )(buildReadingResult);
 

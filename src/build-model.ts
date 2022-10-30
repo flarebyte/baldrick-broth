@@ -33,6 +33,7 @@ const onShellCommandFinish = z.enum([
   'json',
   'yaml',
   'csv',
+  'save'
 ]);
 
 const linkPage = z

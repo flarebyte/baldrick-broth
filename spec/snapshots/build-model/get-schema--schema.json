@@ -747,7 +747,8 @@
                                       "trim",
                                       "json",
                                       "yaml",
-                                      "csv"
+                                      "csv",
+                                      "save"
                                     ]
                                   },
                                   "minItems": 1,

@@ -78,9 +78,11 @@ workflows:
             commands:
               - name: code_of_conduct
                 run: cat CODE_OF_CONDUCT.md
+                onSuccess:
+                  - save
               - name: head
-                stdin: build.model.githubAccount
-                run: head -n 3
+                stdin: data.test::stdin::code_of_conduct
+                run: head -n 5
       lint:
         title: Lint code
         description: Lint code

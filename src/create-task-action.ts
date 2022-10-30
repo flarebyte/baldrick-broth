@@ -12,7 +12,11 @@ import {
 } from './logging.js';
 import { fail, Result, succeed } from './railway.js';
 import { basicExecution } from './basic-execution.js';
-import { getSupportedProperty, isTruthy } from './data-value-utils.js';
+import {
+  getSupportedProperty,
+  isTruthy,
+  setDataValue,
+} from './data-value-utils.js';
 
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
@@ -60,11 +64,15 @@ const toCommandLineAction = (
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
+      const shouldSave = commandLineInput.opts.onSuccess.includes('save');
       await sleep(500);
       if (cmdLineResult.status === 'success') {
         const {
           value: { data },
         } = cmdLineResult;
+        if (shouldSave) {
+          setDataValue(ctx, commandLineInput.name, data);
+        }
         currentTaskLogger.info(data);
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {

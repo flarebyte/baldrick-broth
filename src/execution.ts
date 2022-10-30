@@ -1,9 +1,8 @@
 import { execaCommand } from 'execa';
-import type { JsonValue } from 'type-fest';
 import YAML from 'yaml';
 import CSV from 'papaparse';
-import { CommandOptionsModel, Ctx } from './build-model.js';
-import { Result, succeed } from './railway.js';
+import { AnyDataValue, CommandOptionsModel, Ctx } from './build-model.js';
+import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 
 type ExecuteCommandLineFailedCategory =
@@ -42,14 +41,14 @@ type ExecuteCommandLineSuccess =
       format: 'json';
       line: string;
       name: string;
-      data: JsonValue;
+      data: AnyDataValue;
       onSuccess: CommandOptionsModel['onSuccess'];
     }
   | {
       format: 'csv';
       line: string;
       name: string;
-      data: Record<string, string>[];
+      data: AnyDataValue;
       onSuccess: CommandOptionsModel['onSuccess'];
     };
 
@@ -84,17 +83,17 @@ const toStatus = (params: {
   return 'success';
 };
 
-const parseJson = (content: string): JsonValue | undefined => {
+const parseJson = (content: string): AnyDataValue | undefined => {
   try {
-    const parsed: JsonValue = JSON.parse(content);
+    const parsed: AnyDataValue= JSON.parse(content);
     return parsed;
   } catch {
     return undefined;
   }
 };
-const parseYaml = (content: string): JsonValue | undefined => {
+const parseYaml = (content: string): AnyDataValue | undefined => {
   try {
-    const parsed: JsonValue = YAML.parse(content);
+    const parsed: AnyDataValue = YAML.parse(content);
     return parsed;
   } catch {
     return undefined;
