@@ -33,7 +33,8 @@ const onShellCommandFinish = z.enum([
   'json',
   'yaml',
   'csv',
-  'save'
+  'save',
+  'debug'
 ]);
 
 const linkPage = z
@@ -340,6 +341,7 @@ export type AnyBasicStepModel = z.infer<typeof anyBeforeStep>;
 export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
 export type AnyDataValue = z.infer<typeof jsonishSchema>;
+export type OnShellCommandFinish = z.infer<typeof onShellCommandFinish>
 
 export type BuildModelValidation = Result<BuildModel, ValidationError[]>;
 
