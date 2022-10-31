@@ -1,7 +1,12 @@
 import path from 'node:path';
 import { Listr } from 'listr2';
 import type { ListrTask } from 'listr2';
-import type { BatchStepModel, Ctx, RuntimeContext } from './build-model.js';
+import type {
+  BatchStepModel,
+  Ctx,
+  OnShellCommandFinish,
+  RuntimeContext,
+} from './build-model.js';
 import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
@@ -47,6 +52,18 @@ const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
   return succeed(batchTasks);
 };
 
+interface OnResultFlags {
+  save: boolean;
+  silent: boolean;
+  debug: boolean;
+}
+
+const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
+  save: flags.includes('save'),
+  silent: flags.includes('silent'),
+  debug: flags.includes('debug'),
+});
+
 const toCommandLineAction = (
   ctx: Ctx,
   commandLineInput: CommandLineInput
@@ -64,27 +81,33 @@ const toCommandLineAction = (
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
-      const shouldSave = commandLineInput.opts.onSuccess.includes('save');
-      const shouldBeSilent = commandLineInput.opts.onSuccess.includes('silent');
+      const successFlags = toOnResultFlags(commandLineInput.opts.onSuccess);
+      const failureFlags = toOnResultFlags(commandLineInput.opts.onFailure);
       await sleep(500);
       if (cmdLineResult.status === 'success') {
         const {
           value: { data },
         } = cmdLineResult;
-        if (shouldSave) {
+        if (successFlags.save) {
           setDataValue(ctx, commandLineInput.name, data);
         }
-        if (!shouldBeSilent) {
+        if (!successFlags.silent) {
           currentTaskLogger.info(data);
+        }
+        if (successFlags.debug) {
+          console.debug('Debug Context', ctx);
         }
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {
-        if (!shouldBeSilent) {
+        if (!failureFlags.silent) {
           currentTaskLogger.info(
             [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join(
               '\n\n'
             )
           );
+        }
+        if (failureFlags.debug) {
+          console.debug('Debug Context', ctx);
         }
         task.output = 'KO';
       }

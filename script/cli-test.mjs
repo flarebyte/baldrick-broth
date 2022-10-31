@@ -40,6 +40,10 @@ const commands = [
     run: ['test', 'stdin'],
     expect: 'Contributor Covenant Code',
   },
+  {
+    run: ['test', 'bad-stdin'],
+    expect: 'bad-stdin is done',
+  },
 ];
 
 const commandPromises = commands.map(runCommand);

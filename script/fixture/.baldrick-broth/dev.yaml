@@ -84,6 +84,19 @@ workflows:
               - name: head
                 stdin: data.test::stdin::code_of_conduct
                 run: head -n 5
+      bad-stdin:
+        title: Stdin is undefined
+        description: Provide an undefined value for stdin
+        steps:
+          - a: batch
+            name: main
+            title: Check std in
+            commands:
+              - name: cat
+                stdin: build.unknown
+                run: cat
+              - name: done
+                run: echo "bad-stdin is done"
       lint:
         title: Lint code
         description: Lint code

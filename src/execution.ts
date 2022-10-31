@@ -85,7 +85,7 @@ const toStatus = (params: {
 
 const parseJson = (content: string): AnyDataValue | undefined => {
   try {
-    const parsed: AnyDataValue= JSON.parse(content);
+    const parsed: AnyDataValue = JSON.parse(content);
     return parsed;
   } catch {
     return undefined;
@@ -131,7 +131,7 @@ export const executeCommandLine = async (
   const maybeStdin =
     stdin === undefined
       ? {}
-      : { input: forceString(getSupportedProperty(ctx, stdin)) };
+      : { input: forceString(getSupportedProperty(ctx, stdin) || '') };
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
     await execaCommand(line, { reject: false, ...maybeStdin });
 
