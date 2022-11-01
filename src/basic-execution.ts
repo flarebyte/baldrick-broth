@@ -1,3 +1,4 @@
+import { } from 'json-mask'
 import type {
   AnyBasicStepModel,
   AnyDataValue,
@@ -82,6 +83,14 @@ const basicStepExecution = (
       );
       return success;
     case 'concat-array':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        getPropertyList(ctx, basicStep.values).flatMap(asAnyArray)
+      );
+      return success;
+    case 'mask-object':
+      const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
       setDataValue(
         ctx,
         basicStep.name,

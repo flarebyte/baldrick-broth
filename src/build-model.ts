@@ -34,7 +34,7 @@ const onShellCommandFinish = z.enum([
   'yaml',
   'csv',
   'save',
-  'debug'
+  'debug',
 ]);
 
 const linkPage = z
@@ -241,6 +241,19 @@ const invertObjectStep = z
     value: stringy.varValue,
   })
   .describe('Invert keys and values into a new object');
+const maskJsonStep = z
+  .strictObject({
+    a: z.literal('mask-object'),
+    ...metadataStep,
+
+    value: stringy.varValue,
+    mask: z
+      .string()
+      .min(1)
+      .max(100)
+      .describe('JSON mask to select parts of the json object'),
+  })
+  .describe('Uses JSON mask to select parts of the json object');
 const anyBeforeStep = z
   .discriminatedUnion('a', [
     getPropertyStep,
@@ -254,6 +267,7 @@ const anyBeforeStep = z
     notStep,
     rangeStep,
     invertObjectStep,
+    maskJsonStep,
   ])
   .describe('An operation on the context');
 
@@ -341,7 +355,7 @@ export type AnyBasicStepModel = z.infer<typeof anyBeforeStep>;
 export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
 export type AnyDataValue = z.infer<typeof jsonishSchema>;
-export type OnShellCommandFinish = z.infer<typeof onShellCommandFinish>
+export type OnShellCommandFinish = z.infer<typeof onShellCommandFinish>;
 
 export type BuildModelValidation = Result<BuildModel, ValidationError[]>;
 
