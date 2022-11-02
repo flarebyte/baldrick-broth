@@ -1,4 +1,4 @@
-import { } from 'json-mask'
+import json_mask from 'json-mask';
 import type {
   AnyBasicStepModel,
   AnyDataValue,
@@ -82,6 +82,13 @@ const basicStepExecution = (
         )
       );
       return success;
+    case 'range':
+      setDataValue(
+        ctx,
+        basicStep.name,
+        range(basicStep.end, basicStep.start, basicStep.step)
+      );
+      return success;
     case 'concat-array':
       setDataValue(
         ctx,
@@ -91,11 +98,8 @@ const basicStepExecution = (
       return success;
     case 'mask-object':
       const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
-      setDataValue(
-        ctx,
-        basicStep.name,
-        getPropertyList(ctx, basicStep.values).flatMap(asAnyArray)
-      );
+      const masked = json_mask(objectValue, basicStep.mask);
+      setDataValue(ctx, basicStep.name, masked);
       return success;
   }
 
@@ -119,4 +123,15 @@ export const basicExecution = (
     }
   }
   return succeed(ctx);
+};
+
+/**
+ * Create a range starting with stop as other parameters are optional
+ */
+const range = (stop: number, start: number = 1, step: number = 1) => {
+  let ranged = [];
+  for (let index = start; index <= stop; index = index + step) {
+    ranged.push(index);
+  }
+  return ranged;
 };
