@@ -64,6 +64,16 @@ const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   debug: flags.includes('debug'),
 });
 
+const debugContext = (ctx: Ctx) => {
+  console.debug('--- Debug Context ---');
+  console.debug('model:\n', ctx.build.model);
+  console.debug('engine:\n', ctx.build.engine);
+  console.debug('workflows:\n', ctx.build.workflows);
+  console.debug('task:\n', ctx.task);
+  console.debug('runtime:\n', ctx.runtime);
+  console.debug('data:\n', ctx.data);
+};
+
 const toCommandLineAction = (
   ctx: Ctx,
   commandLineInput: CommandLineInput
@@ -95,7 +105,7 @@ const toCommandLineAction = (
           currentTaskLogger.info(data);
         }
         if (successFlags.debug) {
-          console.debug('Debug Context', ctx);
+          debugContext(ctx);
         }
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {
@@ -107,7 +117,7 @@ const toCommandLineAction = (
           );
         }
         if (failureFlags.debug) {
-          console.debug('Debug Context', ctx);
+          debugContext(ctx);
         }
         task.output = 'KO';
       }

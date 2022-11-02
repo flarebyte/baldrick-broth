@@ -13,3 +13,35 @@ g::not true: true
 g::split-string:
   - Generate
   - code
+g::masked:
+  copyright:
+    holder: copyright-holder-fixme
+    startYear: 2022
+  colors:
+    - green
+    - orange
+    - blue
+g::range7:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+g::range5-7:
+  - 5
+  - 6
+  - 7
+g::range0-20-2:
+  - 0
+  - 2
+  - 4
+  - 6
+  - 8
+  - 10
+  - 12
+  - 14
+  - 16
+  - 18
+  - 20

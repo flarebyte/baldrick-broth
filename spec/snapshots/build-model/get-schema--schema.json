@@ -661,6 +661,47 @@
                                   ],
                                   "additionalProperties": false,
                                   "description": "Invert keys and values into a new object"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "a": {
+                                      "type": "string",
+                                      "const": "mask-object"
+                                    },
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                    },
+                                    "value": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value"
+                                    },
+                                    "mask": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 100,
+                                      "description": "JSON mask to select parts of the json object"
+                                    }
+                                  },
+                                  "required": [
+                                    "a",
+                                    "name",
+                                    "value",
+                                    "mask"
+                                  ],
+                                  "additionalProperties": false,
+                                  "description": "Uses JSON mask to select parts of the json object"
                                 }
                               ],
                               "description": "An operation on the context"
