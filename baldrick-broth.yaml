@@ -84,6 +84,22 @@ workflows:
               - name: transpile
                 title: Compile with typescript
                 run: tsc --outDir dist
+  deps:
+    title:  Library dependencies
+    description: Npm dependencies
+    tasks:
+      upgrade:
+        title: Upgrade to latest dependencies
+        description: Upgrade to latest npm dependencies
+        motivation: Keep up with security and improvements
+        steps:
+          - a: batch
+            name: main
+            title: Upgrade npm dependencies
+            commands:
+              - name: latest
+                title: Upgrade to latest dependencies
+                run: yarn upgrade-interactive --latest
   doc:
     title: Generate the documentation
     description: Generate the documentation automatically
@@ -178,6 +194,7 @@ workflows:
         steps:
           - a: batch
             name: main
+            title: Check markdown
             commands:
               - name: check
                 title: Check markdown files
@@ -209,8 +226,10 @@ workflows:
         steps:
           - a: batch
             name: main
+            title: Check if ready for publishing
             commands:
               - name: lint
+                title: Check linting
                 run: npx baldrick-dev-ts@latest lint check -s src test
               - name: markdown
                 title: Check markdown files
