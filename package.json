@@ -61,6 +61,7 @@
     "spec": "node --loader ts-node/esm .baldrick-zest.ts"
   },
   "dependencies": {
+    "chalk": "^5.1.2",
     "commander": "^9.4.0",
     "dot-prop": "^7.2.0",
     "execa": "^6.1.0",
