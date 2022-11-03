@@ -1,7 +1,16 @@
 import { Command } from 'commander';
-import { BuildModelValidation } from './build-model.js';
+import { BuildModelValidation, TaskModel } from './build-model.js';
+import { coloration } from './coloration.js';
 import { createTaskAction } from './create-task-action.js';
 import { version } from './version.js';
+
+const createTaskDescription = (task: TaskModel): string => {
+  const descriptions = [task.description ? task.description : task.title];
+  if (task.motivation !== undefined) {
+    descriptions.push('\n'+coloration.motivation(`Motivation: ${task.motivation}`));
+  }
+  return descriptions.join('\n');
+};
 
 export const createCommands = (
   program: Command,
@@ -23,14 +32,18 @@ export const createCommands = (
         continue;
       }
       const workflowCmd = program.command(workflowKey);
-      workflowCmd.description(workflow.title);
+      workflowCmd.summary(workflow.title);
+      if (workflow.description !== undefined) {
+        workflowCmd.description(workflow.description);
+      }
       for (const taskId in workflow.tasks) {
         const task = workflow.tasks[taskId];
         if (task === undefined) {
           continue;
         }
         const taskCommand = workflowCmd.command(taskId);
-        taskCommand.description(task.title);
+        taskCommand.summary(task.title);
+        taskCommand.description(createTaskDescription(task));
         taskCommand.action(
           createTaskAction({
             build: value,

@@ -78,8 +78,12 @@ const toCommandLineAction = (
   ctx: Ctx,
   commandLineInput: CommandLineInput
 ): ListrTask => {
+  const title = commandLineInput.opts.title
+    ? commandLineInput.opts.title
+    : commandLineInput.opts.name;
+
   const commandTask: ListrTask = {
-    title: commandLineInput.name,
+    title,
     enabled: (_) => {
       const ifPath = commandLineInput.opts.if;
       if (ifPath === undefined) {
@@ -131,9 +135,7 @@ const toBatchStepAction = (
   ctx: Ctx,
   batchStep: BatchStepModel
 ): BatchStepAction => {
-  const title = batchStep.title
-    ? `${batchStep.title}: ${batchStep.name}`
-    : batchStep.name;
+  const title = batchStep.title ? batchStep.title : batchStep.name;
 
   const batchTask: ListrTask = {
     title,
