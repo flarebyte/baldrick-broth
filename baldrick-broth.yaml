@@ -128,12 +128,13 @@ workflows:
     description: Generate the documentation based on the source code
     tasks:
       standard:
-        title: Standardize the github  repository
+        title: Standardize the github repository
         description: Enable useful features for the github project repository
         motivation: Create consistent settings
         steps:
           - a: batch
             name: main
+            title: Standardize repository settings
             commands:
               - name: edit
                 title: Configure usual settings for github project
@@ -149,7 +150,7 @@ workflows:
         steps:
           - a: batch
             name: main
-            title: lint check
+            title: Lint check
             commands:
               - name: check
                 title: Lint check sources
@@ -161,6 +162,7 @@ workflows:
         steps:
           - a: batch
             name: main
+            title: Lint fix
             commands:
               - name: fix
                 title: Fix source code
