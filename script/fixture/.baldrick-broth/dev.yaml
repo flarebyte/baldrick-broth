@@ -42,8 +42,7 @@ workflows:
               - name: first
                 title: First echo
                 run: echo "First is {{data.status}} and {{data.test::generate::githubAccount}} and {{build.model.license}}"
-              - name: second
-                title: Second echo with task.name
+              - title: Second echo with task.name
                 run: echo "Second {{task.name}}"
       color:
         title: Print some colors
@@ -76,12 +75,12 @@ workflows:
             name: main
             title: Check std in
             commands:
-              - name: code_of_conduct
+              - title: code_of_conduct
                 run: cat CODE_OF_CONDUCT.md
                 onSuccess:
                   - save
                   - silent
-              - name: head
+              - title: head
                 stdin: data.test::stdin::code_of_conduct
                 run: head -n 5
       bad-stdin:
@@ -92,10 +91,10 @@ workflows:
             name: main
             title: Check std in
             commands:
-              - name: cat
+              - title: cat
                 stdin: build.unknown
                 run: cat
-              - name: done
+              - title: done
                 run: echo "bad-stdin is done"
       lint:
         title: Lint code
@@ -105,5 +104,5 @@ workflows:
             name: list files
             title: List files
             commands:
-              - name: list source files
+              - title: list source files
                 run: yarn lint

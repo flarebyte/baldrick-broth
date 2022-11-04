@@ -12,6 +12,7 @@ import {
   isFalsy,
 } from './data-value-utils.js';
 import { Result, succeed } from './railway.js';
+import { dasherizeTitle } from './string-utils.js';
 
 type BasicExecution = Result<Ctx, { message: string }>;
 
@@ -33,50 +34,51 @@ const basicStepExecution = (
 ): BasicExecution => {
   const { a } = basicStep;
   const success: BasicExecution = succeed(ctx);
+  const name = basicStep.name === undefined ?dasherizeTitle(basicStep.title): basicStep.name;
   switch (a) {
     case 'get-property':
       const value = getSupportedProperty(ctx, basicStep.value);
-      setDataValue(ctx, basicStep.name, value);
+      setDataValue(ctx, name, value);
       return success;
     case 'some-truthy':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         getPropertyList(ctx, basicStep.values).some(isTruthy)
       );
       return success;
     case 'some-falsy':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         getPropertyList(ctx, basicStep.values).some(isFalsy)
       );
       return success;
     case 'every-truthy':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         getPropertyList(ctx, basicStep.values).every(isTruthy)
       );
       return success;
     case 'every-falsy':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         getPropertyList(ctx, basicStep.values).every(isFalsy)
       );
       return success;
     case 'not':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         isFalsy(getSupportedProperty(ctx, basicStep.value))
       );
       return success;
     case 'split-string':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         asStringOrBlank(getSupportedProperty(ctx, basicStep.value)).split(
           basicStep.separator
         )
@@ -85,21 +87,21 @@ const basicStepExecution = (
     case 'range':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         range(basicStep.end, basicStep.start, basicStep.step)
       );
       return success;
     case 'concat-array':
       setDataValue(
         ctx,
-        basicStep.name,
+        name,
         getPropertyList(ctx, basicStep.values).flatMap(asAnyArray)
       );
       return success;
     case 'mask-object':
       const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
       const masked = json_mask(objectValue, basicStep.mask);
-      setDataValue(ctx, basicStep.name, masked);
+      setDataValue(ctx, name, masked);
       return success;
   }
 

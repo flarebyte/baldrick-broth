@@ -34,9 +34,8 @@ function sleep(ms: number) {
 }
 
 const startStepTitle = (batchStep: BatchStepModel): string => {
-  const title = batchStep.title ? batchStep.title : batchStep.name;
-  const underline = '-'.repeat(title.length + 1);
-  return `${title}:\n${underline}`;
+  const underline = '-'.repeat(batchStep.title.length + 1);
+  return `${batchStep.title}:\n${underline}`;
 };
 const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
   const withErrors = stepActions.filter((i) => i.status === 'failure');

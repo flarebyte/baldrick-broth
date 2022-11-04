@@ -6,7 +6,7 @@ export const stringy = {
   customKey: z
     .string()
     .min(1)
-    .max(30)
+    .max(60)
     .regex(/[a-z][\d_a-z]+/)
     .describe('A short name that can used as variable'),
   varValue: z

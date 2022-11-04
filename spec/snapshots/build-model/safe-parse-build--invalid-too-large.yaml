@@ -14,7 +14,7 @@
           300
 - title: "Path: model.githubAccount, mutation: string => large"
   result:
-    count: "Words: 185, Characters 102696"
+    count: "Words: 189, Characters 102727"
 - title: "Path: workflows.test.title, mutation: string => large"
   result:
     status: failure

@@ -50,15 +50,26 @@ const metadataStep = {
   name: stringy.customKey.describe(
     'A short name that could be used a key or variable for the step'
   ),
-  title: stringy.title.optional(),
+  title: stringy.title,
   description: stringy.description.optional(),
   motivation: stringy.motivation.optional(),
   links,
 };
+
+const metadataCore = {
+  name: stringy.customKey.describe(
+    'A short name that could be used a key or variable'
+  ).optional(),
+  title: stringy.title,
+  description: stringy.description.optional(),
+  motivation: stringy.motivation.optional(),
+  links,
+};
+
 const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
   .object({
-    ...metadataStep,
+    ...metadataCore,
     onFailure: z
       .array(onShellCommandFinish)
       .min(1)
@@ -73,7 +84,6 @@ const advancedShell = z
       .describe(
         'List of flags to describe the default behavior in case of success'
       ),
-    name: lineShell,
 
     if: stringy.varValue
       .optional()
@@ -274,7 +284,7 @@ const anyBeforeStep = z
 const batchStep = z
   .strictObject({
     a: z.literal('batch'),
-    ...metadataStep,
+    ...metadataCore,
     before: z
       .array(anyBeforeStep)
       .min(1)

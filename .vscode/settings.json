@@ -2,6 +2,7 @@
   "yaml.schemas": {
     "spec/snapshots/build-model/get-schema--schema.json": [
       "script/fixture/.baldrick-broth/dev.yaml",
+      "baldrick-broth.yaml",
       "spec/fixtures/build.yaml"
     ],
     "script/fixture/.baldrick-broth/zest.schema.json": "**/*.zest.yaml"

@@ -28,14 +28,12 @@ workflows:
         description: Use the Jest framework to run unit test (deprecated)
         steps:
           - a: batch
-            name: main
             title: Run Jest unit tests
             links:
               - title: Jest is a JavaScript Testing Framework
                 url: https://jestjs.io/
             commands:
-              - name: test
-                title: Test all test files in test folder
+              - title: Test all test files in test folder
                 run: npx baldrick-dev-ts test check
       spec:
         title: Run unit tests declaratively
@@ -49,7 +47,7 @@ workflows:
               - title: Baldrick Zest run tests declaratively
                 url: https://github.com/flarebyte/baldrick-zest-engine
             commands:
-              - name: spec
+              - title: Run all baldrick zest files
                 run: node --loader ts-node/esm .baldrick-zest.ts
       cli:
         title: Run client directly
@@ -60,7 +58,7 @@ workflows:
             name: main
             title: Run the CLI using ts-node
             commands:
-              - name: cli
+              - title: Run the CLI locally
                 run: node --loader ts-node/esm src/cli.mts
   transpile:
     title: Transpile the source code
@@ -78,11 +76,9 @@ workflows:
               - title: tsc compiles typescript defined by a tsconfig.json
                 url: https://www.typescriptlang.org/docs/handbook/compiler-options.html
             commands:
-              - name: clean
-                title: Delete dist folder
+              - title: Delete dist folder
                 run: rm -rf dist
-              - name: transpile
-                title: Compile with typescript
+              - title: Compile with typescript
                 run: tsc --outDir dist
   deps:
     title:  Library dependencies
@@ -97,9 +93,10 @@ workflows:
             name: main
             title: Upgrade npm dependencies
             commands:
-              - name: latest
-                title: Upgrade to latest dependencies
-                run: yarn upgrade-interactive --latest
+              - title: Upgrade to latest dependencies
+                run: yarn upgrade --latest
+              - title: Display advice about yarn upgrade-interactive
+                run: echo "❐ You could also use yarn upgrade-interactive --latest"
   doc:
     title: Generate the documentation
     description: Generate the documentation automatically
@@ -138,6 +135,7 @@ workflows:
                   - title: Package development of Typescript library in ESM format
                     url: https://github.com/flarebyte/baldrick-dev-ts   
               - name: github
+                title: Fixes markdown in github folder
                 run: npx baldrick-dev-ts@latest markdown fix -s .github/
   github:
     title: Management of the github project
@@ -208,7 +206,7 @@ workflows:
         motivation: Make the markdown documents consistent in style
         steps:
           - a: batch
-            name: main
+            title: Fix Markdown all files
             commands:
               - name: fix
                 title: Fix markdown files
@@ -255,7 +253,7 @@ workflows:
         motivation: Always apply the latest project conventions
         steps:
           - a: batch
-            name: main
+            title: Upgrade baldrick-broth
             before:
               - a: mask-object
                 name: broth-model
@@ -263,19 +261,19 @@ workflows:
                 value: build
                 mask: model
             commands:
-              - name: reset-temp
-                title: Remove previous temporary directory
+              - title: Remove previous temporary directory
                 run: rm -rf temp/broth
-              - name: mkdir-temp
-                title: Create temporary directory
+              - title: Create temporary directory
                 run: mkdir -p temp/broth
-              - name: save-model
-                title: Save baldrick-broth file with existing model
-                stdin: data.scaffold::upgrade::broth-model
-                run: sponge temp/broth/baldrick-broth-model.json
-                links:
-                  - title: sponge from MoreUtils homepage 
-                    url: https://formulae.brew.sh/formula/moreutils
+                onSuccess:
+                  - debug
+              # - name: save-model
+              #   title: Save baldrick-broth file with existing model
+              #   stdin: data.scaffold::upgrade::broth-model
+              #   run: sponge temp/broth/baldrick-broth-model.json
+              #   links:
+              #     - title: sponge from MoreUtils homepage 
+              #       url: https://formulae.brew.sh/formula/moreutils
               # - name: merge
               #   run: npx baldrick-whisker@latest object baldrick-broth2.yaml temp/baldrick-broth-model.yaml github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
       norm:
@@ -284,7 +282,7 @@ workflows:
         motivation: Make the project structure consistent and easier to navigate
         steps:
           - a: batch
-            name: github
+            title: github
             commands:
               - name: mkdir
                 title: Create all github repositories
@@ -302,7 +300,7 @@ workflows:
                 title: Github - create pull request configuration
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/pull-request-template.hbs .github/pull_request_template.md
           - a: batch
-            name: configuration
+            title: configuration
             commands:
               - name: mkdir
                 title: Create all needed repositories
@@ -335,7 +333,7 @@ workflows:
                 title: Create .remarkrc.yml
                 run: npx baldrick-whisker@latest object .remarkrc.yml github:flarebyte:baldrick-reserve:data/ts/remarkrc.yml
           - a: batch
-            name: markdown
+            title: markdown
             commands:
               - name: contributing
                 title: Create CONTRIBUTING.md with contribution guidelines
@@ -359,7 +357,7 @@ workflows:
                 title: Create LICENSE
                 run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/license.hbs LICENSE.md
           - a: batch
-            name: precedent
+            title: precedent
             commands:
               - name: package-json
                 title: Backup dependencies
@@ -367,7 +365,7 @@ workflows:
                 onSuccess:
                   - save
           - a: batch
-            name: package
+            title: package
             before:
               - a: mask-object
                 title: Extracts dependencies from package.json
