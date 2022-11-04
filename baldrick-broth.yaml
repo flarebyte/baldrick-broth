@@ -41,7 +41,6 @@ workflows:
         motivation: Check that the units of code behave as intended
         steps:
           - a: batch
-            name: main
             title: Run the baldrick-zest unit tests
             links:
               - title: Baldrick Zest run tests declaratively
@@ -55,7 +54,6 @@ workflows:
         motivation: Simulate a CLI app in development without the need to install it globally
         steps:
           - a: batch
-            name: main
             title: Run the CLI using ts-node
             commands:
               - title: Run the CLI locally
@@ -70,7 +68,6 @@ workflows:
         motivation: Javascript code is more portable and can be consumed by other projects
         steps:
           - a: batch
-            name: main
             title: Compile the typescript code
             links:
               - title: tsc compiles typescript defined by a tsconfig.json
@@ -90,7 +87,6 @@ workflows:
         motivation: Keep up with security and improvements
         steps:
           - a: batch
-            name: main
             title: Upgrade npm dependencies
             commands:
               - title: Upgrade to latest dependencies
@@ -107,7 +103,6 @@ workflows:
         motivation: Good documentation is essential for developer experience
         steps:
           - a: batch
-            name: main
             title: Generate the documentation
             commands:
               - name: report-folder
@@ -147,7 +142,6 @@ workflows:
         motivation: Create consistent settings
         steps:
           - a: batch
-            name: main
             title: Standardize repository settings
             commands:
               - name: edit
@@ -163,7 +157,6 @@ workflows:
         motivation: Make the code more consistent and avoid bugs
         steps:
           - a: batch
-            name: main
             title: Lint check
             commands:
               - name: check
@@ -175,7 +168,6 @@ workflows:
         motivation: Facilitate routine maintenance of code
         steps:
           - a: batch
-            name: main
             title: Lint fix
             commands:
               - name: fix
@@ -191,7 +183,6 @@ workflows:
         motivation: Make the markdown documents consistent in style
         steps:
           - a: batch
-            name: main
             title: Check markdown
             commands:
               - name: check
@@ -223,7 +214,6 @@ workflows:
         motivation: Detect quality flaws before pushing the code
         steps:
           - a: batch
-            name: main
             title: Check if ready for publishing
             commands:
               - name: lint
