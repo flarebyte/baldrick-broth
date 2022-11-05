@@ -3,6 +3,7 @@ import { BatchStepModel, CommandOptionsModel, Ctx } from './build-model.js';
 import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
 import { Result, succeed, fail } from './railway.js';
+import { dasherizeTitle } from './string-utils.js';
 
 type ExpandedCommandLineInputs = Result<
   CommandLineInput[],
@@ -25,9 +26,10 @@ const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
     const { commandOpts, extra } = current;
-    const { run, name } = commandOpts;
+    const { run, title, name } = commandOpts;
+    const preferredName = name === undefined ? dasherizeTitle(title) : name;
     const template = createTemplate(run);
-    const nameTemplate = createTemplate(name);
+    const nameTemplate = createTemplate(preferredName);
     const templateCtx = forceJson({
       ...ctx,
       ...extra,
