@@ -110,7 +110,7 @@ workflows:
                 run: mdir -p report
               - name: typedoc
                 title: Generate typedoc doc.json
-                run: npx typedoc --json report/doc.json --pretty src/index.ts
+                run: npx typedoc@latest --json report/doc.json --pretty src/index.ts
                 links:
                   - title: TypeDoc converts comments in Typescript into a JSON model
                     url: https://typedoc.org/
@@ -216,6 +216,9 @@ workflows:
           - a: batch
             title: Check if ready for publishing
             commands:
+              - name: release-check
+                title: Checks that the version has been incremented
+                run: npx baldrick-dev-ts@latest release check
               - name: lint
                 title: Check linting
                 run: npx baldrick-dev-ts@latest lint check -s src test
@@ -231,9 +234,6 @@ workflows:
               - name: outdated
                 title: Audit some libraries
                 run: yarn audit
-              - name: release-check
-                title: Checks that the version has been incremented
-                run: npx baldrick-dev-ts@latest release check
   scaffold:
     title: Scaffolding for the project
     tasks:
@@ -255,15 +255,12 @@ workflows:
                 run: rm -rf temp/broth
               - title: Create temporary directory
                 run: mkdir -p temp/broth
-                onSuccess:
-                  - debug
-              # - name: save-model
-              #   title: Save baldrick-broth file with existing model
-              #   stdin: data.scaffold::upgrade::broth-model
-              #   run: sponge temp/broth/baldrick-broth-model.json
-              #   links:
-              #     - title: sponge from MoreUtils homepage 
-              #       url: https://formulae.brew.sh/formula/moreutils
+              - title: Save baldrick-broth file with existing model
+                stdin: data.scaffold::upgrade::broth-model
+                run: sponge temp/broth/baldrick-broth-model.json
+                links:
+                  - title: sponge from MoreUtils homepage 
+                    url: https://formulae.brew.sh/formula/moreutils
               # - name: merge
               #   run: npx baldrick-whisker@latest object baldrick-broth2.yaml temp/baldrick-broth-model.yaml github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
       norm:

@@ -55,12 +55,14 @@ interface OnResultFlags {
   save: boolean;
   silent: boolean;
   debug: boolean;
+  exit: boolean;
 }
 
 const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   save: flags.includes('save'),
   silent: flags.includes('silent'),
   debug: flags.includes('debug'),
+  exit: flags.includes('exit'),
 });
 
 const debugContext = (ctx: Ctx) => {
@@ -123,6 +125,8 @@ const toCommandLineAction = (
           debugContext(ctx);
         }
         task.output = 'KO';
+        await sleep(500);
+        throw new Error(`KO: ${title}`);
       }
       await sleep(500);
     },
@@ -153,7 +157,7 @@ const toBatchStepAction = (
           toCommandLineAction(ctx, input)
         );
         currentTaskLogger.info(startStepTitle(batchStep));
-        return task.newListr([...commandTasks]);
+        return task.newListr([...commandTasks], {exitOnError: false});
       } else {
         return undefined;
       }
@@ -185,7 +189,7 @@ export const createTaskAction =
     if (listPossibleActions.status === 'failure') {
       console.log('Failure ', listPossibleActions.error.messages);
     } else {
-      const mainTask = new Listr<Ctx>(listPossibleActions.value);
+      const mainTask = new Listr<Ctx>(listPossibleActions.value, { exitOnError: false});
       try {
         await mainTask.run(ctx);
         logTaskStatistics(started, ctx);
