@@ -69,9 +69,7 @@ workflows:
                 values: data.test::pest::pest-files
             commands:
               - title: Check help about commands for regression
-                run: echo hi
-                onSuccess:
-                  - debug
+                run: echo {{pest-file.Location}}
           # - a: batch
           #   title: Run the baldrick-pest acceptance tests
           #   links:
