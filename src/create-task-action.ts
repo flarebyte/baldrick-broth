@@ -107,7 +107,11 @@ const toCommandLineAction = (
           setDataValue(ctx, commandLineInput.name, data);
         }
         if (!successFlags.silent) {
-          currentTaskLogger.info(data);
+          const dataView =
+            cmdLineResult.value.format === 'string'
+              ? data
+              : JSON.stringify(data, null, 2);
+          currentTaskLogger.info(dataView);
         }
         if (successFlags.debug) {
           debugContext(ctx);
