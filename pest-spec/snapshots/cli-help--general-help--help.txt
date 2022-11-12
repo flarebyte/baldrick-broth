@@ -1,0 +1,20 @@
+$ node --loader ts-node/esm src/cli.mts --help
+Usage: baldrick-broth [options] [command]
+
+CLI for build automation and running tasks
+
+Options:
+  -V, --version   output the version number
+  -h, --help      display help for command
+
+Commands:
+  test            Test the library
+  transpile       Transpile the source code
+  deps            Library dependencies
+  doc             Generate the documentation
+  github          Management of the github project
+  lint            Static code analysis
+  md              Markdown documentation
+  release         Release of the library
+  scaffold        Scaffolding for the project
+  help [command]  display help for command
