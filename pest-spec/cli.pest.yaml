@@ -1,0 +1,9 @@
+---
+title: baldrick-broth
+description: Acceptance testing of baldrick-broth CLI application
+cases:
+  help-command:
+    title: Display help for a help-command
+    steps:
+      - title: run help help-command
+        run: yarn cli --help

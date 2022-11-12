@@ -54,6 +54,14 @@ workflows:
         motivation: Check that the CLI application behaves as intended
         steps:
           - a: batch
+            title: Retrieve a list of acceptance tests
+            commands:
+              - name: pest-files
+                title: List pest yaml files
+                run: scc pest-spec --by-file --format csv
+                onSuccess:
+                  - save
+          - a: batch
             title: Run the baldrick-pest acceptance tests
             links:
               - title: Testing with baldrick-pest
@@ -61,6 +69,8 @@ workflows:
             commands:
               - title: Check help about commands for regression
                 run: npx baldrick-pest@latest test --spec-file pest-spec/cli-help.pest.yaml
+                onSuccess:
+                  - debug
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
