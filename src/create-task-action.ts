@@ -116,9 +116,11 @@ const toCommandLineAction = (
       } else if (cmdLineResult.status === 'failure') {
         if (!failureFlags.silent) {
           currentTaskLogger.info(
-            [cmdLineResult.error.stdout, cmdLineResult.error.stderr].join(
-              '\n\n'
-            )
+            [
+              cmdLineResult.error.stdout,
+              cmdLineResult.error.stderr,
+              cmdLineResult.error.message,
+            ].join('\n\n')
           );
         }
         if (failureFlags.debug) {
@@ -157,7 +159,7 @@ const toBatchStepAction = (
           toCommandLineAction(ctx, input)
         );
         currentTaskLogger.info(startStepTitle(batchStep));
-        return task.newListr([...commandTasks], {exitOnError: false});
+        return task.newListr([...commandTasks], { exitOnError: false });
       } else {
         return undefined;
       }
@@ -189,7 +191,9 @@ export const createTaskAction =
     if (listPossibleActions.status === 'failure') {
       console.log('Failure ', listPossibleActions.error.messages);
     } else {
-      const mainTask = new Listr<Ctx>(listPossibleActions.value, { exitOnError: false});
+      const mainTask = new Listr<Ctx>(listPossibleActions.value, {
+        exitOnError: false,
+      });
       try {
         await mainTask.run(ctx);
         logTaskStatistics(started, ctx);
