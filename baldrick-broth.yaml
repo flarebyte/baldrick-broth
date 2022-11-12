@@ -62,6 +62,16 @@ workflows:
                 onSuccess:
                   - save
                   - csv
+          - a: batch
+            title: Display the baldrick-pest acceptance tests
+            each:
+              - name: pest-file
+                values: data.test::pest::pest-files
+            commands:
+              - title: Check help about commands for regression
+                run: echo hi
+                onSuccess:
+                  - debug
           # - a: batch
           #   title: Run the baldrick-pest acceptance tests
           #   links:
