@@ -48,6 +48,19 @@ workflows:
             commands:
               - title: Run all baldrick zest files
                 run: node --loader ts-node/esm .baldrick-zest.ts
+      pest:
+        title: Run acceptance tests for the CLI
+        description: Run acceptance tests declaratively using YAML files
+        motivation: Check that the CLI application behaves as intended
+        steps:
+          - a: batch
+            title: Run the baldrick-pest acceptance tests
+            links:
+              - title: Testing with baldrick-pest
+                url: https://github.com/flarebyte/baldrick-pest
+            commands:
+              - title: Check help about commands for regression
+                run: npx baldrick-pest@latest pest-spec/cli-help.pest.yaml
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
