@@ -1,0 +1,9 @@
+$ node --loader ts-node/esm src/cli.mts test spec --help
+Usage: baldrick-broth test spec [options]
+
+Run unit tests for pure functions declaratively using YAML files
+
+Motivation: Check that the units of code behave as intended
+
+Options:
+  -h, --help  display help for command

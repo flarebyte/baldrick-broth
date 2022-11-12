@@ -9,3 +9,10 @@ cases:
         run: yarn cli --help
         expect:
           snapshot: help.txt
+  command-help:
+    title: Display help for a specific command
+    steps:
+      - title: run help test spec
+        run: yarn cli test spec --help
+        expect:
+          snapshot: spec-help.txt
