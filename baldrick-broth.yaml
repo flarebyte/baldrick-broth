@@ -57,10 +57,11 @@ workflows:
             commands:
               - name: pest-files
                 title: List pest yaml files
-                run: scc pest-spec --by-file --format csv
+                run: scc pest-spec --include-ext yaml --by-file --format csv
                 onSuccess:
                   - save
                   - csv
+                  - silent
           - a: batch
             title: Run the baldrick-pest acceptance tests
             links:

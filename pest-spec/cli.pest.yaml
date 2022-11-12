@@ -2,8 +2,10 @@
 title: baldrick-broth
 description: Acceptance testing of baldrick-broth CLI application
 cases:
-  help-command:
-    title: Display help for a help-command
+  test-spec:
+    title: Test specifications files
     steps:
-      - title: run help help-command
-        run: yarn cli --help
+      - title: Test specifications
+        run: yarn cli test spec
+        expect:
+          snapshot: spec.txt
