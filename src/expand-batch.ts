@@ -1,6 +1,5 @@
 import Handlebars from 'handlebars';
 import {
-  AnyDataValue,
   BatchStepModel,
   CommandOptionsModel,
   Ctx,
