@@ -114,11 +114,11 @@ const parseCsv = (content: string): CsvParsingResult => {
     const { data, errors } = parsed;
     if (errors.length > 0) {
       return fail({
-        message: errors[0]?.message || 'Some errors parsing the CSV',
+        message: errors.map( err => `Row ${err.row}: ${err.message}`).join('\n'),
       });
     }
     if (data.length === 0) {
-      return fail({ message: 'Length is of data should not be zero' });
+      return fail({ message: 'Length of csv data should be more than zero' });
     }
     return succeed(data);
   } catch (error) {
