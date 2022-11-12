@@ -2,8 +2,7 @@
 model:
   project:
     title: Build automation tool and task runner
-    description:
-      Take your developer workflow to the next level with a custom CLI with relevant documentation for running your task
+    description: Take your developer workflow to the next level with a custom CLI with relevant documentation for running your task
   readme:
     highlights:
       - Written in `Typescript`
@@ -48,6 +47,33 @@ workflows:
             commands:
               - title: Run all baldrick zest files
                 run: node --loader ts-node/esm .baldrick-zest.ts
+      pest:
+        title: Run acceptance tests for the CLI
+        description: Run acceptance tests declaratively using YAML files
+        motivation: Check that the CLI application behaves as intended
+        steps:
+          - a: batch
+            title: Retrieve a list of acceptance tests
+            commands:
+              - name: pest-files
+                title: List pest yaml files
+                run: scc pest-spec --include-ext yaml --by-file --format csv
+                onSuccess:
+                  - save
+                  - csv
+                  - silent
+          - a: batch
+            title: Run the baldrick-pest acceptance tests
+            links:
+              - title: Testing with baldrick-pest
+                url: https://github.com/flarebyte/baldrick-pest
+            each:
+              - name: pest-file
+                values: data.test::pest::pest-files
+            commands:
+              - title: Run regression on file
+                name: Run regression on {{pest-file.Location}}
+                run: npx baldrick-pest@latest test --spec-file {{pest-file.Location}}
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
@@ -78,7 +104,7 @@ workflows:
               - title: Compile with typescript
                 run: tsc --outDir dist
   deps:
-    title:  Library dependencies
+    title: Library dependencies
     description: Npm dependencies
     tasks:
       upgrade:
@@ -128,7 +154,7 @@ workflows:
                 run: npx baldrick-dev-ts@latest markdown fix
                 links:
                   - title: Package development of Typescript library in ESM format
-                    url: https://github.com/flarebyte/baldrick-dev-ts   
+                    url: https://github.com/flarebyte/baldrick-dev-ts
               - name: github
                 title: Fixes markdown in github folder
                 run: npx baldrick-dev-ts@latest markdown fix -s .github/
@@ -259,7 +285,7 @@ workflows:
                 stdin: data.scaffold::upgrade::broth-model
                 run: sponge temp/broth/baldrick-broth-model.json
                 links:
-                  - title: sponge from MoreUtils homepage 
+                  - title: sponge from MoreUtils homepage
                     url: https://formulae.brew.sh/formula/moreutils
               # - name: merge
               #   run: npx baldrick-whisker@latest object baldrick-broth2.yaml temp/baldrick-broth-model.yaml github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
@@ -364,4 +390,3 @@ workflows:
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm::package-json-deps
                 run: sponge temp/broth/package-deps.json
- 

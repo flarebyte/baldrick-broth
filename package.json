@@ -1,8 +1,11 @@
 {
   "name": "baldrick-broth",
   "description": "Build automation tool and task runner",
-  "keywords": [],
-  "version": "0.6.0",
+  "keywords": [
+    "CLI",
+    "Task runner"
+  ],
+  "version": "0.7.0",
   "author": {
     "name": "Olivier Huin",
     "url": "https://github.com/olih"

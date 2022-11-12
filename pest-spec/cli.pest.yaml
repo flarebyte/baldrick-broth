@@ -1,0 +1,11 @@
+---
+title: baldrick-broth
+description: Acceptance testing of baldrick-broth CLI application
+cases:
+  test-spec:
+    title: Test specifications files
+    steps:
+      - title: Test specifications
+        run: yarn cli test spec
+        expect:
+          snapshot: spec.txt

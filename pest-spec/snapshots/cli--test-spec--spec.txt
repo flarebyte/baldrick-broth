@@ -1,0 +1,16 @@
+$ node --loader ts-node/esm src/cli.mts test spec
+✓ baldrick-broth is done. Version 0.6.0
+[STARTED] Run the baldrick-zest unit tests
+[STARTED] Run all baldrick zest files
+[DATA] node --loader ts-node/esm .baldrick-zest.ts
+[TITLE] run-all-baldrick-zest-files
+[DATA] OK
+[SUCCESS] run-all-baldrick-zest-files
+[SUCCESS] Run the baldrick-zest unit tests
+
+
+Run the baldrick-zest unit tests:
+---------------------------------
+⦿ Function basicExecution ./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml
+⦿ Function getSchema ./src/build-model.ts | spec/build-model/get-schema.zest.yaml
+⦿ Function safeParseBuild ./src/build-model.ts | spec/build-model/safe-parse-build.zest.yaml

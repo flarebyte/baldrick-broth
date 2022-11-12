@@ -1,5 +1,10 @@
 import Handlebars from 'handlebars';
-import { BatchStepModel, CommandOptionsModel, Ctx } from './build-model.js';
+import {
+  BatchStepModel,
+  CommandOptionsModel,
+  Ctx,
+} from './build-model.js';
+import { getSupportedProperty } from './data-value-utils.js';
 import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
 import { Result, succeed, fail } from './railway.js';
@@ -10,7 +15,16 @@ type ExpandedCommandLineInputs = Result<
   { messages: string[] }
 >;
 
-const getArray = (_ctx: Ctx, _name: string): any[] => [];
+const getArray = (ctx: Ctx, name: string): any[] => {
+  const value = getSupportedProperty(ctx, name);
+  if (value === undefined) {
+    return [];
+  }
+  if (Array.isArray(value)) {
+    return value;
+  }
+  return [];
+};
 
 const createTemplate = (run: string) =>
   Handlebars.compile(run, { noEscape: true });

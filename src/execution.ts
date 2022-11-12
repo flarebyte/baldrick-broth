@@ -26,6 +26,7 @@ type ExecuteCommandLineFailure = {
   stdout: string;
   stderr: string;
   exitCode: number;
+  message: string;
   onFailure: CommandOptionsModel['onFailure'];
 };
 
@@ -83,35 +84,55 @@ const toStatus = (params: {
   return 'success';
 };
 
-const parseJson = (content: string): AnyDataValue | undefined => {
+type JsonParsingResult = Result<AnyDataValue, { message: string }>;
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+const parseJson = (content: string): JsonParsingResult => {
   try {
     const parsed: AnyDataValue = JSON.parse(content);
-    return parsed;
-  } catch {
-    return undefined;
+    return succeed(parsed);
+  } catch (error) {
+    return fail({ message: getErrorMessage(error) });
   }
 };
-const parseYaml = (content: string): AnyDataValue | undefined => {
+const parseYaml = (content: string): JsonParsingResult => {
   try {
     const parsed: AnyDataValue = YAML.parse(content);
-    return parsed;
-  } catch {
-    return undefined;
+    return succeed(parsed);
+  } catch (error) {
+    return fail({ message: getErrorMessage(error) });
   }
 };
-const parseCsv = (content: string): Record<string, string>[] | undefined => {
+type CsvParsingResult = Result<Record<string, string>[], { message: string }>;
+
+const prepareCsv = (content: string): string =>
+  content
+    .split('\n')
+    .filter((line) => line.length > 2)
+    .join('\n');
+
+const parseCsv = (content: string): CsvParsingResult => {
   try {
-    const parsed = CSV.parse<Record<string, string>>(content, { header: true });
+    const parsed = CSV.parse<Record<string, string>>(prepareCsv(content), {
+      header: true,
+    });
     const { data, errors } = parsed;
     if (errors.length > 0) {
-      return undefined;
+      return fail({
+        message: errors
+          .map((err) => `Row ${err.row}: ${err.message}`)
+          .join('\n'),
+      });
     }
-    if (data.length > 0) {
-      return undefined;
+    if (data.length === 0) {
+      return fail({ message: 'Length of csv data should be more than zero' });
     }
-    return data;
-  } catch {
-    return undefined;
+    return succeed(data);
+  } catch (error) {
+    return fail({ message: getErrorMessage(error) });
   }
 };
 
@@ -139,8 +160,8 @@ export const executeCommandLine = async (
 
   if (status === 'success') {
     if (onSuccess.includes('json')) {
-      const data = parseJson(stdout);
-      if (data === undefined) {
+      const parsed = parseJson(stdout);
+      if (parsed.status === 'failure') {
         return fail({
           category: 'parse-json-failed',
           line,
@@ -148,13 +169,21 @@ export const executeCommandLine = async (
           stderr,
           exitCode,
           onFailure,
+          message: parsed.error.message,
+        });
+      } else {
+        return succeed({
+          format: 'json',
+          name,
+          line,
+          data: parsed.value,
+          onSuccess,
         });
       }
-      return succeed({ format: 'json', name, line, data, onSuccess });
     }
     if (onSuccess.includes('yaml')) {
-      const data = parseYaml(stdout);
-      if (data === undefined) {
+      const parsed = parseYaml(stdout);
+      if (parsed.status === 'failure') {
         return fail({
           category: 'parse-yaml-failed',
           line,
@@ -162,13 +191,21 @@ export const executeCommandLine = async (
           stderr,
           exitCode,
           onFailure,
+          message: parsed.error.message,
+        });
+      } else {
+        return succeed({
+          format: 'json',
+          name,
+          line,
+          data: parsed.value,
+          onSuccess,
         });
       }
-      return succeed({ format: 'json', name, line, data, onSuccess });
     }
     if (onSuccess.includes('csv')) {
-      const data = parseCsv(stdout);
-      if (data === undefined) {
+      const parsed = parseCsv(stdout);
+      if (parsed.status === 'failure') {
         return fail({
           category: 'parse-csv-failed',
           line,
@@ -176,9 +213,17 @@ export const executeCommandLine = async (
           stderr,
           exitCode,
           onFailure,
+          message: parsed.error.message,
+        });
+      } else {
+        return succeed({
+          format: 'csv',
+          name,
+          line,
+          data: parsed.value,
+          onSuccess,
         });
       }
-      return succeed({ format: 'csv', name, line, data, onSuccess });
     }
 
     const data = onSuccess.includes('trim') ? stdout.trim() : stdout;
@@ -192,6 +237,7 @@ export const executeCommandLine = async (
       stderr,
       exitCode,
       onFailure,
+      message: `Failed with exit code ${exitCode}`,
     });
   }
 };
