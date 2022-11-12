@@ -101,8 +101,9 @@ const toCommandLineAction = (
       await sleep(500);
       if (cmdLineResult.status === 'success') {
         const {
-          value: { data },
+          value: { data, name },
         } = cmdLineResult;
+        task.title = name;
         if (successFlags.save) {
           setDataValue(ctx, commandLineInput.name, data);
         }
