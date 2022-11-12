@@ -108,13 +108,23 @@ const parseYaml = (content: string): JsonParsingResult => {
 };
 type CsvParsingResult = Result<Record<string, string>[], { message: string }>;
 
+const prepareCsv = (content: string): string =>
+  content
+    .split('\n')
+    .filter((line) => line.length > 2)
+    .join('\n');
+
 const parseCsv = (content: string): CsvParsingResult => {
   try {
-    const parsed = CSV.parse<Record<string, string>>(content, { header: true });
+    const parsed = CSV.parse<Record<string, string>>(prepareCsv(content), {
+      header: true,
+    });
     const { data, errors } = parsed;
     if (errors.length > 0) {
       return fail({
-        message: errors.map( err => `Row ${err.row}: ${err.message}`).join('\n'),
+        message: errors
+          .map((err) => `Row ${err.row}: ${err.message}`)
+          .join('\n'),
       });
     }
     if (data.length === 0) {
