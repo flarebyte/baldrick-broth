@@ -63,21 +63,16 @@ workflows:
                   - save
                   - csv
           - a: batch
-            title: Display the baldrick-pest acceptance tests
+            title: Run the baldrick-pest acceptance tests
+            links:
+              - title: Testing with baldrick-pest
+                url: https://github.com/flarebyte/baldrick-pest
             each:
               - name: pest-file
                 values: data.test::pest::pest-files
             commands:
-              - title: Check help about commands for regression
-                run: echo {{pest-file.Location}}
-          # - a: batch
-          #   title: Run the baldrick-pest acceptance tests
-          #   links:
-          #     - title: Testing with baldrick-pest
-          #       url: https://github.com/flarebyte/baldrick-pest
-          #   commands:
-          #     - title: Check help about commands for regression
-          #       run: npx baldrick-pest@latest test --spec-file pest-spec/cli-help.pest.yaml
+              - title: Run regression on {{pest-file.Location}}
+                run: npx baldrick-pest@latest test --spec-file {{pest-file.Location}}
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
