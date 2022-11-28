@@ -16,334 +16,374 @@ The typical developer workflow goes as follow:
 
 > Run GitHub Actions inside a docker container
 
-__Motivation:__ Test GitHub Actions locally
+**Motivation:** Test GitHub Actions locally
 
-__When to use it:__ When changing github actions
+**When to use it:** When changing github actions
 
-__Run:__ ```act```
+**Run:** `act`
 
-__From package:__ [act](https://github.com/nektos/act) of [brew](https://docs.brew.sh/) :  Run GitHub Actions locally
+**From package:** [act](https://github.com/nektos/act) of
+[brew](https://docs.brew.sh/) : Run GitHub Actions locally
 
----
+***
 
 ### Build the library
 
 > Transpile all the typescript source code to javascript
 
-__Motivation:__ ESM library should be written in javascript
+**Motivation:** ESM library should be written in javascript
 
-__When to use it:__ Before building
+**When to use it:** Before building
 
-__Run:__ ```yarn build```
+**Run:** `yarn build`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Generate the documentation
 
 > Generate the markdown documentation for the typescript project
 
-__Motivation:__ Good documentation is essential for developer experience
+**Motivation:** Good documentation is essential for developer experience
 
-__When to use it:__ Before publishing
+**When to use it:** Before publishing
 
-__Run:__ ```yarn doc```
+**Run:** `yarn doc`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Update github repository
 
 > Enable useful features for the github project repository
 
-__Motivation:__ Create consistent settings
+**Motivation:** Create consistent settings
 
-__When to use it:__ After creating
+**When to use it:** After creating
 
-__Run:__ ```yarn github```
+**Run:** `yarn github`
 
-__From package:__ [gh](https://cli.github.com/) of [brew](https://docs.brew.sh/) :  GitHub CLI brings GitHub to your terminal
+**From package:** [gh](https://cli.github.com/) of
+[brew](https://docs.brew.sh/) : GitHub CLI brings GitHub to your terminal
 
----
+***
 
 ### Static code analysis for continuous integration
 
 > Find problems in Typescript code
 
-__Motivation:__ Make the code more consistent and avoid bugs
+**Motivation:** Make the code more consistent and avoid bugs
 
-__When to use it:__ When pushing code to github, before testing
+**When to use it:** When pushing code to github, before testing
 
-__Run:__ ```yarn lint:ci```
+**Run:** `yarn lint:ci`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Static code analysis
 
 > Find problems in Typescript code
 
-__Motivation:__ Make the code more consistent and avoid bugs
+**Motivation:** Make the code more consistent and avoid bugs
 
-__When to use it:__ Before compilation
+**When to use it:** Before compilation
 
-__Run:__ ```yarn lint```
+**Run:** `yarn lint`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Fix static code analysis
 
 > Fix problems in Typescript code
 
-__Motivation:__ Facilitate routine maintenance of code
+**Motivation:** Facilitate routine maintenance of code
 
-__When to use it:__ Before compilation
+**When to use it:** Before compilation
 
-__Run:__ ```yarn lint:fix```
+**Run:** `yarn lint:fix`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Markdown check
 
 > Checks that the markdown documents follows some consistent guidelines
 
-__Motivation:__ Make the markdown documents consistent in style
+**Motivation:** Make the markdown documents consistent in style
 
-__When to use it:__ Before publishing
+**When to use it:** Before publishing
 
-__Run:__ ```yarn md```
+**Run:** `yarn md`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Markdown fix
 
-> Modify the markdown documents to ensure they follow some consistent guidelines
+> Modify the markdown documents to ensure they follow some consistent
+> guidelines
 
-__Motivation:__ Make the markdown documents consistent in style
+**Motivation:** Make the markdown documents consistent in style
 
-__When to use it:__ Before publishing
+**When to use it:** Before publishing
 
-__Run:__ ```yarn md:fix```
+**Run:** `yarn md:fix`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Clear previous build
 
 > Delete the dist and report folder
 
-__Motivation:__ Start from a clean slate
+**Motivation:** Start from a clean slate
 
-__When to use it:__ Before building
+**When to use it:** Before building
 
-__Run:__ ```yarn prebuild```
+**Run:** `yarn prebuild`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Ready for publishing
 
-> Run a sequence of commands to check that the library is ready to be published
+> Run a sequence of commands to check that the library is ready to be
+> published
 
-__Motivation:__ Detect quality flaws before pushing the code
+**Motivation:** Detect quality flaws before pushing the code
 
-__When to use it:__ Before pushing a branch
+**When to use it:** Before pushing a branch
 
-__Run:__ ```yarn ready```
+**Run:** `yarn ready`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Reset distribution and report folders
 
 > Delete the dist and report folder
 
-__Motivation:__ Start from a clean slate
+**Motivation:** Start from a clean slate
 
-__When to use it:__ Before building
+**When to use it:** Before building
 
-__Run:__ ```yarn reset```
+**Run:** `yarn reset`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Unit testing code and coverage for continuous integration
 
 > Test and verify the coverage of the code
 
-__Motivation:__ Check that the units of code behave as intended and ensure that every code branch and function is executed 
+**Motivation:** Check that the units of code behave as intended and ensure
+that every code branch and function is executed
 
-__When to use it:__ When pushing code to github
+**When to use it:** When pushing code to github
 
-__Run:__ ```yarn test:ci```
+**Run:** `yarn test:ci`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Unit testing
 
 > Run the unit tests
 
-__Motivation:__ Check that the units of code behave as intended
+**Motivation:** Check that the units of code behave as intended
 
-__When to use it:__ After compilation, before build
+**When to use it:** After compilation, before build
 
-__Run:__ ```yarn test```
+**Run:** `yarn test`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Unit testing code coverage
 
-> Verify the extent to which the code has been executed. This does not include any threshold, but it is recommended to maximize the coverage
+> Verify the extent to which the code has been executed. This does not
+> include any threshold, but it is recommended to maximize the coverage
 
-__Motivation:__ Ensure that every code branch and function is executed 
+**Motivation:** Ensure that every code branch and function is executed
 
-__When to use it:__ After compilation, before build
+**When to use it:** After compilation, before build
 
-__Run:__ ```yarn test:cov```
+**Run:** `yarn test:cov`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Fix unit testing snapshots
 
 > Run the unit tests and update the snapshots
 
-__Motivation:__ Facilitate routine maintenance of unit test snapshots
+**Motivation:** Facilitate routine maintenance of unit test snapshots
 
-__When to use it:__ After compilation, before build
+**When to use it:** After compilation, before build
 
-__Run:__ ```yarn test:fix```
+**Run:** `yarn test:fix`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Release check
 
 > Checks if a release could be created
 
-__Motivation:__ Avoid failing the release
+**Motivation:** Avoid failing the release
 
-__When to use it:__ After publishing
+**When to use it:** After publishing
 
-__Run:__ ```yarn release:check```
+**Run:** `yarn release:check`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Release
 
 > Creates a github release
 
-__Motivation:__ Save releases in github
+**Motivation:** Save releases in github
 
-__When to use it:__ After publishing
+**When to use it:** After publishing
 
-__Run:__ ```bpub```
+**Run:** `bpub`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Help for commands
 
 > Summarize all the yarn and shell commands
 
-__Motivation:__ Assist the developer in quickly finding commands
+**Motivation:** Assist the developer in quickly finding commands
 
-__When to use it:__ Before running a command
+**When to use it:** Before running a command
 
-__Run:__ ```yarn h```
+**Run:** `yarn h`
 
-__From package:__ [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of [npm](https://www.npmjs.com/) :  Zero-config CLI for TypeScript package development
+**From package:** [baldrick](https://github.com/flarebyte/baldrick-dev-ts) of
+[npm](https://www.npmjs.com/) : Zero-config CLI for TypeScript package
+development
 
----
+***
 
 ### Git commit from file
 
 > Git commit a message that has been saved in the .message file
 
-__Motivation:__ Quicker commit for pre-defined use cases
+**Motivation:** Quicker commit for pre-defined use cases
 
-__When to use it:__ When commit to github
+**When to use it:** When commit to github
 
-__Run:__ ```gcf```
+**Run:** `gcf`
 
-__From package:__ [zsh](https://www.zsh.org/) of [brew](https://docs.brew.sh/) :  Shell designed for interactive use
+**From package:** [zsh](https://www.zsh.org/) of
+[brew](https://docs.brew.sh/) : Shell designed for interactive use
 
----
+***
 
 ### Install the local project globally
 
-> Install this local project/script globally on the dev machine for development or testing purpose
+> Install this local project/script globally on the dev machine for
+> development or testing purpose
 
-__Motivation:__ Test global project locally before publishing
+**Motivation:** Test global project locally before publishing
 
-__When to use it:__ When testing locally
+**When to use it:** When testing locally
 
-__Run:__ ```yig```
+**Run:** `yig`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
 
 ### Normalize the code structure using latest
 
 > Normalize the code structure using baldrick (npx version)
 
-__Motivation:__ Create a consistent developer experience
+**Motivation:** Create a consistent developer experience
 
-__When to use it:__ When changing github actions
+**When to use it:** When changing github actions
 
-__Run:__ ```yarn norm```
+**Run:** `yarn norm`
 
-__From package:__ [baldrick-ts](https://github.com/flarebyte/baldrick-ts) of [npm](https://www.npmjs.com/) :  Typescript scaffolding assistant
+**From package:** [baldrick-ts](https://github.com/flarebyte/baldrick-ts) of
+[npm](https://www.npmjs.com/) : Typescript scaffolding assistant
 
----
+***
 
 ### Normalize the code structure
 
 > Normalize the code structure using baldrick (global version)
 
-__Motivation:__ Create a consistent developer experience
+**Motivation:** Create a consistent developer experience
 
-__When to use it:__ When changing github actions
+**When to use it:** When changing github actions
 
-__Run:__ ```yarn norm:g```
+**Run:** `yarn norm:g`
 
-__From package:__ [baldrick-ts](https://github.com/flarebyte/baldrick-ts) of [npm](https://www.npmjs.com/) :  Typescript scaffolding assistant
+**From package:** [baldrick-ts](https://github.com/flarebyte/baldrick-ts) of
+[npm](https://www.npmjs.com/) : Typescript scaffolding assistant
 
----
+***
 
 ### Run client directly
 
 > Run the client with ts-node during development
 
-__Motivation:__ Simulate a CLI app in development without the need to install it globally
+**Motivation:** Simulate a CLI app in development without the need to install
+it globally
 
-__When to use it:__ After compilation
+**When to use it:** After compilation
 
-__Run:__ ```yarn cli```
+**Run:** `yarn cli`
 
-__From package:__ [yarn](https://classic.yarnpkg.com/en/) of [npm](https://www.npmjs.com/) :  Dependency management
+**From package:** [yarn](https://classic.yarnpkg.com/en/) of
+[npm](https://www.npmjs.com/) : Dependency management
 
----
+***
