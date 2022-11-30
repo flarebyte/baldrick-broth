@@ -11,6 +11,7 @@ import {
   isTruthy,
   isFalsy,
 } from './data-value-utils.js';
+import { currentTaskLogger } from './logging.js';
 import { Result, succeed } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 
@@ -28,13 +29,20 @@ const asStringOrBlank = (value: unknown): string =>
 const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
+function reparse<A>(value: A): A {
+  return JSON.parse(JSON.stringify(value));
+}
+
 const basicStepExecution = (
   ctx: Ctx,
   basicStep: AnyBasicStepModel
 ): BasicExecution => {
   const { a } = basicStep;
   const success: BasicExecution = succeed(ctx);
-  const name = basicStep.name === undefined ?dasherizeTitle(basicStep.title): basicStep.name;
+  const name =
+    basicStep.name === undefined
+      ? dasherizeTitle(basicStep.title)
+      : basicStep.name;
   switch (a) {
     case 'get-property':
       const value = getSupportedProperty(ctx, basicStep.value);
@@ -99,8 +107,11 @@ const basicStepExecution = (
       );
       return success;
     case 'mask-object':
-      const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
+      const objectValue =
+        reparse(getSupportedProperty(ctx, basicStep.value)) || {};
+//      currentTaskLogger.info(`objectValue: ${objectValue}`);
       const masked = json_mask(objectValue, basicStep.mask);
+//      currentTaskLogger.info(`setDataValue: ${name}: ${masked}`);
       setDataValue(ctx, name, masked);
       return success;
   }

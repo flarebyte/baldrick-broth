@@ -1,5 +1,6 @@
 import { getProperty } from 'dot-prop';
 import { AnyDataValue, Ctx } from './build-model.js';
+import { currentTaskLogger } from './logging.js';
 
 export const setDataValue = (
   ctx: Ctx,
@@ -29,11 +30,17 @@ const getDataProperty = (
     data_prefix !== 'data' ||
     otherKeys === undefined
   ) {
+    currentTaskLogger.warn(
+      `getDataProperty: Invalid path ${valuePath}: ${data_prefix} and ${otherKeys}`
+    );
     return undefined;
   }
 
   const [first, second, third] = otherKeys.split('::');
   if (first === undefined || second === undefined || third === undefined) {
+    currentTaskLogger.warn(
+      `getDataProperty: Invalid path ${valuePath}: ${first} then ${second}  then ${third}`
+    );
     return undefined;
   }
   return value[`${first}::${second}::${third}`];
