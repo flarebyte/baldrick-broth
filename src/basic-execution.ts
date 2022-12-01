@@ -29,10 +29,6 @@ const asStringOrBlank = (value: unknown): string =>
 const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
-function reparse<A>(value: A): A {
-  return JSON.parse(JSON.stringify(value));
-}
-
 const basicStepExecution = (
   ctx: Ctx,
   basicStep: AnyBasicStepModel
@@ -107,11 +103,8 @@ const basicStepExecution = (
       );
       return success;
     case 'mask-object':
-      const objectValue =
-        reparse(getSupportedProperty(ctx, basicStep.value)) || {};
-//      currentTaskLogger.info(`objectValue: ${objectValue}`);
+      const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
       const masked = json_mask(objectValue, basicStep.mask);
-//      currentTaskLogger.info(`setDataValue: ${name}: ${masked}`);
       setDataValue(ctx, name, masked);
       return success;
   }
