@@ -11,8 +11,7 @@ import {
   isTruthy,
   isFalsy,
 } from './data-value-utils.js';
-import { currentTaskLogger } from './logging.js';
-import { Result, succeed } from './railway.js';
+import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 
 type BasicExecution = Result<Ctx, { message: string }>;
@@ -104,6 +103,13 @@ const basicStepExecution = (
       return success;
     case 'mask-object':
       const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
+      if (typeof objectValue !== 'object') {
+        return fail({
+          message: `mask-object for path ${
+            basicStep.value
+          } expects an object but got ${typeof objectValue}`,
+        });
+      }
       const masked = json_mask(objectValue, basicStep.mask);
       setDataValue(ctx, name, masked);
       return success;
