@@ -1,13 +1,15 @@
 model:
   project:
     title: Build automation tool and task runner
-    description: Take your developer workflow to the next level with a custom CLI
+    description:
+      Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
+    version: 0.7.0
   readme:
     highlights:
       - Written in `Typescript`
     links:
-      - "[Usage](USAGE.md)"
+      - '[Usage](USAGE.md)'
     related:
       - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
         ne) Run tests declaratively with a few cunning plans"
@@ -18,7 +20,17 @@ model:
     holder: Flarebyte.com
     startYear: 2022
   license: MIT
-  workflow-version: 0.1.0
+  author:
+    name: Olivier Huin
+    url: https://github.com/olih
+  implementation:
+    tags:
+      - cli
+      - zest
+      - pest
+      - zod
+      - railway
+      - commander
 workflows:
   test:
     title: Test the library
@@ -79,7 +91,8 @@ workflows:
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
-        motivation: Simulate a CLI app in development without the need to install it
+        motivation:
+          Simulate a CLI app in development without the need to install it
           globally
         steps:
           - a: batch
@@ -222,7 +235,8 @@ workflows:
                 run: npx baldrick-dev-ts@latest markdown check -s .github/
       fix:
         title: Fix Markdown files
-        description: Modify the markdown documents to ensure they follow some consistent
+        description:
+          Modify the markdown documents to ensure they follow some consistent
           guidelines
         motivation: Make the markdown documents consistent in style
         steps:
@@ -240,7 +254,8 @@ workflows:
     tasks:
       ready:
         title: Ready for publishing
-        description: Run a sequence of commands to check that the library is ready to be
+        description:
+          Run a sequence of commands to check that the library is ready to be
           published
         motivation: Detect quality flaws before pushing the code
         steps:
@@ -432,3 +447,5 @@ workflows:
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm::package-json-deps
                 run: sponge temp/broth/package-deps.json
+              - title: Create package.json metadata from broth model
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/package.hbs temp/broth/package-specific.json
