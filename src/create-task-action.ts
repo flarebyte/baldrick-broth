@@ -25,6 +25,8 @@ import {
 } from './data-value-utils.js';
 import { coloration } from './coloration.js';
 
+const SLEEP_KO = 800;
+const SLEEP_MIN = 150;
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
 type BatchAction = Result<ListrTask[], { messages: string[] }>;
@@ -100,7 +102,7 @@ const toCommandLineAction = (
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
       const successFlags = toOnResultFlags(commandLineInput.opts.onSuccess);
       const failureFlags = toOnResultFlags(commandLineInput.opts.onFailure);
-      await sleep(500);
+      await sleep(SLEEP_MIN);
       if (cmdLineResult.status === 'success') {
         const {
           value: { data, name },
@@ -134,10 +136,10 @@ const toCommandLineAction = (
           debugContext(ctx);
         }
         task.output = 'KO';
-        await sleep(500);
+        await sleep(SLEEP_KO);
         throw new Error(`KO: ${title}`);
       }
-      await sleep(500);
+      await sleep(SLEEP_MIN);
     },
   };
   return commandTask;
@@ -154,7 +156,7 @@ const toBatchStepAction = (
     task: async (_, task) => {
       const basicExecutionResult = basicExecution(ctx, batchStep);
       if (basicExecutionResult.status === 'failure') {
-        currentTaskWarn(basicExecutionResult.error)
+        currentTaskWarn(basicExecutionResult.error);
         task.output = coloration.warn('before: KO');
       }
       const commandsForStep = expandBatchStep(ctx, batchStep);

@@ -418,7 +418,7 @@ workflows:
                 onSuccess:
                   - save
                   - silent
-                  # - json
+                  - json
           - a: batch
             title: package
             before:
