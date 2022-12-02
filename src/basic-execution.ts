@@ -5,16 +5,18 @@ import type {
   BatchStepModel,
   Ctx,
 } from './build-model.js';
+import { coloration } from './coloration.js';
 import {
   setDataValue,
   getSupportedProperty,
   isTruthy,
   isFalsy,
 } from './data-value-utils.js';
+import { LogMessage } from './log-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 
-type BasicExecution = Result<Ctx, { message: string }>;
+type BasicExecution = Result<Ctx, LogMessage>;
 
 const getPropertyList = (
   ctx: Ctx,
@@ -108,6 +110,11 @@ const basicStepExecution = (
           message: `mask-object for path ${
             basicStep.value
           } expects an object but got ${typeof objectValue}`,
+          coloredMessage: `mask-object for path ${coloration.path(
+            basicStep.value
+          )} expects an ${coloration.expected(
+            'object'
+          )} but got ${coloration.actual(typeof objectValue)}`,
         });
       }
       const masked = json_mask(objectValue, basicStep.mask);

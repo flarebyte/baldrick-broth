@@ -11,6 +11,7 @@ import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
   currentTaskLogger,
+  currentTaskWarn,
   replayLogToConsole,
   telemetryTaskLogger,
   telemetryTaskRefLogger,
@@ -22,6 +23,7 @@ import {
   isTruthy,
   setDataValue,
 } from './data-value-utils.js';
+import { coloration } from './coloration.js';
 
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
@@ -152,12 +154,13 @@ const toBatchStepAction = (
     task: async (_, task) => {
       const basicExecutionResult = basicExecution(ctx, batchStep);
       if (basicExecutionResult.status === 'failure') {
-        task.output = 'before: KO';
+        currentTaskWarn(basicExecutionResult.error)
+        task.output = coloration.warn('before: KO');
       }
       const commandsForStep = expandBatchStep(ctx, batchStep);
       if (commandsForStep.status === 'failure') {
-        console.log({ messages: commandsForStep.error.messages });
-        task.output = 'KO';
+        currentTaskLogger.warn({ messages: commandsForStep.error.messages });
+        task.output = coloration.warn('KO');
       }
       if (commandsForStep.status === 'success') {
         const commandTasks = commandsForStep.value.map((input) =>
