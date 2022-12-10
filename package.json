@@ -1,15 +1,18 @@
 {
   "name": "baldrick-broth",
   "description": "Build automation tool and task runner",
-  "keywords": [
-    "CLI",
-    "Task runner"
-  ],
   "version": "0.7.0",
   "author": {
     "name": "Olivier Huin",
     "url": "https://github.com/olih"
   },
+  "keywords": [
+    "CLI",
+    "Task runner",
+    "Build system",
+    "Build tool",
+    "Make"
+  ],
   "license": "MIT",
   "homepage": "https://github.com/flarebyte/baldrick-broth",
   "repository": {
@@ -17,51 +20,8 @@
     "url": "https://github.com/flarebyte/baldrick-broth.git"
   },
   "bugs": "https://github.com/flarebyte/baldrick-broth/issues",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/src/cli.mjs",
-      "default": "./dist/src/cli.mjs",
-      "types": "./dist/src"
-    },
-    "./package.json": {
-      "default": "./package.json"
-    }
-  },
-  "main": "./dist/src/index.mjs",
-  "files": [
-    "dist/src",
-    "src"
-  ],
   "bin": {
     "baldrick-broth": "dist/src/cli.mjs"
-  },
-  "engines": {
-    "node": ">=14"
-  },
-  "scripts": {
-    "build": "tsc --outDir dist",
-    "doc": "npx typedoc --json report/doc.json --pretty src/index.ts && npx baldrick-doc-ts typedoc --json-source report/doc.json && baldrick-doc-ts parse -f internal ngram && yarn md:fix",
-    "github": "gh repo edit --delete-branch-on-merge --enable-squash-merge",
-    "lint:ci": "baldrick lint ci",
-    "lint": "baldrick lint check -s src test",
-    "lint:fix": "baldrick lint fix -s src test",
-    "md": "baldrick markdown check && baldrick markdown check -s .github/",
-    "md:fix": "baldrick markdown fix && baldrick markdown fix -s .github/",
-    "prebuild": "yarn reset",
-    "ready": "yarn lint && yarn test:cov && yarn md && yarn outdated && yarn audit && yarn release:check",
-    "reset": "rm -rf dist; rm -rf report",
-    "test:ci": "baldrick test ci",
-    "test": "node --test --loader ts-node/esm test/*.test.ts",
-    "test:cov": "baldrick test cov",
-    "test:fix": "baldrick test fix",
-    "release:check": "baldrick release check",
-    "release:ci": "baldrick release ci",
-    "h": "cat commands.txt",
-    "norm": "npx baldrick-ts generate -f cli -ga 'flarebyte' -ch 'Flarebyte.com' -cy 2022 -l MIT && yarn md:fix",
-    "norm:g": "baldrick-ts generate -f cli -ga 'flarebyte' -ch 'Flarebyte.com' -cy 2022 -l MIT && yarn md:fix",
-    "cli": "node --loader ts-node/esm src/cli.mts",
-    "spec": "node --loader ts-node/esm .baldrick-zest.ts"
   },
   "dependencies": {
     "chalk": "^5.1.2",
@@ -85,5 +45,30 @@
     "ts-node": "^10.9.1",
     "typescript": "^4.8.4"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/src/cli.mjs",
+      "default": "./dist/src/cli.mjs",
+      "types": "./dist/src"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
+  "main": "./dist/src/index.mjs",
+  "files": [
+    "dist/src",
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "test": "node --test --loader ts-node/esm test/*.test.ts",
+    "cli": "node --loader ts-node/esm src/cli.mts",
+    "spec": "node --loader ts-node/esm .baldrick-zest.ts"
+  }
 }

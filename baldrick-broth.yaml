@@ -5,6 +5,12 @@ model:
       Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
     version: 0.7.0
+    keywords:
+      - CLI
+      - Task runner
+      - Build system
+      - Build tool
+      - Make
   readme:
     highlights:
       - Written in `Typescript`
@@ -449,3 +455,5 @@ workflows:
                 run: sponge temp/broth/package-deps.json
               - title: Create package.json metadata from broth model
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/package.hbs temp/broth/package-specific.json
+              - title: merge dependencies with broth model info
+                run: npx baldrick-whisker@latest object package.json temp/broth/package-specific.json temp/broth/package-deps.json github:flarebyte:baldrick-reserve:data/ts/package-cli.json
