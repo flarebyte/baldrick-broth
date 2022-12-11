@@ -36,6 +36,7 @@ model:
       - zod
       - railway
       - commander
+  workflow-version: 0.1.0
 workflows:
   test:
     title: Test the library
@@ -351,7 +352,7 @@ workflows:
                     url: https://git-scm.com/docs/gitignore
                 run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/gitignore.hbs
-                  .gitignore.sh
+                  gitignore.sh
               - title: Create .editorconfig
                 run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/editorconfig.hbs
@@ -365,7 +366,7 @@ workflows:
                   --no-overwrite
               - title: Create tsconfig.json
                 run: npx baldrick-whisker@latest object tsconfig.json
-                  github:flarebyte:baldrick-reserve:data/ts/tsconfig.json
+                  github:flarebyte:baldrick-reserve:data/ts/tsconfig-2021.json
               - title: Create .prettierrc.json
                 run: npx baldrick-whisker@latest object .prettierrc.json
                   github:flarebyte:baldrick-reserve:data/ts/prettierrc.json
@@ -381,7 +382,7 @@ workflows:
                   CONTRIBUTING.md
               - title: Create CODE_OF_CONDUCT.md with code of conduct guidelines
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
-                  github:flarebyte:baldrick-reserve:template/code_of_conduct.hbs
+                  github:flarebyte:baldrick-reserve:template/code-of-conduct.hbs
                   CODE_OF_CONDUCT.md
               - title: Create GLOSSARY.md with project vocabulary
                 run: npx baldrick-whisker@latest render
@@ -398,7 +399,7 @@ workflows:
                   README.md
               - title: Create TECHNICAL_DESIGN.md
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
-                  github:flarebyte:baldrick-reserve:template/ts/technical_design.hbs
+                  github:flarebyte:baldrick-reserve:template/ts/technical-design.hbs
                   TECHNICAL_DESIGN.md
               - title: Create LICENSE
                 run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
