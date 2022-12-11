@@ -8,8 +8,7 @@ jobs:
     strategy:
       matrix:
         node:
-          - 14.x
-          - 16.x
+          - 18.x
         os:
           - ubuntu-latest
           - macOS-latest
@@ -27,4 +26,4 @@ jobs:
       - name: Test
         run: yarn test:ci
       - name: Build
-        run: yarn build
+        run: yarn build:ci

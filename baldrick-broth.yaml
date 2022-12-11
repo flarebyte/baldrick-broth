@@ -1,15 +1,23 @@
----
 model:
   project:
     title: Build automation tool and task runner
-    description: Take your developer workflow to the next level with a custom CLI with relevant documentation for running your task
+    description: Take your developer workflow to the next level with a custom CLI
+      with relevant documentation for running your task
+    version: 0.8.0
+    keywords:
+      - CLI
+      - Task runner
+      - Build system
+      - Build tool
+      - Make
   readme:
     highlights:
       - Written in `Typescript`
     links:
-      - '[Usage](USAGE.md)'
+      - "[Usage](USAGE.md)"
     related:
-      - '[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engine) Run tests declaratively with a few cunning plans'
+      - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
+        ne) Run tests declaratively with a few cunning plans"
   github:
     account: flarebyte
     name: baldrick-broth
@@ -17,6 +25,18 @@ model:
     holder: Flarebyte.com
     startYear: 2022
   license: MIT
+  author:
+    name: Olivier Huin
+    url: https://github.com/olih
+  implementation:
+    tags:
+      - cli
+      - zest
+      - pest
+      - zod
+      - railway
+      - commander
+  workflow-version: 0.1.0
 workflows:
   test:
     title: Test the library
@@ -77,7 +97,8 @@ workflows:
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
-        motivation: Simulate a CLI app in development without the need to install it globally
+        motivation: Simulate a CLI app in development without the need to install it
+          globally
         steps:
           - a: batch
             title: Run the CLI using ts-node
@@ -219,24 +240,24 @@ workflows:
                 run: npx baldrick-dev-ts@latest markdown check -s .github/
       fix:
         title: Fix Markdown files
-        description: Modify the markdown documents to ensure they follow some consistent guidelines
+        description: Modify the markdown documents to ensure they follow some consistent
+          guidelines
         motivation: Make the markdown documents consistent in style
         steps:
           - a: batch
             title: Fix Markdown all files
             commands:
-              - name: fix
-                title: Fix markdown files
+              - title: Fix markdown files
                 run: npx baldrick-dev-ts@latest markdown fix
-              - name: github
-                title: Fix markdown files in github
+              - title: Fix markdown files in github
                 run: npx baldrick-dev-ts@latest markdown fix -s .github/
   release:
     title: Release of the library
     tasks:
       ready:
         title: Ready for publishing
-        description: Run a sequence of commands to check that the library is ready to be published
+        description: Run a sequence of commands to check that the library is ready to be
+          published
         motivation: Detect quality flaws before pushing the code
         steps:
           - a: batch
@@ -287,88 +308,105 @@ workflows:
                 links:
                   - title: sponge from MoreUtils homepage
                     url: https://formulae.brew.sh/formula/moreutils
-              # - name: merge
-              #   run: npx baldrick-whisker@latest object baldrick-broth2.yaml temp/baldrick-broth-model.yaml github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
+              - title: merge model with new workflow
+                run: npx baldrick-whisker@latest object baldrick-broth.yaml
+                  temp/broth/baldrick-broth-model.json
+                  github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
       norm:
         title: Normalize the project
-        description: Normalize the project in a similar fashion that the other typescript projects
+        description: Normalize the project in a similar fashion that the other
+          typescript projects
         motivation: Make the project structure consistent and easier to navigate
         steps:
           - a: batch
             title: github
             commands:
-              - name: mkdir
-                title: Create all github repositories
+              - title: Create all github repositories
                 run: mkdir -p .github/workflows .github/ISSUE_TEMPLATE
-              - name: bug-report
-                title: Github - create bug report form
-                run: npx baldrick-whisker@latest object .github/ISSUE_TEMPLATE/bug_report.yaml github:flarebyte:baldrick-reserve:data/ts/bug-report.yaml
-              - name: feature-request
-                title: Github - create feature request form
-                run: npx baldrick-whisker@latest object .github/ISSUE_TEMPLATE/feature_request.yaml github:flarebyte:baldrick-reserve:data/ts/feature-request.yaml
-              - name: workflow-main
-                title: Github - create main workflow
-                run: npx baldrick-whisker@latest object .github/workflows/main.yml github:flarebyte:baldrick-reserve:data/ts/workflow-main.yml
-              - name: pull-request-template
-                title: Github - create pull request configuration
-                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/pull-request-template.hbs .github/pull_request_template.md
+              - title: Github - create bug report form
+                run: npx baldrick-whisker@latest object .github/ISSUE_TEMPLATE/bug_report.yaml
+                  github:flarebyte:baldrick-reserve:data/ts/bug-report.yaml
+              - title: Github - create feature request form
+                run: npx baldrick-whisker@latest object
+                  .github/ISSUE_TEMPLATE/feature_request.yaml
+                  github:flarebyte:baldrick-reserve:data/ts/feature-request.yaml
+              - title: Github - create main workflow
+                run: npx baldrick-whisker@latest object .github/workflows/main.yml
+                  github:flarebyte:baldrick-reserve:data/ts/workflow-main.yml
+              - title: Github - create pull request configuration
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/pull-request-template.hbs
+                  .github/pull_request_template.md
           - a: batch
             title: configuration
             commands:
-              - name: mkdir
-                title: Create all needed repositories
+              - title: Create all needed repositories
                 run: mkdir -p .vscode src test spec script script/data script/schema
-              - name: snippet
-                title: Install default vscode snippets
-                run: npx baldrick-whisker@latest object --no-ext .vscode/baldrick.code-snippets.json github:flarebyte:baldrick-reserve:data/ts/snippet.yaml
-              - name: gitignore
-                title: Create .gitignore
+              - title: Install default vscode snippets
+                run: npx baldrick-whisker@latest object --no-ext
+                  .vscode/baldrick.code-snippets.json
+                  github:flarebyte:baldrick-reserve:data/ts/snippet.yaml
+              - title: Create .gitignore
                 links:
                   - title: Specify files to ignore in source control
                     url: https://git-scm.com/docs/gitignore
-                run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/gitignore.hbs .gitignore.sh
-              - name: editorconfig
-                title: Create .editorconfig
-                run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/editorconfig.hbs .editorconfig.sh
+                run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/gitignore.hbs
+                  .gitignore.sh
+              - title: Create .editorconfig
+                run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/editorconfig.hbs
+                  .editorconfig.sh
                 links:
                   - title: Maintain consistent coding styles for spaces
                     url: https://editorconfig.org/
-              - name: vscode-settings
-                title: Create a starter .vscode/settings.json
-                run: npx baldrick-whisker@latest object .vscode/settings.json github:flarebyte:baldrick-reserve:data/ts/vscode-settings.json --no-overwrite
-              - name: tsconfig
-                title: Create tsconfig.json
-                run: npx baldrick-whisker@latest object tsconfig.json github:flarebyte:baldrick-reserve:data/ts/tsconfig.json
-              - name: prettier-rc
-                title: Create .prettierrc.json
-                run: npx baldrick-whisker@latest object .prettierrc.json github:flarebyte:baldrick-reserve:data/ts/prettierrc.json
-              - name: remark-rc
-                title: Create .remarkrc.yml
-                run: npx baldrick-whisker@latest object .remarkrc.yml github:flarebyte:baldrick-reserve:data/ts/remarkrc.yml
+              - title: Create a starter .vscode/settings.json
+                run: npx baldrick-whisker@latest object .vscode/settings.json
+                  github:flarebyte:baldrick-reserve:data/ts/vscode-settings.json
+                  --no-overwrite
+              - title: Create tsconfig.json
+                run: npx baldrick-whisker@latest object tsconfig.json
+                  github:flarebyte:baldrick-reserve:data/ts/tsconfig-2021.yaml
+              - title: Create .prettierrc.json
+                run: npx baldrick-whisker@latest object .prettierrc.json
+                  github:flarebyte:baldrick-reserve:data/ts/prettierrc.json
+              - title: Create .remarkrc.yml
+                run: npx baldrick-whisker@latest object .remarkrc.yml
+                  github:flarebyte:baldrick-reserve:data/ts/remarkrc.yml
           - a: batch
             title: markdown
             commands:
-              - name: contributing
-                title: Create CONTRIBUTING.md with contribution guidelines
-                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/contributing.hbs CONTRIBUTING.md
-              - name: code_of_conduct
-                title: Create CODE_OF_CONDUCT.md with code of conduct guidelines
-                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/code_of_conduct.hbs CODE_OF_CONDUCT.md
-              - name: glossary
-                title: Create GLOSSARY.md with project vocabulary
-                run: npx baldrick-whisker@latest render github:flarebyte:baldrick-reserve:data/glossary.yaml github:flarebyte:baldrick-reserve:template/glossary.hbs GLOSSARY.md
-              - name: decisions
-                title: Create a starter DECISIONS.md
-                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/decisions.hbs DECISIONS.md --no-overwrite
-              - name: readme
-                title: Create README.md
-                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/readme.hbs README.md
-              - name: technical-design
-                title: Create TECHNICAL_DESIGN.md
-                run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/technical_design.hbs TECHNICAL_DESIGN.md
-              - name: license
-                title: Create LICENSE
-                run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/license.hbs LICENSE.md
+              - title: Create CONTRIBUTING.md with contribution guidelines
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/contributing.hbs
+                  CONTRIBUTING.md
+              - title: Create CODE_OF_CONDUCT.md with code of conduct guidelines
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/code-of-conduct.hbs
+                  CODE_OF_CONDUCT.md
+              - title: Create GLOSSARY.md with project vocabulary
+                run: npx baldrick-whisker@latest render
+                  github:flarebyte:baldrick-reserve:data/glossary.yaml
+                  github:flarebyte:baldrick-reserve:template/glossary.hbs
+                  GLOSSARY.md
+              - title: Create a starter DECISIONS.md
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/decisions.hbs
+                  DECISIONS.md --no-overwrite
+              - title: Create README.md
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/readme.hbs
+                  README.md
+              - title: Create TECHNICAL_DESIGN.md
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/technical-design.hbs
+                  TECHNICAL_DESIGN.md
+              - title: Create LICENSE
+                run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/license.hbs
+                  LICENSE.md
+              - title: Fix markdown
+                run: npx baldrick-broth@latest md fix
           - a: batch
             title: precedent
             commands:
@@ -377,16 +415,25 @@ workflows:
                 run: cat package.json
                 onSuccess:
                   - save
+                  - silent
+                  - json
           - a: batch
             title: package
             before:
               - a: mask-object
                 title: Extracts dependencies from package.json
                 name: package-json-deps
-                value: data.norm::main::package-json
+                value: data.scaffold::norm::package-json
                 mask: dependencies,devDependencies,peerDependencies
             commands:
               - name: save-package-json-deps
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm::package-json-deps
                 run: sponge temp/broth/package-deps.json
+              - title: Create package.json metadata from broth model
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/package.hbs
+                  temp/broth/package-specific.json
+              - title: merge dependencies with broth model info
+                run: npx baldrick-whisker@latest object package.json
+                  temp/broth/package-specific.json temp/broth/package-deps.json

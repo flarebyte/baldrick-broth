@@ -1,5 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import winston from 'winston';
+import { coloration } from './coloration.js';
+import { isCI } from './is-ci.js';
+import { LogMessage } from './log-model.js';
 
 const { printf } = winston.format;
 const consoleLikeFormat = printf(({ message }) => {
@@ -16,6 +19,14 @@ export const currentTaskLogger = winston.createLogger({
     }),
   ],
 });
+
+export const currentTaskWarn = (content: LogMessage) => {
+  if (isCI) {
+    currentTaskLogger.warn(`✗ ${content.message}`);
+  } else {
+    currentTaskLogger.warn(coloration.warn('✗') + ' ' + content.coloredMessage);
+  }
+};
 
 export const telemetryTaskLogger = winston.createLogger({
   level: 'info',

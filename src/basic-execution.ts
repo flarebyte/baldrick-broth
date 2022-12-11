@@ -5,16 +5,18 @@ import type {
   BatchStepModel,
   Ctx,
 } from './build-model.js';
+import { coloration } from './coloration.js';
 import {
   setDataValue,
   getSupportedProperty,
   isTruthy,
   isFalsy,
 } from './data-value-utils.js';
-import { Result, succeed } from './railway.js';
+import { LogMessage } from './log-model.js';
+import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 
-type BasicExecution = Result<Ctx, { message: string }>;
+type BasicExecution = Result<Ctx, LogMessage>;
 
 const getPropertyList = (
   ctx: Ctx,
@@ -34,7 +36,10 @@ const basicStepExecution = (
 ): BasicExecution => {
   const { a } = basicStep;
   const success: BasicExecution = succeed(ctx);
-  const name = basicStep.name === undefined ?dasherizeTitle(basicStep.title): basicStep.name;
+  const name =
+    basicStep.name === undefined
+      ? dasherizeTitle(basicStep.title)
+      : basicStep.name;
   switch (a) {
     case 'get-property':
       const value = getSupportedProperty(ctx, basicStep.value);
@@ -100,6 +105,18 @@ const basicStepExecution = (
       return success;
     case 'mask-object':
       const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
+      if (typeof objectValue !== 'object') {
+        return fail({
+          message: `mask-object for path ${
+            basicStep.value
+          } expects an object but got ${typeof objectValue}`,
+          coloredMessage: `mask-object for path ${coloration.path(
+            basicStep.value
+          )} expects an ${coloration.expected(
+            'object'
+          )} but got ${coloration.actual(typeof objectValue)}`,
+        });
+      }
       const masked = json_mask(objectValue, basicStep.mask);
       setDataValue(ctx, name, masked);
       return success;
