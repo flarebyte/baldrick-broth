@@ -40,3 +40,21 @@ Highlights:
 
 This package is [ESM
 only](https://blog.sindresorhus.com/get-ready-for-esm-aa53530b3f77).
+
+```bash
+yarn global add baldrick-broth
+baldrick-broth --help
+```
+
+Or alternatively run it:
+
+```bash
+npx baldrick-broth --help
+```
+
+If you want to tun the latest version from github. Mostly useful for dev:
+
+```bash
+git clone git@github.com:flarebyte/baldrick-broth.git
+yarn global add `pwd`
+```

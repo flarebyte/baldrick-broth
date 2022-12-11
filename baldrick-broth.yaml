@@ -249,11 +249,9 @@ workflows:
           - a: batch
             title: Fix Markdown all files
             commands:
-              - name: fix
-                title: Fix markdown files
+              - title: Fix markdown files
                 run: npx baldrick-dev-ts@latest markdown fix
-              - name: github
-                title: Fix markdown files in github
+              - title: Fix markdown files in github
                 run: npx baldrick-dev-ts@latest markdown fix -s .github/
   release:
     title: Release of the library
@@ -415,6 +413,8 @@ workflows:
                   npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/license.hbs
                   LICENSE.md
+              - title: Fix markdown
+                run: npx baldrick-broth@latest md fix
           - a: batch
             title: precedent
             commands:

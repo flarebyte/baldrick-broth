@@ -4,7 +4,8 @@ Fixes: # (issue)
 
 ## Code check
 
--   [x] `make ready` does not show any concerning issues
+-   [x] `npx baldrick-broth@latest release ready` does not show any
+    concerning issues
 
 ## Type of change
 
