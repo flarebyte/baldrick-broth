@@ -352,7 +352,7 @@ workflows:
                     url: https://git-scm.com/docs/gitignore
                 run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/gitignore.hbs
-                  gitignore.sh
+                  .gitignore.sh
               - title: Create .editorconfig
                 run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/editorconfig.hbs
@@ -366,7 +366,7 @@ workflows:
                   --no-overwrite
               - title: Create tsconfig.json
                 run: npx baldrick-whisker@latest object tsconfig.json
-                  github:flarebyte:baldrick-reserve:data/ts/tsconfig-2021.json
+                  github:flarebyte:baldrick-reserve:data/ts/tsconfig-2021.yaml
               - title: Create .prettierrc.json
                 run: npx baldrick-whisker@latest object .prettierrc.json
                   github:flarebyte:baldrick-reserve:data/ts/prettierrc.json
