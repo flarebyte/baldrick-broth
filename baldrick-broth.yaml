@@ -456,4 +456,4 @@ workflows:
               - title: Create package.json metadata from broth model
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml github:flarebyte:baldrick-reserve:template/ts/package.hbs temp/broth/package-specific.json
               - title: merge dependencies with broth model info
-                run: npx baldrick-whisker@latest object package.json temp/broth/package-specific.json temp/broth/package-deps.json github:flarebyte:baldrick-reserve:data/ts/package-cli.json
+                run: npx baldrick-whisker@latest object package.json temp/broth/package-specific.json temp/broth/package-deps.json
