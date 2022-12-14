@@ -1,17 +1,15 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "ES2021",
+  "display": "ES2022",
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": [
-      "es2021"
-    ],
-    "module": "Node16",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
     "moduleDetection": "force",
-    "moduleResolution": "Node16",
+    "moduleResolution": "Node",
     "newLine": "lf",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
@@ -24,14 +22,16 @@
     "resolveJsonModule": false,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2021",
+    "target": "ES2022",
     "useDefineForClassFields": true,
     "diagnostics": true,
-    "extendedDiagnostics": true
+    "extendedDiagnostics": true,
+    "outDir": "dist"
   },
   "ts-node": {
     "compilerOptions": {},
     "files": true,
     "transpileOnly": true
-  }
+  },
+  "exclude": ["dist"]
 }

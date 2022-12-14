@@ -57,9 +57,9 @@ const metadataStep = {
 };
 
 const metadataCore = {
-  name: stringy.customKey.describe(
-    'A short name that could be used a key or variable'
-  ).optional(),
+  name: stringy.customKey
+    .describe('A short name that could be used a key or variable')
+    .optional(),
   title: stringy.title,
   description: stringy.description.optional(),
   motivation: stringy.motivation.optional(),
@@ -70,6 +70,7 @@ const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
   .object({
     ...metadataCore,
+    a: z.literal('shell'),
     onFailure: z
       .array(onShellCommandFinish)
       .min(1)
@@ -97,12 +98,6 @@ const advancedShell = z
     run: lineShell,
   })
   .describe('Configuration for the batch shell script');
-
-const commands = z
-  .array(advancedShell)
-  .min(1)
-  .max(50)
-  .describe('A list of batch shell scripts to run');
 
 const valuesLoopEach = z.string().min(1).max(300);
 
@@ -280,6 +275,30 @@ const anyBeforeStep = z
     maskJsonStep,
   ])
   .describe('An operation on the context');
+
+const anyCommand = z
+  .discriminatedUnion('a', [
+    getPropertyStep,
+    stringArrayStep,
+    concatArrayStep,
+    splitStringStep,
+    someTruthyArrayStep,
+    someFalsyArrayStep,
+    everyTruthyArrayStep,
+    everyFalsyArrayStep,
+    notStep,
+    rangeStep,
+    invertObjectStep,
+    maskJsonStep,
+    advancedShell,
+  ])
+  .describe('A command to be run');
+
+const commands = z
+  .array(anyCommand)
+  .min(1)
+  .max(50)
+  .describe('A list of batch shell scripts to run');
 
 const batchStep = z
   .strictObject({
