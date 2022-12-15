@@ -1,7 +1,13 @@
 import { execaCommand } from 'execa';
 import YAML from 'yaml';
 import CSV from 'papaparse';
-import { AnyDataValue, CommandOptionsModel, Ctx } from './build-model.js';
+import {
+  AnyDataValue,
+  AnyCommand,
+  Ctx,
+  onCommandSuccess,
+  onCommandFailure,
+} from './build-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 
@@ -17,7 +23,7 @@ type ExecuteCommandLineFailedCategory =
 export interface CommandLineInput {
   line: string;
   name: string;
-  opts: CommandOptionsModel;
+  opts: AnyCommand;
 }
 
 type ExecuteCommandLineFailure = {
@@ -27,7 +33,7 @@ type ExecuteCommandLineFailure = {
   stderr: string;
   exitCode: number;
   message: string;
-  onFailure: CommandOptionsModel['onFailure'];
+  onFailure: onCommandFailure[];
 };
 
 type ExecuteCommandLineSuccess =
@@ -36,21 +42,21 @@ type ExecuteCommandLineSuccess =
       line: string;
       name: string;
       data: string;
-      onSuccess: CommandOptionsModel['onSuccess'];
+      onSuccess: onCommandSuccess[];
     }
   | {
       format: 'json';
       line: string;
       name: string;
       data: AnyDataValue;
-      onSuccess: CommandOptionsModel['onSuccess'];
+      onSuccess: onCommandSuccess[];
     }
   | {
       format: 'csv';
       line: string;
       name: string;
       data: AnyDataValue;
-      onSuccess: CommandOptionsModel['onSuccess'];
+      onSuccess: onCommandSuccess[];
     };
 
 type ExecuteCommandLineResult = Result<
@@ -139,12 +145,9 @@ const parseCsv = (content: string): CsvParsingResult => {
 const forceString = (value: unknown): string =>
   typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 
-/**
- * Executes a a command after template expansion
- */
-export const executeCommandLine = async (
+const executeShellCommandLine = async (
   ctx: Ctx,
-  params: CommandLineInput
+  params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
   const { onSuccess, onFailure, stdin } = opts;
@@ -238,6 +241,27 @@ export const executeCommandLine = async (
       exitCode,
       onFailure,
       message: `Failed with exit code ${exitCode}`,
+    });
+  }
+};
+
+/**
+ * Executes a a command after template expansion
+ */
+export const executeCommandLine = async (
+  ctx: Ctx,
+  params: CommandLineInput
+): Promise<ExecuteCommandLineResult> => {
+  const { line, name, opts } = params;
+  if (opts.a === 'shell') {
+    return await executeShellCommandLine(ctx, { line, name, opts });
+  } else {
+    return succeed({
+      format: 'json',
+      name,
+      line,
+      data: {},
+      onSuccess: [],
     });
   }
 };
