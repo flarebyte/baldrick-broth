@@ -774,76 +774,122 @@
                           "commands": {
                             "type": "array",
                             "items": {
-                              "type": "object",
-                              "properties": {
-                                "name": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                              "anyOf": [
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0"
                                 },
-                                "title": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/1"
                                 },
-                                "description": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/2"
                                 },
-                                "motivation": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/3"
                                 },
-                                "links": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/4"
                                 },
-                                "onFailure": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "string",
-                                    "enum": [
-                                      "exit",
-                                      "silent",
-                                      "trim",
-                                      "json",
-                                      "yaml",
-                                      "csv",
-                                      "save",
-                                      "debug"
-                                    ]
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/5"
+                                },
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/6"
+                                },
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/7"
+                                },
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/8"
+                                },
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/9"
+                                },
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/10"
+                                },
+                                {
+                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/11"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/name"
+                                    },
+                                    "title": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                    },
+                                    "description": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/description"
+                                    },
+                                    "motivation": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/motivation"
+                                    },
+                                    "links": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/links"
+                                    },
+                                    "a": {
+                                      "type": "string",
+                                      "const": "shell"
+                                    },
+                                    "onFailure": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string",
+                                        "enum": [
+                                          "exit",
+                                          "silent",
+                                          "trim",
+                                          "json",
+                                          "yaml",
+                                          "csv",
+                                          "save",
+                                          "debug"
+                                        ]
+                                      },
+                                      "minItems": 1,
+                                      "default": [
+                                        "exit"
+                                      ],
+                                      "description": "List of flags to describe the default behavior in case of failure"
+                                    },
+                                    "onSuccess": {
+                                      "type": "array",
+                                      "items": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/commands/items/anyOf/12/properties/onFailure/items"
+                                      },
+                                      "minItems": 1,
+                                      "default": [
+                                        "trim"
+                                      ],
+                                      "description": "List of flags to describe the default behavior in case of success"
+                                    },
+                                    "if": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
+                                      "description": "reference to JSON path that must be satisfied for the step to run"
+                                    },
+                                    "stdin": {
+                                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
+                                      "description": "Provide stdin with a value read from a dot prop path"
+                                    },
+                                    "run": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 300,
+                                      "description": "A line of shell script"
+                                    }
                                   },
-                                  "minItems": 1,
-                                  "default": [
-                                    "exit"
+                                  "required": [
+                                    "title",
+                                    "a",
+                                    "run"
                                   ],
-                                  "description": "List of flags to describe the default behavior in case of failure"
-                                },
-                                "onSuccess": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/commands/items/properties/onFailure/items"
-                                  },
-                                  "minItems": 1,
-                                  "default": [
-                                    "trim"
-                                  ],
-                                  "description": "List of flags to describe the default behavior in case of success"
-                                },
-                                "if": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
-                                  "description": "reference to JSON path that must be satisfied for the step to run"
-                                },
-                                "stdin": {
-                                  "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/steps/items/properties/before/items/anyOf/0/properties/value",
-                                  "description": "Provide stdin with a value read from a dot prop path"
-                                },
-                                "run": {
-                                  "type": "string",
-                                  "minLength": 1,
-                                  "maxLength": 300,
-                                  "description": "A line of shell script"
+                                  "additionalProperties": false,
+                                  "description": "Configuration for the batch shell script"
                                 }
-                              },
-                              "required": [
-                                "title",
-                                "run"
                               ],
-                              "additionalProperties": false,
-                              "description": "Configuration for the batch shell script"
+                              "description": "A command to be run"
                             },
                             "minItems": 1,
                             "maxItems": 50,
