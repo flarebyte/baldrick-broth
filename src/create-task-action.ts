@@ -61,6 +61,12 @@ interface OnResultFlags {
   debug: boolean;
   exit: boolean;
 }
+const defaultOnResultFlags: OnResultFlags = {
+  save: false,
+  silent: false,
+  debug: false,
+  exit: false,
+};
 
 const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   save: flags.includes('save'),
@@ -90,8 +96,9 @@ const toCommandLineAction = (
   const commandTask: ListrTask = {
     title,
     enabled: (_) => {
-      const ifPath = commandLineInput.opts.if;
-      if (ifPath === undefined) {
+      const ifPath =
+        commandLineInput.opts.a === 'shell' && commandLineInput.opts.if;
+      if (ifPath === undefined || ifPath === false) {
         return true;
       }
       const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
@@ -100,8 +107,14 @@ const toCommandLineAction = (
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
-      const successFlags = toOnResultFlags(commandLineInput.opts.onSuccess);
-      const failureFlags = toOnResultFlags(commandLineInput.opts.onFailure);
+      const successFlags =
+        commandLineInput.opts.a === 'shell'
+          ? toOnResultFlags(commandLineInput.opts.onSuccess)
+          : defaultOnResultFlags;
+      const failureFlags =
+        commandLineInput.opts.a === 'shell'
+          ? toOnResultFlags(commandLineInput.opts.onFailure)
+          : defaultOnResultFlags;
       await sleep(SLEEP_MIN);
       if (cmdLineResult.status === 'success') {
         const {

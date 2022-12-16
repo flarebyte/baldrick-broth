@@ -9,7 +9,7 @@
     "lib": ["ES2022"],
     "module": "NodeNext",
     "moduleDetection": "force",
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "newLine": "lf",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,

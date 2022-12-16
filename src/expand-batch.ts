@@ -1,9 +1,5 @@
 import Handlebars from 'handlebars';
-import {
-  BatchStepModel,
-  CommandOptionsModel,
-  Ctx,
-} from './build-model.js';
+import { BatchStepModel, Ctx, AnyCommand } from './build-model.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
@@ -30,7 +26,7 @@ const createTemplate = (run: string) =>
   Handlebars.compile(run, { noEscape: true });
 
 type CommandLocalVars = {
-  commandOpts: CommandOptionsModel;
+  commandOpts: AnyCommand;
   extra: Record<string, any>;
 };
 
@@ -40,33 +36,39 @@ const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
     const { commandOpts, extra } = current;
-    const { run, title, name } = commandOpts;
-    const preferredName = name === undefined ? dasherizeTitle(title) : name;
-    const template = createTemplate(run);
-    const nameTemplate = createTemplate(preferredName);
-    const templateCtx = forceJson({
-      ...ctx,
-      ...extra,
-      batch,
-      command: commandOpts,
-    });
-    const lines = template(templateCtx)
-      .split('\n')
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-    const expandedName = nameTemplate(templateCtx).trim();
-    const validatedName = stringy.customKey.safeParse(expandedName);
-    if (!validatedName.success) {
-      return fail({
-        messages: [`Expanded name was not supported: ${expandedName}`],
+    if (commandOpts.a === 'shell') {
+      const { run, title, name } = commandOpts;
+
+      const preferredName = name === undefined ? dasherizeTitle(title) : name;
+      const template = createTemplate(run);
+      const nameTemplate = createTemplate(preferredName);
+      const templateCtx = forceJson({
+        ...ctx,
+        ...extra,
+        batch,
+        command: commandOpts,
       });
+      const lines = template(templateCtx)
+        .split('\n')
+        .map((s) => s.trim())
+        .filter((s) => s.length > 0);
+      const expandedName = nameTemplate(templateCtx).trim();
+      const validatedName = stringy.customKey.safeParse(expandedName);
+      if (!validatedName.success) {
+        return fail({
+          messages: [`Expanded name was not supported: ${expandedName}`],
+        });
+      }
+      const lineInputs: CommandLineInput[] = lines.map((line) => ({
+        line,
+        name: expandedName,
+        opts: commandOpts,
+      }));
+      return succeed(lineInputs);
+    } else {
+      const { name } = commandOpts;
+      return succeed([{ line: '', name, opts: commandOpts }]);
     }
-    const lineInputs: CommandLineInput[] = lines.map((line) => ({
-      line,
-      name: expandedName,
-      opts: commandOpts,
-    }));
-    return succeed(lineInputs);
   };
 
 const mergeExpandedCommandLineInputs = (
