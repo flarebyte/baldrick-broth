@@ -70,7 +70,7 @@ const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
   .object({
     ...metadataCore,
-    a: z.literal('shell'),
+    a: z.literal('shell').default('shell'),
     onFailure: z
       .array(onShellCommandFinish)
       .min(1)
@@ -277,19 +277,21 @@ const anyBeforeStep = z
   .describe('An operation on the context');
 
 const anyCommand = z
-  .discriminatedUnion('a', [
-    getPropertyStep,
-    stringArrayStep,
-    concatArrayStep,
-    splitStringStep,
-    someTruthyArrayStep,
-    someFalsyArrayStep,
-    everyTruthyArrayStep,
-    everyFalsyArrayStep,
-    notStep,
-    rangeStep,
-    invertObjectStep,
-    maskJsonStep,
+  .union([
+    z.discriminatedUnion('a', [
+      getPropertyStep,
+      stringArrayStep,
+      concatArrayStep,
+      splitStringStep,
+      someTruthyArrayStep,
+      someFalsyArrayStep,
+      everyTruthyArrayStep,
+      everyFalsyArrayStep,
+      notStep,
+      rangeStep,
+      invertObjectStep,
+      maskJsonStep,
+    ]),
     advancedShell,
   ])
   .describe('A command to be run');
@@ -381,8 +383,8 @@ export type TaskModel = z.infer<typeof task>;
 export type BatchStepModel = z.infer<typeof batchStep>;
 export type AnyCommand = z.infer<typeof anyCommand>;
 // export type CommandOptionsModel = z.infer<typeof advancedShell>;
-export type onCommandSuccess = z.infer<typeof onShellCommandFinish>
-export type onCommandFailure = z.infer<typeof onShellCommandFinish>
+export type onCommandSuccess = z.infer<typeof onShellCommandFinish>;
+export type onCommandFailure = z.infer<typeof onShellCommandFinish>;
 export type AnyBasicStepModel = z.infer<typeof anyBeforeStep>;
 export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
