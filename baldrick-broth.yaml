@@ -437,3 +437,39 @@ workflows:
               - title: merge dependencies with broth model info
                 run: npx baldrick-whisker@latest object package.json
                   temp/broth/package-specific.json temp/broth/package-deps.json
+      norm-package:
+        title: Normalize the project
+        description: Normalize the project in a similar fashion that the other
+          typescript projects
+        motivation: Make the project structure consistent and easier to navigate
+        steps:
+          - a: batch
+            title: precedent
+            commands:
+              - name: package-json
+                title: Backup dependencies
+                run: cat package.json
+                onSuccess:
+                  - save
+                  - silent
+                  - json
+          - a: batch
+            title: package
+            before:
+              - a: mask-object
+                title: Extracts dependencies from package.json
+                name: package-json-deps
+                value: data.scaffold::norm::package-json
+                mask: dependencies,devDependencies,peerDependencies
+            commands:
+              - name: save-package-json-deps
+                title: Save package.json with only dependencies
+                stdin: data.scaffold::norm::package-json-deps
+                run: sponge temp/broth/package-deps.json
+              - title: Create package.json metadata from broth model
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/package.hbs
+                  temp/broth/package-specific.json
+              - title: merge dependencies with broth model info
+                run: npx baldrick-whisker@latest object package-temp.json
+                  temp/broth/package-specific.json temp/broth/package-deps.json
