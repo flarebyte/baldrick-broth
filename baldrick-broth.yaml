@@ -453,19 +453,28 @@ workflows:
                   - save
                   - silent
                   - json
-          - a: batch
-            title: package
-            before:
               - a: mask-object
                 title: Extracts dependencies from package.json
                 name: package-json-deps
                 value: data.scaffold::norm-package::package-json
                 mask: dependencies,devDependencies,peerDependencies
-            commands:
               - name: save-package-json-deps
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm-package::package-json-deps
                 run: sponge temp/broth/package-deps.json
+          - a: batch
+            title: package
+            # before:
+            #   - a: mask-object
+            #     title: Extracts dependencies from package.json
+            #     name: package-json-deps
+            #     value: data.scaffold::norm-package::package-json
+            #     mask: dependencies,devDependencies,peerDependencies
+            commands:
+              # - name: save-package-json-deps
+              #   title: Save package.json with only dependencies
+              #   stdin: data.scaffold::norm-package::package-json-deps
+              #   run: sponge temp/broth/package-deps.json
               - title: Create package.json metadata from broth model
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/package.hbs
