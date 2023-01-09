@@ -151,11 +151,26 @@ const executeShellCommandLine = async (
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
   const { onSuccess, onFailure, stdin } = opts;
+  let maybeStdin;
+  if (stdin !== undefined) {
+    const stdinPropValue = getSupportedProperty(ctx, stdin);
+    if (stdinPropValue === undefined) {
+      return fail({
+        category: 'failed',
+        line,
+        stdout: '',
+        stderr: '',
+        exitCode: 1,
+        onFailure,
+        message: `Could not get property for stdin ${stdin}`,
+      });
+    } else {
+      maybeStdin = { input: forceString(stdinPropValue) };
+    }
+  } else {
+    maybeStdin = {};
+  }
 
-  const maybeStdin =
-    stdin === undefined
-      ? {}
-      : { input: forceString(getSupportedProperty(ctx, stdin) || '') };
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
     await execaCommand(line, { reject: false, ...maybeStdin });
 
