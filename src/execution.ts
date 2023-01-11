@@ -10,6 +10,7 @@ import {
 } from './build-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
+import { currentTaskLogger } from './logging.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -261,7 +262,7 @@ const executeShellCommandLine = async (
 };
 
 /**
- * Executes a a command after template expansion
+ * Executes a command after template expansion
  */
 export const executeCommandLine = async (
   ctx: Ctx,
@@ -269,8 +270,11 @@ export const executeCommandLine = async (
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
   if (opts.a === 'shell') {
+    currentTaskLogger.info('SHELL')
     return await executeShellCommandLine(ctx, { line, name, opts });
   } else {
+    currentTaskLogger.info(`OTHER: ${opts.a}`)
+    
     return succeed({
       format: 'json',
       name,
