@@ -11,6 +11,7 @@ import {
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { currentTaskLogger } from './logging.js';
+import { basicCommandExecution } from './basic-execution.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -274,7 +275,7 @@ export const executeCommandLine = async (
     return await executeShellCommandLine(ctx, { line, name, opts });
   } else {
     currentTaskLogger.info(`OTHER: ${opts.a}`)
-    
+    basicCommandExecution(ctx, params.opts)
     return succeed({
       format: 'json',
       name,
