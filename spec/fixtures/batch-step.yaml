@@ -1,7 +1,7 @@
 name: example-batch-step
 title: Example of batch step
 a: batch
-before:
+commands:
   - a: get-property
     title: Get property
     name: get-property
@@ -91,7 +91,5 @@ before:
     start: 0
     end: 20
     step: 2
-
-commands:
   - title: hello
     run: echo hello

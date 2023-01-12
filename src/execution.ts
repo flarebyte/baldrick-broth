@@ -10,7 +10,6 @@ import {
 } from './build-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
-import { currentTaskLogger } from './logging.js';
 import { basicCommandExecution } from './basic-execution.js';
 
 type ExecuteCommandLineFailedCategory =
@@ -271,10 +270,8 @@ export const executeCommandLine = async (
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
   if (opts.a === 'shell') {
-    currentTaskLogger.info('SHELL')
     return await executeShellCommandLine(ctx, { line, name, opts });
   } else {
-    currentTaskLogger.info(`OTHER: ${opts.a}`)
     basicCommandExecution(ctx, params.opts)
     return succeed({
       format: 'json',

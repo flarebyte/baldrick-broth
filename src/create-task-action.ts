@@ -11,13 +11,11 @@ import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
   currentTaskLogger,
-  currentTaskWarn,
   replayLogToConsole,
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
 import { fail, Result, succeed } from './railway.js';
-import { basicExecution } from './basic-execution.js';
 import {
   getSupportedProperty,
   isTruthy,
@@ -167,11 +165,6 @@ const toBatchStepAction = (
   const batchTask: ListrTask = {
     title,
     task: async (_, task) => {
-      const basicExecutionResult = basicExecution(ctx, batchStep);
-      if (basicExecutionResult.status === 'failure') {
-        currentTaskWarn(basicExecutionResult.error);
-        task.output = coloration.warn('before: KO');
-      }
       const commandsForStep = expandBatchStep(ctx, batchStep);
       if (commandsForStep.status === 'failure') {
         currentTaskLogger.warn({ messages: commandsForStep.error.messages });

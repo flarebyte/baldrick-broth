@@ -1,9 +1,7 @@
 import json_mask from 'json-mask';
 import type {
-  AnyBasicStepModel,
   AnyCommand,
   AnyDataValue,
-  BatchStepModel,
   Ctx,
 } from './build-model.js';
 import { coloration } from './coloration.js';
@@ -40,101 +38,6 @@ const range = (stop: number, start: number = 1, step: number = 1) => {
     ranged.push(index);
   }
   return ranged;
-};
-
-const basicStepExecution = (
-  ctx: Ctx,
-  basicStep: AnyBasicStepModel
-): BasicExecution => {
-  const { a } = basicStep;
-  const success: BasicExecution = succeed(ctx);
-  const name =
-    basicStep.name === undefined
-      ? dasherizeTitle(basicStep.title)
-      : basicStep.name;
-  switch (a) {
-    case 'get-property':
-      const value = getSupportedProperty(ctx, basicStep.value);
-      setDataValue(ctx, name, value);
-      return success;
-    case 'some-truthy':
-      setDataValue(
-        ctx,
-        name,
-        getPropertyList(ctx, basicStep.values).some(isTruthy)
-      );
-      return success;
-    case 'some-falsy':
-      setDataValue(
-        ctx,
-        name,
-        getPropertyList(ctx, basicStep.values).some(isFalsy)
-      );
-      return success;
-    case 'every-truthy':
-      setDataValue(
-        ctx,
-        name,
-        getPropertyList(ctx, basicStep.values).every(isTruthy)
-      );
-      return success;
-    case 'every-falsy':
-      setDataValue(
-        ctx,
-        name,
-        getPropertyList(ctx, basicStep.values).every(isFalsy)
-      );
-      return success;
-    case 'not':
-      setDataValue(
-        ctx,
-        name,
-        isFalsy(getSupportedProperty(ctx, basicStep.value))
-      );
-      return success;
-    case 'split-string':
-      setDataValue(
-        ctx,
-        name,
-        asStringOrBlank(getSupportedProperty(ctx, basicStep.value)).split(
-          basicStep.separator
-        )
-      );
-      return success;
-    case 'range':
-      setDataValue(
-        ctx,
-        name,
-        range(basicStep.end, basicStep.start, basicStep.step)
-      );
-      return success;
-    case 'concat-array':
-      setDataValue(
-        ctx,
-        name,
-        getPropertyList(ctx, basicStep.values).flatMap(asAnyArray)
-      );
-      return success;
-    case 'mask-object':
-      const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
-      if (typeof objectValue !== 'object') {
-        return fail({
-          message: `mask-object for path ${
-            basicStep.value
-          } expects an object but got ${typeof objectValue}`,
-          coloredMessage: `mask-object for path ${coloration.path(
-            basicStep.value
-          )} expects an ${coloration.expected(
-            'object'
-          )} but got ${coloration.actual(typeof objectValue)}`,
-        });
-      }
-      const masked = json_mask(objectValue, basicStep.mask);
-      setDataValue(ctx, name, masked);
-      return success;
-  }
-
-  return success;
 };
 
 export const basicCommandExecution = (
@@ -230,23 +133,4 @@ export const basicCommandExecution = (
   }
 
   return success;
-};
-
-/**
- * Transform the data with a list of supported operations
- */
-export const basicExecution = (
-  ctx: Ctx,
-  batchStep: BatchStepModel
-): BasicExecution => {
-  if (batchStep.before === undefined) {
-    return succeed(ctx);
-  }
-  for (const basicStep of batchStep.before) {
-    const result = basicStepExecution(ctx, basicStep);
-    if (result.status === 'failure') {
-      return result;
-    }
-  }
-  return succeed(ctx);
 };
