@@ -3,7 +3,7 @@ model:
     title: Build automation tool and task runner
     description: Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.8.0
+    version: 0.9.0
     keywords:
       - CLI
       - Task runner
@@ -442,7 +442,7 @@ workflows:
         motivation: Make the project structure consistent and easier to navigate
         steps:
           - a: batch
-            title: precedent
+            title: packaging
             commands:
               - name: package-json
                 title: Backup dependencies
@@ -460,23 +460,10 @@ workflows:
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm-package::package-json-deps
                 run: sponge temp/broth/package-deps.json
-          # - a: batch
-          #   title: package
-          #   # before:
-          #   #   - a: mask-object
-          #   #     title: Extracts dependencies from package.json
-          #   #     name: package-json-deps
-          #   #     value: data.scaffold::norm-package::package-json
-          #   #     mask: dependencies,devDependencies,peerDependencies
-          #   commands:
-          #     # - name: save-package-json-deps
-          #     #   title: Save package.json with only dependencies
-          #     #   stdin: data.scaffold::norm-package::package-json-deps
-          #     #   run: sponge temp/broth/package-deps.json
-          #     - title: Create package.json metadata from broth model
-          #       run: npx baldrick-whisker@latest render baldrick-broth.yaml
-          #         github:flarebyte:baldrick-reserve:template/ts/package.hbs
-          #         temp/broth/package-specific.json
-          #     - title: merge dependencies with broth model info
-          #       run: npx baldrick-whisker@latest object temp/broth/package.json
-          #         temp/broth/package-specific.json temp/broth/package-deps.json
+              - title: Create package.json metadata from broth model
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/package.hbs
+                  temp/broth/package-specific.json
+              - title: merge dependencies with broth model info
+                run: npx baldrick-whisker@latest object temp/broth/package.json
+                  temp/broth/package-specific.json temp/broth/package-deps.json
