@@ -291,17 +291,16 @@ workflows:
         steps:
           - a: batch
             title: Upgrade baldrick-broth
-            before:
-              - a: mask-object
-                name: broth-model
-                title: Extract model from this baldrick-broth.yaml
-                value: build
-                mask: model
             commands:
               - title: Remove previous temporary directory
                 run: rm -rf temp/broth
               - title: Create temporary directory
                 run: mkdir -p temp/broth
+              - a: mask-object
+                name: broth-model
+                title: Extract model from this baldrick-broth.yaml
+                value: build
+                mask: model
               - title: Save baldrick-broth file with existing model
                 stdin: data.scaffold::upgrade::broth-model
                 run: sponge temp/broth/baldrick-broth-model.json
@@ -419,13 +418,12 @@ workflows:
                   - json
           - a: batch
             title: package
-            before:
+            commands:
               - a: mask-object
                 title: Extracts dependencies from package.json
                 name: package-json-deps
                 value: data.scaffold::norm::package-json
                 mask: dependencies,devDependencies,peerDependencies
-            commands:
               - name: save-package-json-deps
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm::package-json-deps

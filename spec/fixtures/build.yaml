@@ -35,12 +35,11 @@ workflows:
         steps:
           - a: batch
             title: Run calculate shell step
-            before:
+            commands:
               - a: get-property
                 name: githubAccount
                 title: Set variable githubAccount
                 value: model.githubAccount
-            commands:
               - run: >-
                   cat {{whisker}} render {{project_yaml}} {{generate_hbs}}
                   {{generate_sh}} {{color}}

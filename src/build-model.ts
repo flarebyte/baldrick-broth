@@ -259,22 +259,6 @@ const maskJsonStep = z
       .describe('JSON mask to select parts of the json object'),
   })
   .describe('Uses JSON mask to select parts of the json object');
-const anyBeforeStep = z
-  .discriminatedUnion('a', [
-    getPropertyStep,
-    stringArrayStep,
-    concatArrayStep,
-    splitStringStep,
-    someTruthyArrayStep,
-    someFalsyArrayStep,
-    everyTruthyArrayStep,
-    everyFalsyArrayStep,
-    notStep,
-    rangeStep,
-    invertObjectStep,
-    maskJsonStep,
-  ])
-  .describe('An operation on the context');
 
 const anyCommand = z
   .union([
@@ -306,12 +290,6 @@ const batchStep = z
   .strictObject({
     a: z.literal('batch'),
     ...metadataCore,
-    before: z
-      .array(anyBeforeStep)
-      .min(1)
-      .max(20)
-      .optional()
-      .describe('A list of operations to run before end'),
     if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
@@ -385,7 +363,6 @@ export type AnyCommand = z.infer<typeof anyCommand>;
 // export type CommandOptionsModel = z.infer<typeof advancedShell>;
 export type onCommandSuccess = z.infer<typeof onShellCommandFinish>;
 export type onCommandFailure = z.infer<typeof onShellCommandFinish>;
-export type AnyBasicStepModel = z.infer<typeof anyBeforeStep>;
 export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
 export type AnyDataValue = z.infer<typeof jsonishSchema>;
