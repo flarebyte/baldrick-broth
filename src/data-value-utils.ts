@@ -54,14 +54,12 @@ export const getSupportedProperty = (
   const value = isInsideData
     ? getDataProperty(valuePath, ctx.data)
     : getProperty(ctx, valuePath);
-  if (
-    typeof value === 'string' ||
+  return typeof value === 'string' ||
     typeof value === 'number' ||
     typeof value === 'boolean' ||
     typeof value === 'object'
-  ) {
-    return value;
-  } else return undefined;
+    ? value
+    : undefined;
 };
 /**
  * Check if the the value would generally considered false or empty

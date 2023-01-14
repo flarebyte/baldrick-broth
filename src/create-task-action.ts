@@ -177,7 +177,7 @@ const toBatchStepAction = (
         currentTaskLogger.info(startStepTitle(batchStep));
         return task.newListr([...commandTasks], { exitOnError: false });
       } else {
-        return undefined;
+        return;
       }
     },
   };
@@ -205,7 +205,7 @@ export const createTaskAction =
       ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
     );
     if (listPossibleActions.status === 'failure') {
-      console.log('Failure ', listPossibleActions.error.messages);
+      console.log('Failure', listPossibleActions.error.messages);
     } else {
       const mainTask = new Listr<Ctx>(listPossibleActions.value, {
         exitOnError: false,
@@ -214,8 +214,8 @@ export const createTaskAction =
         await mainTask.run(ctx);
         logTaskStatistics(started, ctx);
         await replayLogToConsole();
-      } catch (e: any) {
-        console.log('Failure ', e);
+      } catch (error: any) {
+        console.log('Failure', error);
       }
     }
   };

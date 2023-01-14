@@ -28,8 +28,8 @@ const asAnyArray = (value: unknown): AnyDataValue[] =>
 /**
  * Create a range starting with stop as other parameters are optional
  */
-const range = (stop: number, start: number = 1, step: number = 1) => {
-  let ranged = [];
+const range = (stop: number, start = 1, step = 1) => {
+  const ranged = [];
   for (let index = start; index <= stop; index = index + step) {
     ranged.push(index);
   }

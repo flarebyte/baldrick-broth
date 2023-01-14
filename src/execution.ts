@@ -180,69 +180,63 @@ const executeShellCommandLine = async (
   if (status === 'success') {
     if (onSuccess.includes('json')) {
       const parsed = parseJson(stdout);
-      if (parsed.status === 'failure') {
-        return fail({
-          category: 'parse-json-failed',
-          line,
-          stdout,
-          stderr,
-          exitCode,
-          onFailure,
-          message: parsed.error.message,
-        });
-      } else {
-        return succeed({
-          format: 'json',
-          name,
-          line,
-          data: parsed.value,
-          onSuccess,
-        });
-      }
+      return parsed.status === 'failure'
+        ? fail({
+            category: 'parse-json-failed',
+            line,
+            stdout,
+            stderr,
+            exitCode,
+            onFailure,
+            message: parsed.error.message,
+          })
+        : succeed({
+            format: 'json',
+            name,
+            line,
+            data: parsed.value,
+            onSuccess,
+          });
     }
     if (onSuccess.includes('yaml')) {
       const parsed = parseYaml(stdout);
-      if (parsed.status === 'failure') {
-        return fail({
-          category: 'parse-yaml-failed',
-          line,
-          stdout,
-          stderr,
-          exitCode,
-          onFailure,
-          message: parsed.error.message,
-        });
-      } else {
-        return succeed({
-          format: 'json',
-          name,
-          line,
-          data: parsed.value,
-          onSuccess,
-        });
-      }
+      return parsed.status === 'failure'
+        ? fail({
+            category: 'parse-yaml-failed',
+            line,
+            stdout,
+            stderr,
+            exitCode,
+            onFailure,
+            message: parsed.error.message,
+          })
+        : succeed({
+            format: 'json',
+            name,
+            line,
+            data: parsed.value,
+            onSuccess,
+          });
     }
     if (onSuccess.includes('csv')) {
       const parsed = parseCsv(stdout);
-      if (parsed.status === 'failure') {
-        return fail({
-          category: 'parse-csv-failed',
-          line,
-          stdout,
-          stderr,
-          exitCode,
-          onFailure,
-          message: parsed.error.message,
-        });
-      } else {
-        return succeed({
-          format: 'csv',
-          name,
-          line,
-          data: parsed.value,
-          onSuccess,
-        });
-      }
+      return parsed.status === 'failure'
+        ? fail({
+            category: 'parse-csv-failed',
+            line,
+            stdout,
+            stderr,
+            exitCode,
+            onFailure,
+            message: parsed.error.message,
+          })
+        : succeed({
+            format: 'csv',
+            name,
+            line,
+            data: parsed.value,
+            onSuccess,
+          });
     }
 
     const data = onSuccess.includes('trim') ? stdout.trim() : stdout;
@@ -272,7 +266,7 @@ export const executeCommandLine = async (
   if (opts.a === 'shell') {
     return await executeShellCommandLine(ctx, { line, name, opts });
   } else {
-    basicCommandExecution(ctx, params.opts)
+    basicCommandExecution(ctx, params.opts);
     return succeed({
       format: 'json',
       name,

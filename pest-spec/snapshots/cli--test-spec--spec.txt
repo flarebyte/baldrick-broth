@@ -1,5 +1,5 @@
 $ node --loader ts-node/esm src/cli.mts test spec
-✓ baldrick-broth is done. Version 0.6.0
+✓ baldrick-broth is done. Version 0.9.0
 [STARTED] Run the baldrick-zest unit tests
 [STARTED] Run all baldrick zest files
 [DATA] node --loader ts-node/esm .baldrick-zest.ts
