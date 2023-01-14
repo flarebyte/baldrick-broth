@@ -7,6 +7,11 @@ cases:
     steps:
       - title: run help help-command
         run: yarn cli --help
+      - title: Remove changing info from output
+        run: sed -f pest-spec/scripts/cleaning.sed
+        stdin:
+          step: 0
+          receiving: stdout + stderr
         expect:
           snapshot: help.txt
   command-help:
@@ -14,5 +19,10 @@ cases:
     steps:
       - title: run help test spec
         run: yarn cli test spec --help
+      - title: Remove changing info from output
+        run: sed -f pest-spec/scripts/cleaning.sed
+        stdin:
+          step: 0
+          receiving: stdout + stderr
         expect:
           snapshot: spec-help.txt
