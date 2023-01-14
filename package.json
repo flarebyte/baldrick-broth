@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "chalk": "^5.2.0",
-    "commander": "^9.4.1",
+    "commander": "^10.0.0",
     "dot-prop": "^7.2.0",
     "execa": "^6.1.0",
     "handlebars": "^4.7.7",
@@ -58,11 +58,11 @@
     "listr2": "^5.0.6",
     "papaparse": "^5.3.2",
     "winston": "^3.8.2",
-    "yaml": "^2.1.3",
-    "zod": "^3.19.1"
+    "yaml": "^2.2.1",
+    "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@types/papaparse": "^5.3.5",
+    "@types/papaparse": "^5.3.7",
     "baldrick-dev-ts": "^0.17.0",
     "baldrick-zest-engine": "^0.7.0",
     "baldrick-zest-mess": "^0.16.0",
