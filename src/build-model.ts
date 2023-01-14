@@ -420,5 +420,9 @@ export const unsafeParse =
       batchStep.parse(content);
       return content;
     }
+    if (name === 'commands') {
+      z.array(anyCommand).parse(content);
+      return content;
+    }
     return `${name} is not supported (979839)`;
   };

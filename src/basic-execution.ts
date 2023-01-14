@@ -1,9 +1,5 @@
 import json_mask from 'json-mask';
-import type {
-  AnyCommand,
-  AnyDataValue,
-  Ctx,
-} from './build-model.js';
+import type { AnyCommand, AnyDataValue, Ctx } from './build-model.js';
 import { coloration } from './coloration.js';
 import {
   setDataValue,
@@ -29,7 +25,7 @@ const asStringOrBlank = (value: unknown): string =>
 const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
-  /**
+/**
  * Create a range starting with stop as other parameters are optional
  */
 const range = (stop: number, start: number = 1, step: number = 1) => {
@@ -133,4 +129,20 @@ export const basicCommandExecution = (
   }
 
   return success;
+};
+
+/**
+ * Mostly used for testing purpose
+ */
+export const basicCommandsExecution = (
+  ctx: Ctx,
+  anyCommands: AnyCommand[]
+): BasicExecution => {
+  for (const anyCommand of anyCommands) {
+    const result = basicCommandExecution(ctx, anyCommand);
+    if (result.status === 'failure') {
+      return result;
+    }
+  }
+  return succeed(ctx);
 };
