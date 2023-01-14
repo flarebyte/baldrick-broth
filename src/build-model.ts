@@ -57,9 +57,9 @@ const metadataStep = {
 };
 
 const metadataCore = {
-  name: stringy.customKey.describe(
-    'A short name that could be used a key or variable'
-  ).optional(),
+  name: stringy.customKey
+    .describe('A short name that could be used a key or variable')
+    .optional(),
   title: stringy.title,
   description: stringy.description.optional(),
   motivation: stringy.motivation.optional(),
@@ -70,6 +70,7 @@ const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
   .object({
     ...metadataCore,
+    a: z.literal('shell').default('shell'),
     onFailure: z
       .array(onShellCommandFinish)
       .min(1)
@@ -97,12 +98,6 @@ const advancedShell = z
     run: lineShell,
   })
   .describe('Configuration for the batch shell script');
-
-const commands = z
-  .array(advancedShell)
-  .min(1)
-  .max(50)
-  .describe('A list of batch shell scripts to run');
 
 const valuesLoopEach = z.string().min(1).max(300);
 
@@ -264,33 +259,37 @@ const maskJsonStep = z
       .describe('JSON mask to select parts of the json object'),
   })
   .describe('Uses JSON mask to select parts of the json object');
-const anyBeforeStep = z
-  .discriminatedUnion('a', [
-    getPropertyStep,
-    stringArrayStep,
-    concatArrayStep,
-    splitStringStep,
-    someTruthyArrayStep,
-    someFalsyArrayStep,
-    everyTruthyArrayStep,
-    everyFalsyArrayStep,
-    notStep,
-    rangeStep,
-    invertObjectStep,
-    maskJsonStep,
+
+const anyCommand = z
+  .union([
+    z.discriminatedUnion('a', [
+      getPropertyStep,
+      stringArrayStep,
+      concatArrayStep,
+      splitStringStep,
+      someTruthyArrayStep,
+      someFalsyArrayStep,
+      everyTruthyArrayStep,
+      everyFalsyArrayStep,
+      notStep,
+      rangeStep,
+      invertObjectStep,
+      maskJsonStep,
+    ]),
+    advancedShell,
   ])
-  .describe('An operation on the context');
+  .describe('A command to be run');
+
+const commands = z
+  .array(anyCommand)
+  .min(1)
+  .max(50)
+  .describe('A list of batch shell scripts to run');
 
 const batchStep = z
   .strictObject({
     a: z.literal('batch'),
     ...metadataCore,
-    before: z
-      .array(anyBeforeStep)
-      .min(1)
-      .max(20)
-      .optional()
-      .describe('A list of operations to run before end'),
     if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
@@ -360,8 +359,10 @@ const context = z.object({
 export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
 export type BatchStepModel = z.infer<typeof batchStep>;
-export type CommandOptionsModel = z.infer<typeof advancedShell>;
-export type AnyBasicStepModel = z.infer<typeof anyBeforeStep>;
+export type AnyCommand = z.infer<typeof anyCommand>;
+// export type CommandOptionsModel = z.infer<typeof advancedShell>;
+export type onCommandSuccess = z.infer<typeof onShellCommandFinish>;
+export type onCommandFailure = z.infer<typeof onShellCommandFinish>;
 export type Ctx = z.infer<typeof context>;
 export type RuntimeContext = z.infer<typeof runtimeContext>;
 export type AnyDataValue = z.infer<typeof jsonishSchema>;
@@ -394,6 +395,10 @@ export const unsafeParse =
     }
     if (name === 'batchStep') {
       batchStep.parse(content);
+      return content;
+    }
+    if (name === 'commands') {
+      z.array(anyCommand).parse(content);
       return content;
     }
     return `${name} is not supported (979839)`;

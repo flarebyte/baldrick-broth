@@ -3,7 +3,7 @@ model:
     title: Build automation tool and task runner
     description: Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.8.0
+    version: 0.9.0
     keywords:
       - CLI
       - Task runner
@@ -291,17 +291,16 @@ workflows:
         steps:
           - a: batch
             title: Upgrade baldrick-broth
-            before:
-              - a: mask-object
-                name: broth-model
-                title: Extract model from this baldrick-broth.yaml
-                value: build
-                mask: model
             commands:
               - title: Remove previous temporary directory
                 run: rm -rf temp/broth
               - title: Create temporary directory
                 run: mkdir -p temp/broth
+              - a: mask-object
+                name: broth-model
+                title: Extract model from this baldrick-broth.yaml
+                value: build
+                mask: model
               - title: Save baldrick-broth file with existing model
                 stdin: data.scaffold::upgrade::broth-model
                 run: sponge temp/broth/baldrick-broth-model.json
@@ -419,13 +418,12 @@ workflows:
                   - json
           - a: batch
             title: package
-            before:
+            commands:
               - a: mask-object
                 title: Extracts dependencies from package.json
                 name: package-json-deps
                 value: data.scaffold::norm::package-json
                 mask: dependencies,devDependencies,peerDependencies
-            commands:
               - name: save-package-json-deps
                 title: Save package.json with only dependencies
                 stdin: data.scaffold::norm::package-json-deps
@@ -436,4 +434,36 @@ workflows:
                   temp/broth/package-specific.json
               - title: merge dependencies with broth model info
                 run: npx baldrick-whisker@latest object package.json
+                  temp/broth/package-specific.json temp/broth/package-deps.json
+      norm-package:
+        title: Normalize the project
+        description: Normalize the project in a similar fashion that the other
+          typescript projects
+        motivation: Make the project structure consistent and easier to navigate
+        steps:
+          - a: batch
+            title: packaging
+            commands:
+              - name: package-json
+                title: Backup dependencies
+                run: cat package.json
+                onSuccess:
+                  - save
+                  - silent
+                  - json
+              - a: mask-object
+                title: Extracts dependencies from package.json
+                name: package-json-deps
+                value: data.scaffold::norm-package::package-json
+                mask: dependencies,devDependencies,peerDependencies
+              - name: save-package-json-deps
+                title: Save package.json with only dependencies
+                stdin: data.scaffold::norm-package::package-json-deps
+                run: sponge temp/broth/package-deps.json
+              - title: Create package.json metadata from broth model
+                run: npx baldrick-whisker@latest render baldrick-broth.yaml
+                  github:flarebyte:baldrick-reserve:template/ts/package.hbs
+                  temp/broth/package-specific.json
+              - title: merge dependencies with broth model info
+                run: npx baldrick-whisker@latest object temp/broth/package.json
                   temp/broth/package-specific.json temp/broth/package-deps.json

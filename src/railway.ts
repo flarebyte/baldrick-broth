@@ -30,19 +30,11 @@ export const withDefault =
 export const map1 =
   <a, b, e>(func: (value: a) => b) =>
   (result: Result<a, e>): Result<b, e> => {
-    if (result.status === 'success') {
-      return succeed(func(result.value));
-    } else {
-      return result;
-    }
+    return result.status === 'success' ? succeed(func(result.value)) : result;
   };
 
 export const andThen =
   <a, b, e>(func: (value: a) => Result<b, e>) =>
   (result: Result<a, e>): Result<b, e> => {
-    if (result.status === 'success') {
-      return func(result.value);
-    } else {
-      return result;
-    }
+    return result.status === 'success' ? func(result.value) : result;
   };

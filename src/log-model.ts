@@ -1,4 +1,4 @@
 export interface LogMessage {
-    message: string;
-    coloredMessage: string;
+  message: string;
+  coloredMessage: string;
 }

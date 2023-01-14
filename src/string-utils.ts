@@ -1,5 +1,5 @@
 const keepAlphaNumeric = (title: string): string => {
-  const azText = title.replace(/[^A-Za-z0-9-]/g, ' ');
+  const azText = title.replace(/[^\dA-Za-z-]/g, ' ');
   const singleSpace = azText.replace(/\s+/g, ' ').trim();
   return singleSpace;
 };

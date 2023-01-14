@@ -2,10 +2,11 @@
 testing:
   style: function a b
   import: ./src/basic-execution.ts
-  function: basicExecution
+  function: basicCommandsExecution
 cases:
   basic:
     a: snapshot
+    snapshot: YAML
     title: some basic execution on the context
     params:
       - from: file
@@ -18,14 +19,14 @@ cases:
             config:
               model: context
       - from: file
-        filename: spec/fixtures/batch-step.yaml
+        filename: spec/fixtures/commands.yaml
         parser: YAML
         transform:
           - style: config -> function a
             import: ./src/build-model.ts
             function: unsafeParse
             config:
-              model: batchStep
+              model: commands
     result:
       transform:
         - style: config -> function a
@@ -33,4 +34,3 @@ cases:
           function: findByPath
           config:
             path: value.data
-    snapshot: YAML

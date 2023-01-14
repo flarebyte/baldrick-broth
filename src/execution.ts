@@ -1,9 +1,16 @@
 import { execaCommand } from 'execa';
 import YAML from 'yaml';
 import CSV from 'papaparse';
-import { AnyDataValue, CommandOptionsModel, Ctx } from './build-model.js';
+import {
+  AnyDataValue,
+  AnyCommand,
+  Ctx,
+  onCommandSuccess,
+  onCommandFailure,
+} from './build-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
+import { basicCommandExecution } from './basic-execution.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -17,7 +24,7 @@ type ExecuteCommandLineFailedCategory =
 export interface CommandLineInput {
   line: string;
   name: string;
-  opts: CommandOptionsModel;
+  opts: AnyCommand;
 }
 
 type ExecuteCommandLineFailure = {
@@ -27,7 +34,7 @@ type ExecuteCommandLineFailure = {
   stderr: string;
   exitCode: number;
   message: string;
-  onFailure: CommandOptionsModel['onFailure'];
+  onFailure: onCommandFailure[];
 };
 
 type ExecuteCommandLineSuccess =
@@ -36,21 +43,21 @@ type ExecuteCommandLineSuccess =
       line: string;
       name: string;
       data: string;
-      onSuccess: CommandOptionsModel['onSuccess'];
+      onSuccess: onCommandSuccess[];
     }
   | {
       format: 'json';
       line: string;
       name: string;
       data: AnyDataValue;
-      onSuccess: CommandOptionsModel['onSuccess'];
+      onSuccess: onCommandSuccess[];
     }
   | {
       format: 'csv';
       line: string;
       name: string;
       data: AnyDataValue;
-      onSuccess: CommandOptionsModel['onSuccess'];
+      onSuccess: onCommandSuccess[];
     };
 
 type ExecuteCommandLineResult = Result<
@@ -139,20 +146,32 @@ const parseCsv = (content: string): CsvParsingResult => {
 const forceString = (value: unknown): string =>
   typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 
-/**
- * Executes a a command after template expansion
- */
-export const executeCommandLine = async (
+const executeShellCommandLine = async (
   ctx: Ctx,
-  params: CommandLineInput
+  params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
   const { onSuccess, onFailure, stdin } = opts;
+  let maybeStdin;
+  if (stdin !== undefined) {
+    const stdinPropValue = getSupportedProperty(ctx, stdin);
+    if (stdinPropValue === undefined) {
+      return fail({
+        category: 'failed',
+        line,
+        stdout: '',
+        stderr: '',
+        exitCode: 1,
+        onFailure,
+        message: `Could not get property for stdin ${stdin}`,
+      });
+    } else {
+      maybeStdin = { input: forceString(stdinPropValue) };
+    }
+  } else {
+    maybeStdin = {};
+  }
 
-  const maybeStdin =
-    stdin === undefined
-      ? {}
-      : { input: forceString(getSupportedProperty(ctx, stdin) || '') };
   const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
     await execaCommand(line, { reject: false, ...maybeStdin });
 
@@ -161,69 +180,63 @@ export const executeCommandLine = async (
   if (status === 'success') {
     if (onSuccess.includes('json')) {
       const parsed = parseJson(stdout);
-      if (parsed.status === 'failure') {
-        return fail({
-          category: 'parse-json-failed',
-          line,
-          stdout,
-          stderr,
-          exitCode,
-          onFailure,
-          message: parsed.error.message,
-        });
-      } else {
-        return succeed({
-          format: 'json',
-          name,
-          line,
-          data: parsed.value,
-          onSuccess,
-        });
-      }
+      return parsed.status === 'failure'
+        ? fail({
+            category: 'parse-json-failed',
+            line,
+            stdout,
+            stderr,
+            exitCode,
+            onFailure,
+            message: parsed.error.message,
+          })
+        : succeed({
+            format: 'json',
+            name,
+            line,
+            data: parsed.value,
+            onSuccess,
+          });
     }
     if (onSuccess.includes('yaml')) {
       const parsed = parseYaml(stdout);
-      if (parsed.status === 'failure') {
-        return fail({
-          category: 'parse-yaml-failed',
-          line,
-          stdout,
-          stderr,
-          exitCode,
-          onFailure,
-          message: parsed.error.message,
-        });
-      } else {
-        return succeed({
-          format: 'json',
-          name,
-          line,
-          data: parsed.value,
-          onSuccess,
-        });
-      }
+      return parsed.status === 'failure'
+        ? fail({
+            category: 'parse-yaml-failed',
+            line,
+            stdout,
+            stderr,
+            exitCode,
+            onFailure,
+            message: parsed.error.message,
+          })
+        : succeed({
+            format: 'json',
+            name,
+            line,
+            data: parsed.value,
+            onSuccess,
+          });
     }
     if (onSuccess.includes('csv')) {
       const parsed = parseCsv(stdout);
-      if (parsed.status === 'failure') {
-        return fail({
-          category: 'parse-csv-failed',
-          line,
-          stdout,
-          stderr,
-          exitCode,
-          onFailure,
-          message: parsed.error.message,
-        });
-      } else {
-        return succeed({
-          format: 'csv',
-          name,
-          line,
-          data: parsed.value,
-          onSuccess,
-        });
-      }
+      return parsed.status === 'failure'
+        ? fail({
+            category: 'parse-csv-failed',
+            line,
+            stdout,
+            stderr,
+            exitCode,
+            onFailure,
+            message: parsed.error.message,
+          })
+        : succeed({
+            format: 'csv',
+            name,
+            line,
+            data: parsed.value,
+            onSuccess,
+          });
     }
 
     const data = onSuccess.includes('trim') ? stdout.trim() : stdout;
@@ -238,6 +251,28 @@ export const executeCommandLine = async (
       exitCode,
       onFailure,
       message: `Failed with exit code ${exitCode}`,
+    });
+  }
+};
+
+/**
+ * Executes a command after template expansion
+ */
+export const executeCommandLine = async (
+  ctx: Ctx,
+  params: CommandLineInput
+): Promise<ExecuteCommandLineResult> => {
+  const { line, name, opts } = params;
+  if (opts.a === 'shell') {
+    return await executeShellCommandLine(ctx, { line, name, opts });
+  } else {
+    basicCommandExecution(ctx, params.opts);
+    return succeed({
+      format: 'json',
+      name,
+      line,
+      data: {},
+      onSuccess: [],
     });
   }
 };

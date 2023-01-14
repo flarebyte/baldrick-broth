@@ -7,7 +7,9 @@ import { version } from './version.js';
 const createTaskDescription = (task: TaskModel): string => {
   const descriptions = [task.description ? task.description : task.title];
   if (task.motivation !== undefined) {
-    descriptions.push('\n'+coloration.motivation(`Motivation: ${task.motivation}`));
+    descriptions.push(
+      '\n' + coloration.motivation(`Motivation: ${task.motivation}`)
+    );
   }
   return descriptions.join('\n');
 };

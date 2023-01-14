@@ -1,10 +1,5 @@
 import json_mask from 'json-mask';
-import type {
-  AnyBasicStepModel,
-  AnyDataValue,
-  BatchStepModel,
-  Ctx,
-} from './build-model.js';
+import type { AnyCommand, AnyDataValue, Ctx } from './build-model.js';
 import { coloration } from './coloration.js';
 import {
   setDataValue,
@@ -30,62 +25,73 @@ const asStringOrBlank = (value: unknown): string =>
 const asAnyArray = (value: unknown): AnyDataValue[] =>
   Array.isArray(value) ? value : [];
 
-const basicStepExecution = (
+/**
+ * Create a range starting with stop as other parameters are optional
+ */
+const range = (stop: number, start = 1, step = 1) => {
+  const ranged = [];
+  for (let index = start; index <= stop; index = index + step) {
+    ranged.push(index);
+  }
+  return ranged;
+};
+
+export const basicCommandExecution = (
   ctx: Ctx,
-  basicStep: AnyBasicStepModel
+  anyCommand: AnyCommand
 ): BasicExecution => {
-  const { a } = basicStep;
+  const { a } = anyCommand;
   const success: BasicExecution = succeed(ctx);
   const name =
-    basicStep.name === undefined
-      ? dasherizeTitle(basicStep.title)
-      : basicStep.name;
+    anyCommand.name === undefined
+      ? dasherizeTitle(anyCommand.title)
+      : anyCommand.name;
   switch (a) {
     case 'get-property':
-      const value = getSupportedProperty(ctx, basicStep.value);
+      const value = getSupportedProperty(ctx, anyCommand.value);
       setDataValue(ctx, name, value);
       return success;
     case 'some-truthy':
       setDataValue(
         ctx,
         name,
-        getPropertyList(ctx, basicStep.values).some(isTruthy)
+        getPropertyList(ctx, anyCommand.values).some(isTruthy)
       );
       return success;
     case 'some-falsy':
       setDataValue(
         ctx,
         name,
-        getPropertyList(ctx, basicStep.values).some(isFalsy)
+        getPropertyList(ctx, anyCommand.values).some(isFalsy)
       );
       return success;
     case 'every-truthy':
       setDataValue(
         ctx,
         name,
-        getPropertyList(ctx, basicStep.values).every(isTruthy)
+        getPropertyList(ctx, anyCommand.values).every(isTruthy)
       );
       return success;
     case 'every-falsy':
       setDataValue(
         ctx,
         name,
-        getPropertyList(ctx, basicStep.values).every(isFalsy)
+        getPropertyList(ctx, anyCommand.values).every(isFalsy)
       );
       return success;
     case 'not':
       setDataValue(
         ctx,
         name,
-        isFalsy(getSupportedProperty(ctx, basicStep.value))
+        isFalsy(getSupportedProperty(ctx, anyCommand.value))
       );
       return success;
     case 'split-string':
       setDataValue(
         ctx,
         name,
-        asStringOrBlank(getSupportedProperty(ctx, basicStep.value)).split(
-          basicStep.separator
+        asStringOrBlank(getSupportedProperty(ctx, anyCommand.value)).split(
+          anyCommand.separator
         )
       );
       return success;
@@ -93,31 +99,31 @@ const basicStepExecution = (
       setDataValue(
         ctx,
         name,
-        range(basicStep.end, basicStep.start, basicStep.step)
+        range(anyCommand.end, anyCommand.start, anyCommand.step)
       );
       return success;
     case 'concat-array':
       setDataValue(
         ctx,
         name,
-        getPropertyList(ctx, basicStep.values).flatMap(asAnyArray)
+        getPropertyList(ctx, anyCommand.values).flatMap(asAnyArray)
       );
       return success;
     case 'mask-object':
-      const objectValue = getSupportedProperty(ctx, basicStep.value) || {};
+      const objectValue = getSupportedProperty(ctx, anyCommand.value) || {};
       if (typeof objectValue !== 'object') {
         return fail({
           message: `mask-object for path ${
-            basicStep.value
+            anyCommand.value
           } expects an object but got ${typeof objectValue}`,
           coloredMessage: `mask-object for path ${coloration.path(
-            basicStep.value
+            anyCommand.value
           )} expects an ${coloration.expected(
             'object'
           )} but got ${coloration.actual(typeof objectValue)}`,
         });
       }
-      const masked = json_mask(objectValue, basicStep.mask);
+      const masked = json_mask(objectValue, anyCommand.mask);
       setDataValue(ctx, name, masked);
       return success;
   }
@@ -126,31 +132,17 @@ const basicStepExecution = (
 };
 
 /**
- * Transform the data with a list of supported operations
+ * Mostly used for testing purpose
  */
-export const basicExecution = (
+export const basicCommandsExecution = (
   ctx: Ctx,
-  batchStep: BatchStepModel
+  anyCommands: AnyCommand[]
 ): BasicExecution => {
-  if (batchStep.before === undefined) {
-    return succeed(ctx);
-  }
-  for (const basicStep of batchStep.before) {
-    const result = basicStepExecution(ctx, basicStep);
+  for (const anyCommand of anyCommands) {
+    const result = basicCommandExecution(ctx, anyCommand);
     if (result.status === 'failure') {
       return result;
     }
   }
   return succeed(ctx);
-};
-
-/**
- * Create a range starting with stop as other parameters are optional
- */
-const range = (stop: number, start: number = 1, step: number = 1) => {
-  let ranged = [];
-  for (let index = start; index <= stop; index = index + step) {
-    ranged.push(index);
-  }
-  return ranged;
 };

@@ -54,7 +54,7 @@ export const replayLogToConsole = async () => {
       encoding: 'utf8',
     });
     console.log(['', '', currentLog].join('\n'));
-  } catch (e: any) {
-    console.error('Could not replay the log', e);
+  } catch (error: any) {
+    console.error('Could not replay the log', error);
   }
 };

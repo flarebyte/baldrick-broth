@@ -11,13 +11,11 @@ import { CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
   currentTaskLogger,
-  currentTaskWarn,
   replayLogToConsole,
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
 import { fail, Result, succeed } from './railway.js';
-import { basicExecution } from './basic-execution.js';
 import {
   getSupportedProperty,
   isTruthy,
@@ -61,6 +59,12 @@ interface OnResultFlags {
   debug: boolean;
   exit: boolean;
 }
+const defaultOnResultFlags: OnResultFlags = {
+  save: false,
+  silent: false,
+  debug: false,
+  exit: false,
+};
 
 const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   save: flags.includes('save'),
@@ -90,8 +94,9 @@ const toCommandLineAction = (
   const commandTask: ListrTask = {
     title,
     enabled: (_) => {
-      const ifPath = commandLineInput.opts.if;
-      if (ifPath === undefined) {
+      const ifPath =
+        commandLineInput.opts.a === 'shell' && commandLineInput.opts.if;
+      if (ifPath === undefined || ifPath === false) {
         return true;
       }
       const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
@@ -100,8 +105,14 @@ const toCommandLineAction = (
     task: async (_, task): Promise<void> => {
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
-      const successFlags = toOnResultFlags(commandLineInput.opts.onSuccess);
-      const failureFlags = toOnResultFlags(commandLineInput.opts.onFailure);
+      const successFlags =
+        commandLineInput.opts.a === 'shell'
+          ? toOnResultFlags(commandLineInput.opts.onSuccess)
+          : defaultOnResultFlags;
+      const failureFlags =
+        commandLineInput.opts.a === 'shell'
+          ? toOnResultFlags(commandLineInput.opts.onFailure)
+          : defaultOnResultFlags;
       await sleep(SLEEP_MIN);
       if (cmdLineResult.status === 'success') {
         const {
@@ -154,11 +165,6 @@ const toBatchStepAction = (
   const batchTask: ListrTask = {
     title,
     task: async (_, task) => {
-      const basicExecutionResult = basicExecution(ctx, batchStep);
-      if (basicExecutionResult.status === 'failure') {
-        currentTaskWarn(basicExecutionResult.error);
-        task.output = coloration.warn('before: KO');
-      }
       const commandsForStep = expandBatchStep(ctx, batchStep);
       if (commandsForStep.status === 'failure') {
         currentTaskLogger.warn({ messages: commandsForStep.error.messages });
@@ -171,7 +177,7 @@ const toBatchStepAction = (
         currentTaskLogger.info(startStepTitle(batchStep));
         return task.newListr([...commandTasks], { exitOnError: false });
       } else {
-        return undefined;
+        return;
       }
     },
   };
@@ -199,7 +205,7 @@ export const createTaskAction =
       ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
     );
     if (listPossibleActions.status === 'failure') {
-      console.log('Failure ', listPossibleActions.error.messages);
+      console.log('Failure', listPossibleActions.error.messages);
     } else {
       const mainTask = new Listr<Ctx>(listPossibleActions.value, {
         exitOnError: false,
@@ -208,8 +214,8 @@ export const createTaskAction =
         await mainTask.run(ctx);
         logTaskStatistics(started, ctx);
         await replayLogToConsole();
-      } catch (e: any) {
-        console.log('Failure ', e);
+      } catch (error: any) {
+        console.log('Failure', error);
       }
     }
   };
