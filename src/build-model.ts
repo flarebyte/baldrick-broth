@@ -24,7 +24,6 @@ const engine = z
   })
   .optional()
   .describe('Settings for the baldrick-broth engine');
-const onBatchStepFinish = z.enum(['exit', 'silent']);
 
 const onShellCommandFinish = z.enum([
   'exit',
@@ -288,8 +287,7 @@ const commands = z
 
 const batchStep = z
   .strictObject({
-    a: z.literal('batch'),
-    ...metadataCore,
+    name: z.enum(['main', 'before', 'after']).default('main'),
     if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
@@ -299,11 +297,6 @@ const batchStep = z
       .max(3)
       .optional()
       .describe('The same batch will be run multiple times for each loop'),
-    onFinish: z
-      .array(onBatchStepFinish)
-      .min(1)
-      .optional()
-      .describe('Expected behavior when the batch finishes'),
     commands,
   })
   .describe('A batch of shell commands to run');
@@ -321,6 +314,7 @@ const task = z
     title: stringy.title,
     description: stringy.description.optional(),
     motivation: stringy.motivation.optional(),
+    links,
     parameters: z.array(parameter).max(20).optional(),
     steps,
     finally: steps.optional(),

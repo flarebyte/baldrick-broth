@@ -44,37 +44,34 @@ workflows:
     tasks:
       jest:
         title: Run the unit tests with Jest
-        description: Use the Jest framework to run unit test (deprecated)
+        description: Use the Jest framework to run unit test (deprecated)  
+        links:
+          - title: Jest is a JavaScript Testing Framework
+            url: https://jestjs.io/
         steps:
-          - a: batch
-            title: Run Jest unit tests
-            links:
-              - title: Jest is a JavaScript Testing Framework
-                url: https://jestjs.io/
-            commands:
+          - commands:
               - title: Test all test files in test folder
                 run: npx baldrick-dev-ts test check
       spec:
         title: Run unit tests declaratively
         description: Run unit tests for pure functions declaratively using YAML files
         motivation: Check that the units of code behave as intended
+        links:
+          - title: Baldrick Zest run tests declaratively
+            url: https://github.com/flarebyte/baldrick-zest-engine
         steps:
-          - a: batch
-            title: Run the baldrick-zest unit tests
-            links:
-              - title: Baldrick Zest run tests declaratively
-                url: https://github.com/flarebyte/baldrick-zest-engine
-            commands:
+          - commands:
               - title: Run all baldrick zest files
                 run: node --loader ts-node/esm .baldrick-zest.ts
       pest:
         title: Run acceptance tests for the CLI
         description: Run acceptance tests declaratively using YAML files
         motivation: Check that the CLI application behaves as intended
+        links:
+          - title: Testing with baldrick-pest
+            url: https://github.com/flarebyte/baldrick-pest
         steps:
-          - a: batch
-            title: Retrieve a list of acceptance tests
-            commands:
+          - commands:
               - name: pest-files
                 title: List pest yaml files
                 run: scc pest-spec --include-ext yaml --by-file --format csv
@@ -82,12 +79,7 @@ workflows:
                   - save
                   - csv
                   - silent
-          - a: batch
-            title: Run the baldrick-pest acceptance tests
-            links:
-              - title: Testing with baldrick-pest
-                url: https://github.com/flarebyte/baldrick-pest
-            each:
+          - each:
               - name: pest-file
                 values: data.test::pest::pest-files
             commands:
@@ -100,9 +92,7 @@ workflows:
         motivation: Simulate a CLI app in development without the need to install it
           globally
         steps:
-          - a: batch
-            title: Run the CLI using ts-node
-            commands:
+          - commands:
               - title: Run the CLI locally
                 run: node --loader ts-node/esm src/cli.mts
   transpile:
@@ -113,13 +103,11 @@ workflows:
         title: Transpile typescript
         description: Generate javascript from the typescript source code
         motivation: Javascript code is more portable and can be consumed by other projects
+        links:
+          - title: tsc compiles typescript defined by a tsconfig.json
+            url: https://www.typescriptlang.org/docs/handbook/compiler-options.html
         steps:
-          - a: batch
-            title: Compile the typescript code
-            links:
-              - title: tsc compiles typescript defined by a tsconfig.json
-                url: https://www.typescriptlang.org/docs/handbook/compiler-options.html
-            commands:
+          - commands:
               - title: Delete dist folder
                 run: rm -rf dist
               - title: Compile with typescript
@@ -133,9 +121,7 @@ workflows:
         description: Upgrade to latest npm dependencies
         motivation: Keep up with security and improvements
         steps:
-          - a: batch
-            title: Upgrade npm dependencies
-            commands:
+          - commands:
               - title: Upgrade to latest dependencies
                 run: yarn upgrade --latest
               - title: Display advice about yarn upgrade-interactive
@@ -149,9 +135,7 @@ workflows:
         description: Generate the markdown documentation for the typescript project
         motivation: Good documentation is essential for developer experience
         steps:
-          - a: batch
-            title: Generate the documentation
-            commands:
+          - commands:
               - name: report-folder
                 title: Ensure that we have a report folder
                 run: mdir -p report
@@ -188,9 +172,7 @@ workflows:
         description: Enable useful features for the github project repository
         motivation: Create consistent settings
         steps:
-          - a: batch
-            title: Standardize repository settings
-            commands:
+          - commands:
               - name: edit
                 title: Configure usual settings for github project
                 run: gh repo edit --delete-branch-on-merge --enable-squash-merge
@@ -203,9 +185,7 @@ workflows:
         description: Find problems in Typescript code
         motivation: Make the code more consistent and avoid bugs
         steps:
-          - a: batch
-            title: Lint check
-            commands:
+          - commands:
               - name: check
                 title: Lint check sources
                 run: npx baldrick-dev-ts@latest lint check -s src test
@@ -214,9 +194,7 @@ workflows:
         description: Fix problems in Typescript code
         motivation: Facilitate routine maintenance of code
         steps:
-          - a: batch
-            title: Lint fix
-            commands:
+          - commands:
               - name: fix
                 title: Fix source code
                 run: npx baldrick-dev-ts@latest lint fix -s src test
@@ -229,9 +207,7 @@ workflows:
         description: Checks that the markdown documents follows some consistent guidelines
         motivation: Make the markdown documents consistent in style
         steps:
-          - a: batch
-            title: Check markdown
-            commands:
+          - commands:
               - name: check
                 title: Check markdown files
                 run: baldrick markdown check
@@ -244,9 +220,7 @@ workflows:
           guidelines
         motivation: Make the markdown documents consistent in style
         steps:
-          - a: batch
-            title: Fix Markdown all files
-            commands:
+          - commands:
               - title: Fix markdown files
                 run: npx baldrick-dev-ts@latest markdown fix
               - title: Fix markdown files in github
@@ -260,9 +234,7 @@ workflows:
           published
         motivation: Detect quality flaws before pushing the code
         steps:
-          - a: batch
-            title: Check if ready for publishing
-            commands:
+          - commands:
               - name: release-check
                 title: Checks that the version has been incremented
                 run: npx baldrick-dev-ts@latest release check
@@ -289,9 +261,7 @@ workflows:
         description: Gets the latest version of this configuration file
         motivation: Always apply the latest project conventions
         steps:
-          - a: batch
-            title: Upgrade baldrick-broth
-            commands:
+          - commands:
               - title: Remove previous temporary directory
                 run: rm -rf temp/broth
               - title: Create temporary directory
@@ -317,9 +287,7 @@ workflows:
           typescript projects
         motivation: Make the project structure consistent and easier to navigate
         steps:
-          - a: batch
-            title: github
-            commands:
+          - commands:
               - title: Create all github repositories
                 run: mkdir -p .github/workflows .github/ISSUE_TEMPLATE
               - title: Github - create bug report form
@@ -336,9 +304,7 @@ workflows:
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/pull-request-template.hbs
                   .github/pull_request_template.md
-          - a: batch
-            title: configuration
-            commands:
+          - commands:
               - title: Create all needed repositories
                 run: mkdir -p .vscode src test spec script script/data script/schema
               - title: Install default vscode snippets
@@ -372,9 +338,7 @@ workflows:
               - title: Create .remarkrc.yml
                 run: npx baldrick-whisker@latest object .remarkrc.yml
                   github:flarebyte:baldrick-reserve:data/ts/remarkrc.yml
-          - a: batch
-            title: markdown
-            commands:
+          - commands:
               - title: Create CONTRIBUTING.md with contribution guidelines
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/contributing.hbs
@@ -406,9 +370,7 @@ workflows:
                   LICENSE.md
               - title: Fix markdown
                 run: npx baldrick-broth@latest md fix
-          - a: batch
-            title: precedent
-            commands:
+          - commands:
               - name: package-json
                 title: Backup dependencies
                 run: cat package.json
@@ -416,9 +378,7 @@ workflows:
                   - save
                   - silent
                   - json
-          - a: batch
-            title: package
-            commands:
+          - commands:
               - a: mask-object
                 title: Extracts dependencies from package.json
                 name: package-json-deps
@@ -441,9 +401,7 @@ workflows:
           typescript projects
         motivation: Make the project structure consistent and easier to navigate
         steps:
-          - a: batch
-            title: packaging
-            commands:
+          - commands:
               - name: package-json
                 title: Backup dependencies
                 run: cat package.json

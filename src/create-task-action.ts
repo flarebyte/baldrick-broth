@@ -35,10 +35,6 @@ function sleep(ms: number) {
   });
 }
 
-const startStepTitle = (batchStep: BatchStepModel): string => {
-  const underline = '-'.repeat(batchStep.title.length + 1);
-  return `${batchStep.title}:\n${underline}`;
-};
 const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
   const withErrors = stepActions.filter((i) => i.status === 'failure');
   if (withErrors.length > 0) {
@@ -160,7 +156,7 @@ const toBatchStepAction = (
   ctx: Ctx,
   batchStep: BatchStepModel
 ): BatchStepAction => {
-  const title = batchStep.title ? batchStep.title : batchStep.name;
+  const title = `${batchStep.name} step`;
 
   const batchTask: ListrTask = {
     title,
@@ -174,7 +170,6 @@ const toBatchStepAction = (
         const commandTasks = commandsForStep.value.map((input) =>
           toCommandLineAction(ctx, input)
         );
-        currentTaskLogger.info(startStepTitle(batchStep));
         return task.newListr([...commandTasks], { exitOnError: false });
       } else {
         return;
