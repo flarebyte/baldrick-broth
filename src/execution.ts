@@ -172,8 +172,8 @@ const executeShellCommandLine = async (
     maybeStdin = {};
   }
 
-  const { stdout, stderr, exitCode, failed, isCanceled, timedOut, killed } =
-    await execaCommand(line, { reject: false, ...maybeStdin });
+  const { stdout, stderr, all, exitCode, failed, isCanceled, timedOut, killed } =
+    await execaCommand(line, { reject: false, all: true, env: { FORCE_COLOR: 'true'}, ...maybeStdin });
 
   const status = toStatus({ exitCode, failed, isCanceled, timedOut, killed });
 
@@ -239,7 +239,7 @@ const executeShellCommandLine = async (
           });
     }
 
-    const data = onSuccess.includes('trim') ? stdout.trim() : stdout;
+    const data = onSuccess.includes('trim') ? (all || stdout).trim() : (all || stdout);
 
     return succeed({ format: 'string', name, line, data, onSuccess });
   } else {
