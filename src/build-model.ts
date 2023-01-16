@@ -287,7 +287,7 @@ const commands = z
 
 const batchStep = z
   .strictObject({
-    name: z.enum(['main', 'before', 'after']).default('main'),
+    name: z.enum(['unknown', 'main', 'before', 'after']).default('unknown'),
     if: stringy.varValue
       .optional()
       .describe('A condition that must be satisfied to enable the batch'),
@@ -300,7 +300,6 @@ const batchStep = z
     commands,
   })
   .describe('A batch of shell commands to run');
-const steps = z.array(batchStep).min(1);
 const parameter = z
   .object({
     description: stringy.description,
@@ -316,8 +315,10 @@ const task = z
     motivation: stringy.motivation.optional(),
     links,
     parameters: z.array(parameter).max(20).optional(),
-    steps,
-    finally: steps.optional(),
+    main: batchStep,
+    before: batchStep.optional(),
+    after: batchStep.optional(),
+    finally: batchStep.optional(),
   })
   .describe('Settings for a task');
 const domain = z

@@ -32,8 +32,8 @@ workflows:
         parameters:
           - description: only run this
             flags: '-p, --pizza-type <type>'
-        steps:
-          - commands:
+        main:
+          commands:
               - a: get-property
                 name: githubAccount
                 title: Set variable githubAccount
@@ -48,7 +48,7 @@ workflows:
                 onFailure:
                   - exit
         finally:
-          - commands:
+          commands:
               - run: >-
                   cat {{whisker}} render {{project_yaml}} {{generate_hbs}}
                   {{generate_sh}} {{color}}

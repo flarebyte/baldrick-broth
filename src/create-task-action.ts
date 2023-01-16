@@ -15,7 +15,7 @@ import {
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
-import { fail, Result, succeed } from './railway.js';
+import { Result, succeed } from './railway.js';
 import {
   getSupportedProperty,
   isTruthy,
@@ -27,27 +27,11 @@ const SLEEP_KO = 800;
 const SLEEP_MIN = 150;
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
-type BatchAction = Result<ListrTask[], { messages: string[] }>;
-
 function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
-
-const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
-  const withErrors = stepActions.filter((i) => i.status === 'failure');
-  if (withErrors.length > 0) {
-    const messages = stepActions.flatMap((i) =>
-      i.status === 'failure' ? i.error.messages : []
-    );
-    return fail({ messages });
-  }
-  const batchTasks = stepActions.flatMap((i) =>
-    i.status === 'success' ? i.value : []
-  );
-  return succeed(batchTasks);
-};
 
 interface OnResultFlags {
   save: boolean;
@@ -196,13 +180,35 @@ export const createTaskAction =
     };
     const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
     const started = process.hrtime();
-    const listPossibleActions = mergeBatchStepAction(
-      ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
-    );
-    if (listPossibleActions.status === 'failure') {
-      console.log('Failure', listPossibleActions.error.messages);
+    const task = ctx.task;
+    let listTasks: ListrTask[] = [];
+    if (task.before !== undefined) {
+      const beforeStep = toBatchStepAction(ctx, task.before);
+      if (beforeStep.status === 'failure') {
+        console.log('Failure before', beforeStep.error.messages);
+      } else {
+        listTasks.push(beforeStep.value);
+      }
+    }
+
+    const mainStep = toBatchStepAction(ctx, task.main);
+    if (mainStep.status === 'failure') {
+      console.log('Failure main', mainStep.error.messages);
     } else {
-      const mainTask = new Listr<Ctx>(listPossibleActions.value, {
+      listTasks.push(mainStep.value);
+    }
+
+    if (task.after !== undefined) {
+      const afterStep = toBatchStepAction(ctx, task.after);
+      if (afterStep.status === 'failure') {
+        console.log('Failure after', afterStep.error.messages);
+      } else {
+        listTasks.push(afterStep.value);
+      }
+    }
+
+    if (listTasks.length > 0) {
+      const mainTask = new Listr<Ctx>(listTasks, {
         exitOnError: false,
       });
       try {
