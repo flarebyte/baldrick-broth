@@ -39,7 +39,11 @@ abstract:
     kind: string
   - path: value.workflows.test.tasks.generate.parameters
     kind: array/object
-  - path: value.workflows.test.tasks.generate.steps
+  - path: value.workflows.test.tasks.generate.main.name
+    kind: string
+  - path: value.workflows.test.tasks.generate.main.commands
     kind: array/object
-  - path: value.workflows.test.tasks.generate.finally
+  - path: value.workflows.test.tasks.generate.finally.name
+    kind: string
+  - path: value.workflows.test.tasks.generate.finally.commands
     kind: array/object
