@@ -136,11 +136,14 @@ const toCommandLineAction = (
   return commandTask;
 };
 
+const capitalizeWord = (text: string): string =>
+  text.length > 0 ? text[0]?.toUpperCase() + text.slice(1).toLowerCase() : '';
+
 const toBatchStepAction = (
   ctx: Ctx,
   batchStep: BatchStepModel
 ): BatchStepAction => {
-  const title = `${batchStep.name} step`;
+  const title = capitalizeWord(batchStep.name);
 
   const batchTask: ListrTask = {
     title,
