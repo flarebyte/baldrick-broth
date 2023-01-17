@@ -107,6 +107,7 @@ const toCommandLineAction = (
             cmdLineResult.value.format === 'string'
               ? data
               : JSON.stringify(data, null, 2);
+          currentTaskLogger.info(coloration.title(title))
           currentTaskLogger.info(dataView);
         }
         if (successFlags.debug) {

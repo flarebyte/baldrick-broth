@@ -17,4 +17,7 @@ export const coloration = {
   get actual() {
     return chalk.redBright;
   },
+  get title() {
+    return chalk.blueBright;
+  },
 };
