@@ -163,6 +163,9 @@ const toBatchStepAction = (
   return succeed(batchTask);
 };
 
+const makeMessage = (title: string, messages: string[]): string =>
+  `${title}: ${messages.join('\n')}`;
+
 type BuildCtx = Pick<Ctx, 'build' | 'task'>;
 export const createTaskAction =
   (buildCtx: BuildCtx) =>
@@ -185,7 +188,9 @@ export const createTaskAction =
     if (task.before !== undefined) {
       const beforeStep = toBatchStepAction(ctx, task.before);
       if (beforeStep.status === 'failure') {
-        console.log('Failure before', beforeStep.error.messages);
+        currentTaskLogger.error(
+          makeMessage(`Before ${projectName}`, beforeStep.error.messages)
+        );
       } else {
         listTasks.push(beforeStep.value);
       }
@@ -193,7 +198,9 @@ export const createTaskAction =
 
     const mainStep = toBatchStepAction(ctx, task.main);
     if (mainStep.status === 'failure') {
-      console.log('Failure main', mainStep.error.messages);
+      currentTaskLogger.error(
+        makeMessage(`Main ${projectName}`, mainStep.error.messages)
+      );
     } else {
       listTasks.push(mainStep.value);
     }
@@ -201,7 +208,9 @@ export const createTaskAction =
     if (task.after !== undefined) {
       const afterStep = toBatchStepAction(ctx, task.after);
       if (afterStep.status === 'failure') {
-        console.log('Failure after', afterStep.error.messages);
+        currentTaskLogger.error(
+          makeMessage(`After ${projectName}`, afterStep.error.messages)
+        );
       } else {
         listTasks.push(afterStep.value);
       }
@@ -216,7 +225,7 @@ export const createTaskAction =
         logTaskStatistics(started, ctx);
         await replayLogToConsole();
       } catch (error: any) {
-        console.log('Failure', error);
+        currentTaskLogger.error(error);
       }
     }
   };
