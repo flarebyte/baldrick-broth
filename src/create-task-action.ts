@@ -107,7 +107,7 @@ const toCommandLineAction = (
             cmdLineResult.value.format === 'string'
               ? data
               : JSON.stringify(data, null, 2);
-          currentTaskLogger.info(coloration.title(title))
+          currentTaskLogger.info(coloration.stepTitle(`◼ ${title}`));
           currentTaskLogger.info(dataView);
         }
         if (successFlags.debug) {
@@ -185,6 +185,8 @@ export const createTaskAction =
       },
       parameters,
     };
+    currentTaskLogger.info(coloration.taskTitle(buildCtx.task.title));
+
     const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
     const started = process.hrtime();
     const task = ctx.task;
@@ -193,7 +195,7 @@ export const createTaskAction =
       const beforeStep = toBatchStepAction(ctx, task.before);
       if (beforeStep.status === 'failure') {
         currentTaskLogger.error(
-          makeMessage(`Before ${projectName}`, beforeStep.error.messages)
+          makeMessage(`Before ${buildCtx.task.name}`, beforeStep.error.messages)
         );
       } else {
         listTasks.push(beforeStep.value);
@@ -203,7 +205,7 @@ export const createTaskAction =
     const mainStep = toBatchStepAction(ctx, task.main);
     if (mainStep.status === 'failure') {
       currentTaskLogger.error(
-        makeMessage(`Main ${projectName}`, mainStep.error.messages)
+        makeMessage(`Main ${buildCtx.task.name}`, mainStep.error.messages)
       );
     } else {
       listTasks.push(mainStep.value);
@@ -213,7 +215,7 @@ export const createTaskAction =
       const afterStep = toBatchStepAction(ctx, task.after);
       if (afterStep.status === 'failure') {
         currentTaskLogger.error(
-          makeMessage(`After ${projectName}`, afterStep.error.messages)
+          makeMessage(`After ${buildCtx.task.name}`, afterStep.error.messages)
         );
       } else {
         listTasks.push(afterStep.value);

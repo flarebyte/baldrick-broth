@@ -17,7 +17,10 @@ export const coloration = {
   get actual() {
     return chalk.redBright;
   },
-  get title() {
-    return chalk.blueBright;
+  get taskTitle() {
+    return chalk.hex('#800080').bold.underline;
+  },
+  get stepTitle() {
+    return chalk.hex('#4B0082');
   },
 };
