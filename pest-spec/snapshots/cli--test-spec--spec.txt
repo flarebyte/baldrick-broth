@@ -1,5 +1,4 @@
-yarn run v1.22.19
-$ node --loader ts-node/esm src/cli.mts test spec
+[2K[1G[2m$ node --loader ts-node/esm src/cli.mts test spec[22m
 ✓ baldrick-broth is done. Version 0.9.0
 [STARTED] main step
 [STARTED] Run all baldrick zest files
@@ -10,8 +9,12 @@ $ node --loader ts-node/esm src/cli.mts test spec
 [SUCCESS] main step
 
 
-⦿ Function getSchema ./src/build-model.ts | spec/build-model/get-schema.zest.yaml
-⦿ Function safeParseBuild ./src/build-model.ts | spec/build-model/safe-parse-build.zest.yaml
-⦿ Function basicCommandsExecution ./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml
-
-Done in 2.77s.
+(node:21746) ExperimentalWarning: Custom ESM Loaders is an experimental feature. This feature could change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1m⦿ Function basicCommandsExecution[22m [90m./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml[39m
+  [32m✓ PASS[39m [1msome basic execution on the context[22m   [90m📷 spec/snapshots/basic-execution/basic-execution--basic.yaml[39m
+[1m⦿ Function getSchema[22m [90m./src/build-model.ts | spec/build-model/get-schema.zest.yaml[39m
+  [32m✓ PASS[39m [1mProduce a JSON schema[22m   [90m📷 spec/snapshots/build-model/get-schema--schema.json[39m
+[1m⦿ Function safeParseBuild[22m [90m./src/build-model.ts | spec/build-model/safe-parse-build.zest.yaml[39m
+  [32m✓ PASS[39m [1mTest edge cases that will produce errors[22m   [90m📷 spec/snapshots/build-model/safe-parse-build--invalid-too-large.yaml[39m
+  [32m✓ PASS[39m [1mabstract with object crumble[22m   [90m📷 spec/snapshots/build-model/safe-parse-build--abstract-parsing.yaml[39m
