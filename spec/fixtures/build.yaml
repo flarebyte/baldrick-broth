@@ -32,10 +32,8 @@ workflows:
         parameters:
           - description: only run this
             flags: '-p, --pizza-type <type>'
-        steps:
-          - a: batch
-            title: Run calculate shell step
-            commands:
+        main:
+          commands:
               - a: get-property
                 name: githubAccount
                 title: Set variable githubAccount
@@ -49,10 +47,8 @@ workflows:
                   - trim
                 onFailure:
                   - exit
-        finally:
-          - a: batch
-            title: Run finish shell step
-            commands:
+        after:
+          commands:
               - run: >-
                   cat {{whisker}} render {{project_yaml}} {{generate_hbs}}
                   {{generate_sh}} {{color}}

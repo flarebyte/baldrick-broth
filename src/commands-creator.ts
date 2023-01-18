@@ -45,6 +45,13 @@ export const createCommands = (
         }
         const taskCommand = workflowCmd.command(taskId);
         taskCommand.summary(task.title);
+        task.main.name = 'main';
+        if (task.before) {
+          task.before.name = 'before';
+        }
+        if (task.after) {
+          task.after.name = 'after';
+        }
         taskCommand.description(createTaskDescription(task));
         taskCommand.action(
           createTaskAction({

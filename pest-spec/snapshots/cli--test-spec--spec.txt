@@ -1,16 +1,21 @@
-$ node --loader ts-node/esm src/cli.mts test spec
-✓ baldrick-broth is done. Version 0.9.0
-[STARTED] Run the baldrick-zest unit tests
+[2K[1G[2m$ node --loader ts-node/esm src/cli.mts test spec[22m
+✓ baldrick-broth is done. Version 0.10.0
+[STARTED] Main
 [STARTED] Run all baldrick zest files
 [DATA] node --loader ts-node/esm .baldrick-zest.ts
 [TITLE] run-all-baldrick-zest-files
 [DATA] OK
 [SUCCESS] run-all-baldrick-zest-files
-[SUCCESS] Run the baldrick-zest unit tests
+[SUCCESS] Main
 
 
-Run the baldrick-zest unit tests:
----------------------------------
-⦿ Function basicExecution ./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml
-⦿ Function getSchema ./src/build-model.ts | spec/build-model/get-schema.zest.yaml
-⦿ Function safeParseBuild ./src/build-model.ts | spec/build-model/safe-parse-build.zest.yaml
+getDataProperty: Invalid path data.g.get-property: g then undefined  [38;2;75;0;130m◼ Run all baldrick zest files[39m
+(node:25460) ExperimentalWarning: Custom ESM Loaders is an experimental feature. This feature could change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1m⦿ Function basicCommandsExecution[22m [90m./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml[39m
+  [32m✓ PASS[39m [1msome basic execution on the context[22m   [90m📷 spec/snapshots/basic-execution/basic-execution--basic.yaml[39m
+[1m⦿ Function getSchema[22m [90m./src/build-model.ts | spec/build-model/get-schema.zest.yaml[39m
+  [32m✓ PASS[39m [1mProduce a JSON schema[22m   [90m📷 spec/snapshots/build-model/get-schema--schema.json[39m
+[1m⦿ Function safeParseBuild[22m [90m./src/build-model.ts | spec/build-model/safe-parse-build.zest.yaml[39m
+  [32m✓ PASS[39m [1mabstract with object crumble[22m   [90m📷 spec/snapshots/build-model/safe-parse-build--abstract-parsing.yaml[39m
+  [32m✓ PASS[39m [1mTest edge cases that will produce errors[22m   [90m📷 spec/snapshots/build-model/safe-parse-build--invalid-too-large.yaml[39m

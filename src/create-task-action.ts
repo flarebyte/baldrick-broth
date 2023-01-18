@@ -15,7 +15,7 @@ import {
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
-import { fail, Result, succeed } from './railway.js';
+import { Result, succeed } from './railway.js';
 import {
   getSupportedProperty,
   isTruthy,
@@ -27,31 +27,11 @@ const SLEEP_KO = 800;
 const SLEEP_MIN = 150;
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
-type BatchAction = Result<ListrTask[], { messages: string[] }>;
-
 function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
-
-const startStepTitle = (batchStep: BatchStepModel): string => {
-  const underline = '-'.repeat(batchStep.title.length + 1);
-  return `${batchStep.title}:\n${underline}`;
-};
-const mergeBatchStepAction = (stepActions: BatchStepAction[]): BatchAction => {
-  const withErrors = stepActions.filter((i) => i.status === 'failure');
-  if (withErrors.length > 0) {
-    const messages = stepActions.flatMap((i) =>
-      i.status === 'failure' ? i.error.messages : []
-    );
-    return fail({ messages });
-  }
-  const batchTasks = stepActions.flatMap((i) =>
-    i.status === 'success' ? i.value : []
-  );
-  return succeed(batchTasks);
-};
 
 interface OnResultFlags {
   save: boolean;
@@ -127,6 +107,7 @@ const toCommandLineAction = (
             cmdLineResult.value.format === 'string'
               ? data
               : JSON.stringify(data, null, 2);
+          currentTaskLogger.info(coloration.stepTitle(`◼ ${title}`));
           currentTaskLogger.info(dataView);
         }
         if (successFlags.debug) {
@@ -156,11 +137,14 @@ const toCommandLineAction = (
   return commandTask;
 };
 
+const capitalizeWord = (text: string): string =>
+  text.length > 0 ? text[0]?.toUpperCase() + text.slice(1).toLowerCase() : '';
+
 const toBatchStepAction = (
   ctx: Ctx,
   batchStep: BatchStepModel
 ): BatchStepAction => {
-  const title = batchStep.title ? batchStep.title : batchStep.name;
+  const title = capitalizeWord(batchStep.name);
 
   const batchTask: ListrTask = {
     title,
@@ -174,7 +158,6 @@ const toBatchStepAction = (
         const commandTasks = commandsForStep.value.map((input) =>
           toCommandLineAction(ctx, input)
         );
-        currentTaskLogger.info(startStepTitle(batchStep));
         return task.newListr([...commandTasks], { exitOnError: false });
       } else {
         return;
@@ -183,6 +166,9 @@ const toBatchStepAction = (
   };
   return succeed(batchTask);
 };
+
+const makeMessage = (title: string, messages: string[]): string =>
+  `${title}: ${messages.join('\n')}`;
 
 type BuildCtx = Pick<Ctx, 'build' | 'task'>;
 export const createTaskAction =
@@ -199,15 +185,45 @@ export const createTaskAction =
       },
       parameters,
     };
+    currentTaskLogger.info(coloration.taskTitle(buildCtx.task.title));
+
     const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
     const started = process.hrtime();
-    const listPossibleActions = mergeBatchStepAction(
-      ctx.task.steps.map((step) => toBatchStepAction(ctx, step))
-    );
-    if (listPossibleActions.status === 'failure') {
-      console.log('Failure', listPossibleActions.error.messages);
+    const task = ctx.task;
+    let listTasks: ListrTask[] = [];
+    if (task.before !== undefined) {
+      const beforeStep = toBatchStepAction(ctx, task.before);
+      if (beforeStep.status === 'failure') {
+        currentTaskLogger.error(
+          makeMessage(`Before ${buildCtx.task.name}`, beforeStep.error.messages)
+        );
+      } else {
+        listTasks.push(beforeStep.value);
+      }
+    }
+
+    const mainStep = toBatchStepAction(ctx, task.main);
+    if (mainStep.status === 'failure') {
+      currentTaskLogger.error(
+        makeMessage(`Main ${buildCtx.task.name}`, mainStep.error.messages)
+      );
     } else {
-      const mainTask = new Listr<Ctx>(listPossibleActions.value, {
+      listTasks.push(mainStep.value);
+    }
+
+    if (task.after !== undefined) {
+      const afterStep = toBatchStepAction(ctx, task.after);
+      if (afterStep.status === 'failure') {
+        currentTaskLogger.error(
+          makeMessage(`After ${buildCtx.task.name}`, afterStep.error.messages)
+        );
+      } else {
+        listTasks.push(afterStep.value);
+      }
+    }
+
+    if (listTasks.length > 0) {
+      const mainTask = new Listr<Ctx>(listTasks, {
         exitOnError: false,
       });
       try {
@@ -215,7 +231,7 @@ export const createTaskAction =
         logTaskStatistics(started, ctx);
         await replayLogToConsole();
       } catch (error: any) {
-        console.log('Failure', error);
+        currentTaskLogger.error(error);
       }
     }
   };

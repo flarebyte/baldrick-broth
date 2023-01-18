@@ -3,7 +3,7 @@ model:
     title: Build automation tool and task runner
     description: Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.9.0
+    version: 0.10.0
     keywords:
       - CLI
       - Task runner
@@ -44,37 +44,34 @@ workflows:
     tasks:
       jest:
         title: Run the unit tests with Jest
-        description: Use the Jest framework to run unit test (deprecated)
-        steps:
-          - a: batch
-            title: Run Jest unit tests
-            links:
-              - title: Jest is a JavaScript Testing Framework
-                url: https://jestjs.io/
-            commands:
+        description: Use the Jest framework to run unit test (deprecated)  
+        links:
+          - title: Jest is a JavaScript Testing Framework
+            url: https://jestjs.io/
+        main:
+          commands:
               - title: Test all test files in test folder
                 run: npx baldrick-dev-ts test check
       spec:
         title: Run unit tests declaratively
         description: Run unit tests for pure functions declaratively using YAML files
         motivation: Check that the units of code behave as intended
-        steps:
-          - a: batch
-            title: Run the baldrick-zest unit tests
-            links:
-              - title: Baldrick Zest run tests declaratively
-                url: https://github.com/flarebyte/baldrick-zest-engine
-            commands:
+        links:
+          - title: Baldrick Zest run tests declaratively
+            url: https://github.com/flarebyte/baldrick-zest-engine
+        main:
+          commands:
               - title: Run all baldrick zest files
                 run: node --loader ts-node/esm .baldrick-zest.ts
       pest:
         title: Run acceptance tests for the CLI
         description: Run acceptance tests declaratively using YAML files
         motivation: Check that the CLI application behaves as intended
-        steps:
-          - a: batch
-            title: Retrieve a list of acceptance tests
-            commands:
+        links:
+          - title: Testing with baldrick-pest
+            url: https://github.com/flarebyte/baldrick-pest
+        before:
+          commands:
               - name: pest-files
                 title: List pest yaml files
                 run: scc pest-spec --include-ext yaml --by-file --format csv
@@ -82,15 +79,11 @@ workflows:
                   - save
                   - csv
                   - silent
-          - a: batch
-            title: Run the baldrick-pest acceptance tests
-            links:
-              - title: Testing with baldrick-pest
-                url: https://github.com/flarebyte/baldrick-pest
-            each:
+        main:
+          each:
               - name: pest-file
                 values: data.test::pest::pest-files
-            commands:
+          commands:
               - title: Run regression on file
                 name: Run regression on {{pest-file.Location}}
                 run: npx baldrick-pest@latest test --spec-file {{pest-file.Location}}
@@ -99,10 +92,8 @@ workflows:
         description: Run the client with ts-node during development
         motivation: Simulate a CLI app in development without the need to install it
           globally
-        steps:
-          - a: batch
-            title: Run the CLI using ts-node
-            commands:
+        main:
+          commands:
               - title: Run the CLI locally
                 run: node --loader ts-node/esm src/cli.mts
   transpile:
@@ -113,13 +104,11 @@ workflows:
         title: Transpile typescript
         description: Generate javascript from the typescript source code
         motivation: Javascript code is more portable and can be consumed by other projects
-        steps:
-          - a: batch
-            title: Compile the typescript code
-            links:
-              - title: tsc compiles typescript defined by a tsconfig.json
-                url: https://www.typescriptlang.org/docs/handbook/compiler-options.html
-            commands:
+        links:
+          - title: tsc compiles typescript defined by a tsconfig.json
+            url: https://www.typescriptlang.org/docs/handbook/compiler-options.html
+        main:
+          commands:
               - title: Delete dist folder
                 run: rm -rf dist
               - title: Compile with typescript
@@ -132,10 +121,8 @@ workflows:
         title: Upgrade to latest dependencies
         description: Upgrade to latest npm dependencies
         motivation: Keep up with security and improvements
-        steps:
-          - a: batch
-            title: Upgrade npm dependencies
-            commands:
+        main:
+          commands:
               - title: Upgrade to latest dependencies
                 run: yarn upgrade --latest
               - title: Display advice about yarn upgrade-interactive
@@ -148,10 +135,8 @@ workflows:
         title: Generate documentation
         description: Generate the markdown documentation for the typescript project
         motivation: Good documentation is essential for developer experience
-        steps:
-          - a: batch
-            title: Generate the documentation
-            commands:
+        main:
+          commands:
               - name: report-folder
                 title: Ensure that we have a report folder
                 run: mdir -p report
@@ -187,10 +172,8 @@ workflows:
         title: Standardize the github repository
         description: Enable useful features for the github project repository
         motivation: Create consistent settings
-        steps:
-          - a: batch
-            title: Standardize repository settings
-            commands:
+        main:
+          commands:
               - name: edit
                 title: Configure usual settings for github project
                 run: gh repo edit --delete-branch-on-merge --enable-squash-merge
@@ -202,10 +185,8 @@ workflows:
         title: Static code analysis of Typescript code
         description: Find problems in Typescript code
         motivation: Make the code more consistent and avoid bugs
-        steps:
-          - a: batch
-            title: Lint check
-            commands:
+        main:
+          commands:
               - name: check
                 title: Lint check sources
                 run: npx baldrick-dev-ts@latest lint check -s src test
@@ -213,10 +194,8 @@ workflows:
         title: Fix static code analysis
         description: Fix problems in Typescript code
         motivation: Facilitate routine maintenance of code
-        steps:
-          - a: batch
-            title: Lint fix
-            commands:
+        main:
+          commands:
               - name: fix
                 title: Fix source code
                 run: npx baldrick-dev-ts@latest lint fix -s src test
@@ -228,10 +207,8 @@ workflows:
         title: Check Markdown files
         description: Checks that the markdown documents follows some consistent guidelines
         motivation: Make the markdown documents consistent in style
-        steps:
-          - a: batch
-            title: Check markdown
-            commands:
+        main:
+          commands:
               - name: check
                 title: Check markdown files
                 run: baldrick markdown check
@@ -243,10 +220,8 @@ workflows:
         description: Modify the markdown documents to ensure they follow some consistent
           guidelines
         motivation: Make the markdown documents consistent in style
-        steps:
-          - a: batch
-            title: Fix Markdown all files
-            commands:
+        main:
+          commands:
               - title: Fix markdown files
                 run: npx baldrick-dev-ts@latest markdown fix
               - title: Fix markdown files in github
@@ -259,10 +234,8 @@ workflows:
         description: Run a sequence of commands to check that the library is ready to be
           published
         motivation: Detect quality flaws before pushing the code
-        steps:
-          - a: batch
-            title: Check if ready for publishing
-            commands:
+        main:
+          commands:
               - name: release-check
                 title: Checks that the version has been incremented
                 run: npx baldrick-dev-ts@latest release check
@@ -288,10 +261,8 @@ workflows:
         title: Upgrade baldrick-broth configuration to latest version
         description: Gets the latest version of this configuration file
         motivation: Always apply the latest project conventions
-        steps:
-          - a: batch
-            title: Upgrade baldrick-broth
-            commands:
+        main:
+          commands:
               - title: Remove previous temporary directory
                 run: rm -rf temp/broth
               - title: Create temporary directory
@@ -316,10 +287,8 @@ workflows:
         description: Normalize the project in a similar fashion that the other
           typescript projects
         motivation: Make the project structure consistent and easier to navigate
-        steps:
-          - a: batch
-            title: github
-            commands:
+        main:
+          commands:
               - title: Create all github repositories
                 run: mkdir -p .github/workflows .github/ISSUE_TEMPLATE
               - title: Github - create bug report form
@@ -336,9 +305,6 @@ workflows:
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/pull-request-template.hbs
                   .github/pull_request_template.md
-          - a: batch
-            title: configuration
-            commands:
               - title: Create all needed repositories
                 run: mkdir -p .vscode src test spec script script/data script/schema
               - title: Install default vscode snippets
@@ -372,9 +338,6 @@ workflows:
               - title: Create .remarkrc.yml
                 run: npx baldrick-whisker@latest object .remarkrc.yml
                   github:flarebyte:baldrick-reserve:data/ts/remarkrc.yml
-          - a: batch
-            title: markdown
-            commands:
               - title: Create CONTRIBUTING.md with contribution guidelines
                 run: npx baldrick-whisker@latest render baldrick-broth.yaml
                   github:flarebyte:baldrick-reserve:template/ts/contributing.hbs
@@ -406,9 +369,6 @@ workflows:
                   LICENSE.md
               - title: Fix markdown
                 run: npx baldrick-broth@latest md fix
-          - a: batch
-            title: precedent
-            commands:
               - name: package-json
                 title: Backup dependencies
                 run: cat package.json
@@ -416,9 +376,6 @@ workflows:
                   - save
                   - silent
                   - json
-          - a: batch
-            title: package
-            commands:
               - a: mask-object
                 title: Extracts dependencies from package.json
                 name: package-json-deps
@@ -440,10 +397,8 @@ workflows:
         description: Normalize the project in a similar fashion that the other
           typescript projects
         motivation: Make the project structure consistent and easier to navigate
-        steps:
-          - a: batch
-            title: packaging
-            commands:
+        main:
+          commands:
               - name: package-json
                 title: Backup dependencies
                 run: cat package.json
