@@ -318,7 +318,6 @@ const task = z
     main: batchStep,
     before: batchStep.optional(),
     after: batchStep.optional(),
-    finally: batchStep.optional(),
   })
   .describe('Settings for a task');
 const domain = z

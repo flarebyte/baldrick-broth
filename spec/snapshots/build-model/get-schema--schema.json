@@ -842,9 +842,6 @@
                     },
                     "after": {
                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main"
-                    },
-                    "finally": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main"
                     }
                   },
                   "required": [

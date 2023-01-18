@@ -48,7 +48,7 @@ build:
                     - trim
                   onFailure:
                     - exit
-          finally:
+          after:
             commands:
                 - run: >-
                     cat {{whisker}} render {{project_yaml}} {{generate_hbs}}
@@ -82,7 +82,7 @@ task:
             - trim
           onFailure:
             - exit
-  finally:
+  after:
     commands:
         - run: >-
             cat {{whisker}} render {{project_yaml}} {{generate_hbs}}
