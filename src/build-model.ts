@@ -259,6 +259,50 @@ const maskJsonStep = z
   })
   .describe('Uses JSON mask to select parts of the json object');
 
+  const inputPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-input'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+  })
+  .describe('Prompt that takes user input and returns a string');
+
+  const invisiblePromptStep = z
+  .strictObject({
+    a: z.literal('prompt-invisible'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+  })
+  .describe('Prompt that takes user input, hides it from the terminal, and returns a string');
+  const confirmPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-confirm'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+  })
+  .describe('Prompt that returns true or false');
+
+  const selectPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-select'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+    select: stringy.varValue,
+  })
+  .describe('Prompt that allows the user to select from a list of options');
+  const choicePromptStep = z
+  .strictObject({
+    a: z.literal('prompt-choices'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+    choices: z.array(stringy.varValue).min(2).max(30),
+  })
+  .describe('Prompt that allows the user to select from a list of static options');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -274,6 +318,11 @@ const anyCommand = z
       rangeStep,
       invertObjectStep,
       maskJsonStep,
+      inputPromptStep,
+      confirmPromptStep,
+      invisiblePromptStep,
+      selectPromptStep,
+      choicePromptStep
     ]),
     advancedShell,
   ])
