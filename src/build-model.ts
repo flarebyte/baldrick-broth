@@ -302,7 +302,7 @@ const maskJsonStep = z
     message: stringy.promptMessage,
     choices: z.array(stringy.varValue).min(2).max(30),
   })
-  .describe('Prompt that allows the user to select from a list of static options');
+  .describe('Prompt that allows the user to choose an option');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
