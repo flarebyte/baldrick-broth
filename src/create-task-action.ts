@@ -55,12 +55,13 @@ const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
 
 const debugContext = (ctx: Ctx) => {
   console.debug('--- Debug Context ---');
-  console.debug('model:\n', ctx.build.model);
-  console.debug('engine:\n', ctx.build.engine);
-  console.debug('workflows:\n', ctx.build.workflows);
-  console.debug('task:\n', ctx.task);
-  console.debug('runtime:\n', ctx.runtime);
-  console.debug('data:\n', ctx.data);
+  // console.debug('model:\n', ctx.build.model);
+  // console.debug('engine:\n', ctx.build.engine);
+  // console.debug('workflows:\n', ctx.build.workflows);
+  // console.debug('task:\n', ctx.task);
+  // console.debug('runtime:\n', ctx.runtime);
+  currentTaskLogger.info('-------------------')
+  currentTaskLogger.info(JSON.stringify(ctx.data));
 };
 
 const toCommandLineAction = (
@@ -90,7 +91,7 @@ const toCommandLineAction = (
             type: 'Input',
             message: commandLineInput.opts.message,
           });
-          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+          setDataValue(ctx, 'that', `input is ${taskContext.input}`);
         }
         if (commandLineInput.opts.a === 'prompt-invisible') {
           taskContext.input = await task.prompt<string>({
