@@ -103,10 +103,26 @@ workflows:
                   - save
                   - csv
                   - silent
+              - a: prompt-choices
+                title: Prompt for pest filename
+                name: color
+                message: Select color
+                choices:
+                  - blue
+                  - yellow
+                  - red
+              - a: prompt-input
+                title: input
+                name: info
+                message: Enter some info
+              - a: prompt-invisible
+                title: Invisible
+                name: invisible
+                message: Enter some invisible
               - a: prompt-select
                 title: Prompt for pest filename
+                message: Select file
                 name: pest-filepath
-                message: Select the pest file
                 select: data.test::pest1::pest-files
               - title: Run regression on file
                 name: Run regression on {{data.test::pest1:pest-filepath}}

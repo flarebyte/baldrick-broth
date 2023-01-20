@@ -82,7 +82,33 @@ const toCommandLineAction = (
       const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
       return shouldEnable;
     },
-    task: async (_, task): Promise<void> => {
+    task: async (taskContext, task): Promise<void> => {
+      const isPrompt = commandLineInput.opts.a.startsWith('prompt-');
+      if (isPrompt) {
+        if (commandLineInput.opts.a === 'prompt-input') {
+          taskContext.input = await task.prompt<string>({
+            type: 'Input',
+            message: commandLineInput.opts.message,
+          });
+          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+        }
+        if (commandLineInput.opts.a === 'prompt-invisible') {
+          taskContext.input = await task.prompt<string>({
+            type: 'Invisible',
+            message: commandLineInput.opts.message,
+          });
+          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+        }
+        if (commandLineInput.opts.a === 'prompt-choices') {
+          taskContext.input = await task.prompt<string>({
+            type: 'Select',
+            message: commandLineInput.opts.message,
+            choices: commandLineInput.opts.choices
+          });
+          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+        }
+        return;
+      }
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
       const successFlags =
