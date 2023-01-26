@@ -53,15 +53,13 @@ const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   exit: flags.includes('exit'),
 });
 
+const asJSONLog = (value: any): string =>
+  coloration.jsonBlock(JSON.stringify(value, null, 2));
+
 const debugContext = (ctx: Ctx) => {
-  console.debug('--- Debug Context ---');
-  // console.debug('model:\n', ctx.build.model);
-  // console.debug('engine:\n', ctx.build.engine);
-  // console.debug('workflows:\n', ctx.build.workflows);
-  // console.debug('task:\n', ctx.task);
-  // console.debug('runtime:\n', ctx.runtime);
-  currentTaskLogger.info('-------------------')
-  currentTaskLogger.info(JSON.stringify(ctx.data));
+  currentTaskLogger.info(
+    asJSONLog({ keys: Object.keys(ctx), runtime: ctx.runtime, data: ctx.data })
+  );
 };
 
 const toCommandLineAction = (
@@ -104,7 +102,7 @@ const toCommandLineAction = (
           taskContext.input = await task.prompt<string>({
             type: 'Select',
             message: commandLineInput.opts.message,
-            choices: commandLineInput.opts.choices
+            choices: commandLineInput.opts.choices,
           });
           setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
         }
