@@ -1,5 +1,5 @@
-import Handlebars from 'handlebars';
 import { BatchStepModel, Ctx, AnyCommand } from './build-model.js';
+import { getExpandedName, getCommandLines } from './templating.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
@@ -22,9 +22,6 @@ const getArray = (ctx: Ctx, name: string): any[] => {
   return [];
 };
 
-const createTemplate = (run: string) =>
-  Handlebars.compile(run, { noEscape: true });
-
 type CommandLocalVars = {
   commandOpts: AnyCommand;
   extra: Record<string, any>;
@@ -40,20 +37,14 @@ const expandCommand =
       const { run, title, name } = commandOpts;
 
       const preferredName = name === undefined ? dasherizeTitle(title) : name;
-      const template = createTemplate(run);
-      const nameTemplate = createTemplate(preferredName);
       const templateCtx = forceJson({
         ...ctx,
         ...extra,
         batch,
         command: commandOpts,
       });
-      console.log(templateCtx)
-      const lines = template(templateCtx)
-        .split('\n')
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-      const expandedName = nameTemplate(templateCtx).trim();
+      const lines = getCommandLines(run, templateCtx);
+      const expandedName = getExpandedName(preferredName, templateCtx);
       const validatedName = stringy.customKey.safeParse(expandedName);
       if (!validatedName.success) {
         return fail({

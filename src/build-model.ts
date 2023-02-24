@@ -95,6 +95,7 @@ const advancedShell = z
       .describe('Provide stdin with a value read from a dot prop path'),
 
     run: lineShell,
+    multiline: z.boolean().default(false).describe('Should the run command spread on multiple lines')
   })
   .describe('Configuration for the batch shell script');
 
