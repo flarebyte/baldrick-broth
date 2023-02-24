@@ -34,7 +34,7 @@ const expandCommand =
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
     const { commandOpts, extra } = current;
     if (commandOpts.a === 'shell') {
-      const { run, title, name } = commandOpts;
+      const { run, title, name, multiline } = commandOpts;
 
       const preferredName = name === undefined ? dasherizeTitle(title) : name;
       const templateCtx = forceJson({
@@ -43,7 +43,7 @@ const expandCommand =
         batch,
         command: commandOpts,
       });
-      const lines = getCommandLines(run, templateCtx);
+      const lines = multiline ? getCommandLines(run, templateCtx) : [run];
       const expandedName = getExpandedName(preferredName, templateCtx);
       const validatedName = stringy.customKey.safeParse(expandedName);
       if (!validatedName.success) {
