@@ -11,6 +11,7 @@ import {
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { basicCommandExecution } from './basic-execution.js';
+import { getSingleCommandLine } from './templating.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -146,11 +147,21 @@ const parseCsv = (content: string): CsvParsingResult => {
 const forceString = (value: unknown): string =>
   typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 
+const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
+
 const executeShellCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts } = params;
+
+  const templateCtx = forceJson({
+    ...ctx,
+    opts,
+  });
+  const runnableLine = opts.multiline
+    ? line
+    : getSingleCommandLine(line, templateCtx);
   const { onSuccess, onFailure, stdin } = opts;
   let maybeStdin;
   if (stdin !== undefined) {
@@ -158,7 +169,7 @@ const executeShellCommandLine = async (
     if (stdinPropValue === undefined) {
       return fail({
         category: 'failed',
-        line,
+        line: runnableLine,
         stdout: '',
         stderr: '',
         exitCode: 1,
@@ -181,7 +192,7 @@ const executeShellCommandLine = async (
     isCanceled,
     timedOut,
     killed,
-  } = await execaCommand(line, {
+  } = await execaCommand(runnableLine, {
     reject: false,
     all: true,
     env: { FORCE_COLOR: 'true' },

@@ -17,3 +17,12 @@ export const getCommandLines = (run: string, context: any): string[] => {
     .filter((s) => s.length > 0);
   return lines;
 };
+
+export const getSingleCommandLine = (run: string, context: any): string => {
+  const template = createTemplate(run);
+  const lines = template(context)
+    .split('\n')
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+  return lines.join(' ').trim();
+};

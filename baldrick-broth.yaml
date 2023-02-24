@@ -94,7 +94,7 @@ workflows:
         links:
           - title: Testing with baldrick-pest
             url: https://github.com/flarebyte/baldrick-pest
-        before:
+        main:
           commands:
               - a: prompt-choices
                 title: Prompt for pest filename
@@ -117,8 +117,6 @@ workflows:
                 message: Select tag
                 name: tag
                 select: build.model.implementation.tags
-        main:
-          commands:
               - title: Display
                 run: echo "Info {{data.test::pest1::color}}"
                 onSuccess:
