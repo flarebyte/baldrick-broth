@@ -48,6 +48,7 @@ const expandCommand =
         batch,
         command: commandOpts,
       });
+      console.log(templateCtx)
       const lines = template(templateCtx)
         .split('\n')
         .map((s) => s.trim())

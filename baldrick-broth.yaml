@@ -94,15 +94,8 @@ workflows:
         links:
           - title: Testing with baldrick-pest
             url: https://github.com/flarebyte/baldrick-pest
-        main:
+        before:
           commands:
-              - name: pest-files
-                title: List pest yaml files
-                run: scc pest-spec --include-ext yaml --by-file --format csv
-                onSuccess:
-                  # - save
-                  - csv
-                  - silent
               - a: prompt-choices
                 title: Prompt for pest filename
                 name: color
@@ -124,14 +117,12 @@ workflows:
                 message: Select tag
                 name: tag
                 select: build.model.implementation.tags
+        main:
+          commands:
               - title: Display
                 run: echo "Info {{data.test::pest1::color}}"
                 onSuccess:
                   - debug
-
-              - title: Run regression on file
-                name: Run regression on {{data.test::pest1:pest-filepath}}
-                run: npx baldrick-pest@latest test --spec-file {{data.test::pest1:pest-filepath}}
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
