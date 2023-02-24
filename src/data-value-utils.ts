@@ -1,6 +1,7 @@
 import { getProperty } from 'dot-prop';
 import { AnyDataValue, Ctx } from './build-model.js';
 import { currentTaskLogger } from './logging.js';
+import { isStringArray } from './string-utils.js';
 
 export const setDataValue = (
   ctx: Ctx,

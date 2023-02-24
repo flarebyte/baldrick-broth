@@ -121,9 +121,9 @@ workflows:
                 message: Enter some invisible
               - a: prompt-select
                 title: Prompt for pest filename
-                message: Select file
-                name: pest-filepath
-                select: data.test::pest1::pest-files
+                message: Select tag
+                name: tag
+                select: build.model.implementation.tags
               - title: Display
                 run: echo "Info {{data.test::pest1::color}}"
                 onSuccess:

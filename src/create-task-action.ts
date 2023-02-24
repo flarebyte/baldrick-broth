@@ -22,6 +22,7 @@ import {
   setDataValue,
 } from './data-value-utils.js';
 import { coloration } from './coloration.js';
+import { isStringArray } from './string-utils.js';
 
 const SLEEP_KO = 800;
 const SLEEP_MIN = 150;
@@ -103,6 +104,21 @@ const toCommandLineAction = (
             type: 'Select',
             message: commandLineInput.opts.message,
             choices: commandLineInput.opts.choices,
+          });
+          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+        }
+        if (commandLineInput.opts.a === 'prompt-select') {
+          const possibleChoices = getSupportedProperty(
+            ctx,
+            commandLineInput.opts.select
+          );
+          const choices: string[] = isStringArray(possibleChoices)
+            ? possibleChoices
+            : ['Not supported'];
+          taskContext.input = await task.prompt<string>({
+            type: 'Select',
+            message: commandLineInput.opts.message,
+            choices,
           });
           setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
         }

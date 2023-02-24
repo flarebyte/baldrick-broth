@@ -13,3 +13,10 @@ export const dasherizeTitle = (title: string): string => {
         .map((t) => t.toLowerCase())
         .join('-');
 };
+
+export const isStringArray = (value: unknown): value is string[] =>
+  typeof value === 'object' &&
+  value !== null &&
+  Array.isArray(value) &&
+  value.length > 0 &&
+  typeof value.at(0) === 'string';
