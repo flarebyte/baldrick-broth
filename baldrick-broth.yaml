@@ -118,7 +118,7 @@ workflows:
                 name: tag
                 select: build.model.implementation.tags
               - title: Display
-                run: echo "Info {{data.test::pest1::color}}"
+                run: echo "Info {{data.test::pest1::color}}, {{data.test::pest1::invisible}}, {{data.test::pest1::tag}}"
                 onSuccess:
                   - debug
       cli:

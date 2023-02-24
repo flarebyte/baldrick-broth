@@ -90,7 +90,7 @@ const toCommandLineAction = (
             type: 'Input',
             message: commandLineInput.opts.message,
           });
-          setDataValue(ctx, 'that', `input is ${taskContext.input}`);
+          setDataValue(ctx,  commandLineInput.opts.name, taskContext.input);
         }
         if (commandLineInput.opts.a === 'prompt-invisible') {
           taskContext.input = await task.prompt<string>({
