@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { Listr } from 'listr2';
+import { Listr, ListrTaskWrapper } from 'listr2';
 import type { ListrTask } from 'listr2';
 import type {
   BatchStepModel,
@@ -85,43 +85,7 @@ const toCommandLineAction = (
     task: async (taskContext, task): Promise<void> => {
       const isPrompt = commandLineInput.opts.a.startsWith('prompt-');
       if (isPrompt) {
-        if (commandLineInput.opts.a === 'prompt-input') {
-          taskContext.input = await task.prompt<string>({
-            type: 'Input',
-            message: commandLineInput.opts.message,
-          });
-          setDataValue(ctx,  commandLineInput.opts.name, taskContext.input);
-        }
-        if (commandLineInput.opts.a === 'prompt-invisible') {
-          taskContext.input = await task.prompt<string>({
-            type: 'Invisible',
-            message: commandLineInput.opts.message,
-          });
-          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
-        }
-        if (commandLineInput.opts.a === 'prompt-choices') {
-          taskContext.input = await task.prompt<string>({
-            type: 'Select',
-            message: commandLineInput.opts.message,
-            choices: commandLineInput.opts.choices,
-          });
-          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
-        }
-        if (commandLineInput.opts.a === 'prompt-select') {
-          const possibleChoices = getSupportedProperty(
-            ctx,
-            commandLineInput.opts.select
-          );
-          const choices: string[] = isStringArray(possibleChoices)
-            ? possibleChoices
-            : ['Not supported'];
-          taskContext.input = await task.prompt<string>({
-            type: 'Select',
-            message: commandLineInput.opts.message,
-            choices,
-          });
-          setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
-        }
+        await interactivePrompt(commandLineInput, taskContext, task, ctx);
         return;
       }
       task.output = commandLineInput.line;
@@ -276,6 +240,51 @@ export const createTaskAction =
       }
     }
   };
+async function interactivePrompt(
+  commandLineInput: CommandLineInput,
+  taskContext: any,
+  task: ListrTaskWrapper<any, any>,
+  ctx: Ctx
+) {
+  if (commandLineInput.opts.a === 'prompt-input') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Input',
+      message: commandLineInput.opts.message,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-invisible') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Invisible',
+      message: commandLineInput.opts.message,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-choices') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Select',
+      message: commandLineInput.opts.message,
+      choices: commandLineInput.opts.choices,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-select') {
+    const possibleChoices = getSupportedProperty(
+      ctx,
+      commandLineInput.opts.select
+    );
+    const choices: string[] = isStringArray(possibleChoices)
+      ? possibleChoices
+      : ['Not supported'];
+    taskContext.input = await task.prompt<string>({
+      type: 'Select',
+      message: commandLineInput.opts.message,
+      choices,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+}
+
 function logTaskStatistics(started: [number, number], ctx: Ctx) {
   const date = new Date();
   const finished = process.hrtime(started);
