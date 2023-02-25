@@ -427,6 +427,41 @@
                                     "properties": {
                                       "a": {
                                         "type": "string",
+                                        "const": "split-lines"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "value": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Split a string into multiple lines"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
                                         "const": "some-truthy"
                                       },
                                       "name": {
@@ -801,7 +836,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
                                       },
                                       "message": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/12/properties/message"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
                                       }
                                     },
                                     "required": [
@@ -818,7 +853,7 @@
                                     "properties": {
                                       "a": {
                                         "type": "string",
-                                        "const": "prompt-invisible"
+                                        "const": "prompt-password"
                                       },
                                       "name": {
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
@@ -836,7 +871,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
                                       },
                                       "message": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/12/properties/message"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
                                       }
                                     },
                                     "required": [
@@ -871,7 +906,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
                                       },
                                       "message": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/12/properties/message"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
                                       },
                                       "select": {
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
@@ -910,7 +945,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
                                       },
                                       "message": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/12/properties/message"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
                                       },
                                       "choices": {
                                         "type": "array",
@@ -1005,6 +1040,11 @@
                                     "minLength": 1,
                                     "maxLength": 300,
                                     "description": "A line of shell script"
+                                  },
+                                  "multiline": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Should the run command spread on multiple lines"
                                   }
                                 },
                                 "required": [
