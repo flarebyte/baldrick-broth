@@ -95,6 +95,16 @@ export const basicCommandExecution = (
         )
       );
       return success;
+    case 'split-lines':
+      setDataValue(
+        ctx,
+        name,
+        asStringOrBlank(getSupportedProperty(ctx, anyCommand.value))
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => line.length > 0)
+      );
+      return success;
     case 'range':
       setDataValue(
         ctx,

@@ -176,6 +176,14 @@ const splitStringStep = z
   })
   .describe('Split a string into multiple strings');
 
+  const splitLinesStep = z
+  .strictObject({
+    a: z.literal('split-lines'),
+    ...metadataStep,
+    value: stringy.varValue,
+  })
+  .describe('Split a string into multiple lines');
+
 const someTruthyArrayStep = z
   .strictObject({
     a: z.literal('some-truthy'),
@@ -311,6 +319,7 @@ const anyCommand = z
       stringArrayStep,
       concatArrayStep,
       splitStringStep,
+      splitLinesStep,
       someTruthyArrayStep,
       someFalsyArrayStep,
       everyTruthyArrayStep,
