@@ -117,8 +117,12 @@ workflows:
                 message: Select tag
                 name: tag
                 select: build.model.implementation.tags
+              - a: prompt-confirm
+                title: is this all good
+                message: is this all good message
+                name: confirm
               - title: Display
-                run: echo "Info {{data.test::pest1::color}}, {{data.test::pest1::invisible}}, {{data.test::pest1::tag}}"
+                run: echo "Info {{data.test::pest1::color}}, {{data.test::pest1::invisible}}, {{data.test::pest1::info}}, {{data.test::pest1::tag}}, {{data.test::pest1::confirm}}"
                 onSuccess:
                   - debug
       cli:

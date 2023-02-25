@@ -268,6 +268,13 @@ async function interactivePrompt(
     });
     setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
   }
+  if (commandLineInput.opts.a === 'prompt-confirm') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Confirm',
+      message: commandLineInput.opts.message,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
   if (commandLineInput.opts.a === 'prompt-select') {
     const possibleChoices = getSupportedProperty(
       ctx,
