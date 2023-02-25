@@ -108,7 +108,7 @@ workflows:
                 title: input
                 name: info
                 message: Enter some info
-              - a: prompt-invisible
+              - a: prompt-password
                 title: Invisible
                 name: invisible
                 message: Enter some invisible

@@ -269,9 +269,9 @@ const maskJsonStep = z
   })
   .describe('Prompt that takes user input and returns a string');
 
-  const invisiblePromptStep = z
+  const passwordPromptStep = z
   .strictObject({
-    a: z.literal('prompt-invisible'),
+    a: z.literal('prompt-password'),
     ...metadataStep,
 
     message: stringy.promptMessage,
@@ -321,7 +321,7 @@ const anyCommand = z
       maskJsonStep,
       inputPromptStep,
       confirmPromptStep,
-      invisiblePromptStep,
+      passwordPromptStep,
       selectPromptStep,
       choicePromptStep
     ]),

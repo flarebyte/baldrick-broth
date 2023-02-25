@@ -253,9 +253,9 @@ async function interactivePrompt(
     });
     setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
   }
-  if (commandLineInput.opts.a === 'prompt-invisible') {
+  if (commandLineInput.opts.a === 'prompt-password') {
     taskContext.input = await task.prompt<string>({
-      type: 'Invisible',
+      type: 'Password',
       message: commandLineInput.opts.message,
     });
     setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
@@ -275,7 +275,7 @@ async function interactivePrompt(
     );
     const choices: string[] = isStringArray(possibleChoices)
       ? possibleChoices
-      : ['Not supported'];
+      : ['The choice should be an array (645608)'];
     taskContext.input = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
