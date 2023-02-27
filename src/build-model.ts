@@ -95,6 +95,7 @@ const advancedShell = z
       .describe('Provide stdin with a value read from a dot prop path'),
 
     run: lineShell,
+    multiline: z.boolean().default(false).describe('Should the run command spread on multiple lines')
   })
   .describe('Configuration for the batch shell script');
 
@@ -174,6 +175,14 @@ const splitStringStep = z
     value: stringy.varValue,
   })
   .describe('Split a string into multiple strings');
+
+  const splitLinesStep = z
+  .strictObject({
+    a: z.literal('split-lines'),
+    ...metadataStep,
+    value: stringy.varValue,
+  })
+  .describe('Split a string into multiple lines');
 
 const someTruthyArrayStep = z
   .strictObject({
@@ -259,6 +268,50 @@ const maskJsonStep = z
   })
   .describe('Uses JSON mask to select parts of the json object');
 
+  const inputPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-input'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+  })
+  .describe('Prompt that takes user input and returns a string');
+
+  const passwordPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-password'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+  })
+  .describe('Prompt that takes user input, hides it from the terminal, and returns a string');
+  const confirmPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-confirm'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+  })
+  .describe('Prompt that returns true or false');
+
+  const selectPromptStep = z
+  .strictObject({
+    a: z.literal('prompt-select'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+    select: stringy.varValue,
+  })
+  .describe('Prompt that allows the user to select from a list of options');
+  const choicePromptStep = z
+  .strictObject({
+    a: z.literal('prompt-choices'),
+    ...metadataStep,
+
+    message: stringy.promptMessage,
+    choices: z.array(stringy.varValue).min(2).max(30),
+  })
+  .describe('Prompt that allows the user to choose an option');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -266,6 +319,7 @@ const anyCommand = z
       stringArrayStep,
       concatArrayStep,
       splitStringStep,
+      splitLinesStep,
       someTruthyArrayStep,
       someFalsyArrayStep,
       everyTruthyArrayStep,
@@ -274,6 +328,11 @@ const anyCommand = z
       rangeStep,
       invertObjectStep,
       maskJsonStep,
+      inputPromptStep,
+      confirmPromptStep,
+      passwordPromptStep,
+      selectPromptStep,
+      choicePromptStep
     ]),
     advancedShell,
   ])

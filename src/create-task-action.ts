@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { Listr } from 'listr2';
+import { Listr, ListrTaskWrapper } from 'listr2';
 import type { ListrTask } from 'listr2';
 import type {
   BatchStepModel,
@@ -22,6 +22,7 @@ import {
   setDataValue,
 } from './data-value-utils.js';
 import { coloration } from './coloration.js';
+import { isStringArray } from './string-utils.js';
 
 const SLEEP_KO = 800;
 const SLEEP_MIN = 150;
@@ -53,14 +54,13 @@ const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   exit: flags.includes('exit'),
 });
 
+const asJSONLog = (value: any): string =>
+  coloration.jsonBlock(JSON.stringify(value, null, 2));
+
 const debugContext = (ctx: Ctx) => {
-  console.debug('--- Debug Context ---');
-  console.debug('model:\n', ctx.build.model);
-  console.debug('engine:\n', ctx.build.engine);
-  console.debug('workflows:\n', ctx.build.workflows);
-  console.debug('task:\n', ctx.task);
-  console.debug('runtime:\n', ctx.runtime);
-  console.debug('data:\n', ctx.data);
+  currentTaskLogger.info(
+    asJSONLog({ keys: Object.keys(ctx), runtime: ctx.runtime, data: ctx.data })
+  );
 };
 
 const toCommandLineAction = (
@@ -82,7 +82,12 @@ const toCommandLineAction = (
       const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
       return shouldEnable;
     },
-    task: async (_, task): Promise<void> => {
+    task: async (taskContext, task): Promise<void> => {
+      const isPrompt = commandLineInput.opts.a.startsWith('prompt-');
+      if (isPrompt) {
+        await interactivePrompt(commandLineInput, taskContext, task, ctx);
+        return;
+      }
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
       const successFlags =
@@ -235,6 +240,58 @@ export const createTaskAction =
       }
     }
   };
+async function interactivePrompt(
+  commandLineInput: CommandLineInput,
+  taskContext: any,
+  task: ListrTaskWrapper<any, any>,
+  ctx: Ctx
+) {
+  if (commandLineInput.opts.a === 'prompt-input') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Input',
+      message: commandLineInput.opts.message,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-password') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Password',
+      message: commandLineInput.opts.message,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-choices') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Select',
+      message: commandLineInput.opts.message,
+      choices: commandLineInput.opts.choices,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-confirm') {
+    taskContext.input = await task.prompt<string>({
+      type: 'Confirm',
+      message: commandLineInput.opts.message,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+  if (commandLineInput.opts.a === 'prompt-select') {
+    const possibleChoices = getSupportedProperty(
+      ctx,
+      commandLineInput.opts.select
+    );
+    const choices: string[] = isStringArray(possibleChoices)
+      ? possibleChoices
+      : ['The choice should be an array (645608)'];
+    taskContext.input = await task.prompt<string>({
+      type: 'Select',
+      message: commandLineInput.opts.message,
+      choices,
+    });
+    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+  }
+}
+
 function logTaskStatistics(started: [number, number], ctx: Ctx) {
   const date = new Date();
   const finished = process.hrtime(started);

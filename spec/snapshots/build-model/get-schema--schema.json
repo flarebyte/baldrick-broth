@@ -101,7 +101,8 @@
                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                     },
                     "description": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description",
+                      "description": "The main purpose of this section of script"
                     },
                     "motivation": {
                       "type": "string",
@@ -234,10 +235,12 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                                       },
                                       "description": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description",
+                                        "description": "The main purpose of this section of script"
                                       },
                                       "motivation": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation",
+                                        "description": "The main reason why this section of script is needed"
                                       },
                                       "links": {
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
@@ -421,6 +424,41 @@
                                     ],
                                     "additionalProperties": false,
                                     "description": "Split a string into multiple strings"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "split-lines"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "value": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "value"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Split a string into multiple lines"
                                   },
                                   {
                                     "type": "object",
@@ -739,6 +777,197 @@
                                     ],
                                     "additionalProperties": false,
                                     "description": "Uses JSON mask to select parts of the json object"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "prompt-input"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "message": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 60,
+                                        "description": "A short message that will display in the prompt"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "message"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Prompt that takes user input and returns a string"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "prompt-confirm"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "message": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "message"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Prompt that returns true or false"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "prompt-password"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "message": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "message"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Prompt that takes user input, hides it from the terminal, and returns a string"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "prompt-select"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "message": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
+                                      },
+                                      "select": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "message",
+                                      "select"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Prompt that allows the user to select from a list of options"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "prompt-choices"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "message": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/13/properties/message"
+                                      },
+                                      "choices": {
+                                        "type": "array",
+                                        "items": {
+                                          "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
+                                        },
+                                        "minItems": 2,
+                                        "maxItems": 30
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "message",
+                                      "choices"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Prompt that allows the user to choose an option"
                                   }
                                 ]
                               },
@@ -756,10 +985,12 @@
                                     "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                                   },
                                   "description": {
-                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
+                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description",
+                                    "description": "The main purpose of this section of script"
                                   },
                                   "motivation": {
-                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation"
+                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation",
+                                    "description": "The main reason why this section of script is needed"
                                   },
                                   "links": {
                                     "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
@@ -814,6 +1045,11 @@
                                     "minLength": 1,
                                     "maxLength": 300,
                                     "description": "A line of shell script"
+                                  },
+                                  "multiline": {
+                                    "type": "boolean",
+                                    "default": false,
+                                    "description": "Should the run command spread on multiple lines"
                                   }
                                 },
                                 "required": [
@@ -838,10 +1074,12 @@
                       "description": "A batch of shell commands to run"
                     },
                     "before": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main",
+                      "description": "A batch of shell commands to run"
                     },
                     "after": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main",
+                      "description": "A batch of shell commands to run"
                     }
                   },
                   "required": [

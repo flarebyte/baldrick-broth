@@ -37,6 +37,22 @@ export const stringy = {
   url: z.string().url().max(300).describe('A https link to a webpage'),
   path: z.string().max(300).describe('A relative path to a file'),
   propPath: z.string().max(300).describe('A dot prop path'),
+  promptMessage: z
+  .string()
+  .trim()
+  .min(1)
+  .max(60)
+  .refine(isSingleLine, { message: 'message should be a single line' })
+  .describe('A short message that will display in the prompt'),
+  choice: z
+  .string()
+  .trim()
+  .min(1)
+  .max(60)
+  .refine(isSingleLine, { message: 'choice should be a single line' })
+  .describe('A possible choice'),
+
+
 };
 export const safeParseField = (
   name: 'title' | 'filename' | string,

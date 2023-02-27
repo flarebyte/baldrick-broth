@@ -7,5 +7,10 @@ cases:
     steps:
       - title: Test specifications
         run: yarn cli test spec
+      - title: Remove changing info from output
+        run: sed -f pest-spec/scripts/cleaning.sed
+        stdin:
+          step: 0
+          receiving: stdout + stderr
         expect:
-          snapshot: spec.txt
+          snapshot: help.txt
