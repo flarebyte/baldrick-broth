@@ -10,8 +10,6 @@
 
 
 getDataProperty: Invalid path data.g.get-property: g then undefined  [38;2;75;0;130m◼ Run all baldrick zest files[39m
-(node:25460) ExperimentalWarning: Custom ESM Loaders is an experimental feature. This feature could change at any time
-(Use `node --trace-warnings ...` to show where the warning was created)
 [1m⦿ Function basicCommandsExecution[22m [90m./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml[39m
   [32m✓ PASS[39m [1msome basic execution on the context[22m   [90m📷 spec/snapshots/basic-execution/basic-execution--basic.yaml[39m
 [1m⦿ Function getSchema[22m [90m./src/build-model.ts | spec/build-model/get-schema.zest.yaml[39m
