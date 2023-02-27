@@ -101,7 +101,8 @@
                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                     },
                     "description": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description",
+                      "description": "The main purpose of this section of script"
                     },
                     "motivation": {
                       "type": "string",
@@ -234,10 +235,12 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                                       },
                                       "description": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description",
+                                        "description": "The main purpose of this section of script"
                                       },
                                       "motivation": {
-                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation"
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation",
+                                        "description": "The main reason why this section of script is needed"
                                       },
                                       "links": {
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
@@ -982,10 +985,12 @@
                                     "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
                                   },
                                   "description": {
-                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description"
+                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description",
+                                    "description": "The main purpose of this section of script"
                                   },
                                   "motivation": {
-                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation"
+                                    "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivation",
+                                    "description": "The main reason why this section of script is needed"
                                   },
                                   "links": {
                                     "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
@@ -1069,10 +1074,12 @@
                       "description": "A batch of shell commands to run"
                     },
                     "before": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main",
+                      "description": "A batch of shell commands to run"
                     },
                     "after": {
-                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main"
+                      "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main",
+                      "description": "A batch of shell commands to run"
                     }
                   },
                   "required": [
