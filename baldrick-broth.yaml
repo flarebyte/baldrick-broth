@@ -102,6 +102,8 @@ workflows:
               name: Run regression on {{pest-file}}
               run: npx baldrick-pest@latest test --spec-file {{pest-file}}
               multiline: true
+              onSuccess:
+                - debug
       pest1:
         title: Run one acceptance tests for the CLI
         description: Run one acceptance tests declaratively using YAML files

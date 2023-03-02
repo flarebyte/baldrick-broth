@@ -79,7 +79,9 @@ const toCommandLineAction = (
       if (ifPath === undefined || ifPath === false) {
         return true;
       }
-      const shouldEnable = isTruthy(getSupportedProperty(ctx, ifPath));
+      const shouldEnable = isTruthy(
+        getSupportedProperty(commandLineInput.memoryId, ctx, ifPath)
+      );
       return shouldEnable;
     },
     task: async (taskContext, task): Promise<void> => {
@@ -105,7 +107,12 @@ const toCommandLineAction = (
         } = cmdLineResult;
         task.title = name;
         if (successFlags.save) {
-          setDataValue(ctx, commandLineInput.name, data);
+          setDataValue(
+            commandLineInput.memoryId,
+            ctx,
+            commandLineInput.name,
+            data
+          );
         }
         if (!successFlags.silent) {
           const dataView =
@@ -251,14 +258,24 @@ async function interactivePrompt(
       type: 'Input',
       message: commandLineInput.opts.message,
     });
-    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+    setDataValue(
+      commandLineInput.memoryId,
+      ctx,
+      commandLineInput.opts.name,
+      taskContext.input
+    );
   }
   if (commandLineInput.opts.a === 'prompt-password') {
     taskContext.input = await task.prompt<string>({
       type: 'Password',
       message: commandLineInput.opts.message,
     });
-    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+    setDataValue(
+      commandLineInput.memoryId,
+      ctx,
+      commandLineInput.opts.name,
+      taskContext.input
+    );
   }
   if (commandLineInput.opts.a === 'prompt-choices') {
     taskContext.input = await task.prompt<string>({
@@ -266,17 +283,28 @@ async function interactivePrompt(
       message: commandLineInput.opts.message,
       choices: commandLineInput.opts.choices,
     });
-    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+    setDataValue(
+      commandLineInput.memoryId,
+      ctx,
+      commandLineInput.opts.name,
+      taskContext.input
+    );
   }
   if (commandLineInput.opts.a === 'prompt-confirm') {
     taskContext.input = await task.prompt<string>({
       type: 'Confirm',
       message: commandLineInput.opts.message,
     });
-    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+    setDataValue(
+      commandLineInput.memoryId,
+      ctx,
+      commandLineInput.opts.name,
+      taskContext.input
+    );
   }
   if (commandLineInput.opts.a === 'prompt-select') {
     const possibleChoices = getSupportedProperty(
+      commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.select
     );
@@ -288,7 +316,12 @@ async function interactivePrompt(
       message: commandLineInput.opts.message,
       choices,
     });
-    setDataValue(ctx, commandLineInput.opts.name, taskContext.input);
+    setDataValue(
+      commandLineInput.memoryId,
+      ctx,
+      commandLineInput.opts.name,
+      taskContext.input
+    );
   }
 }
 

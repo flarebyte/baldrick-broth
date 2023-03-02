@@ -23,6 +23,7 @@ type ExecuteCommandLineFailedCategory =
   | 'parse-csv-failed';
 
 export interface CommandLineInput {
+  memoryId: string;
   line: string;
   name: string;
   opts: AnyCommand;
@@ -153,7 +154,7 @@ const executeShellCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
-  const { line, name, opts } = params;
+  const { line, name, opts, memoryId } = params;
 
   const templateCtx = forceJson({
     ...ctx,
@@ -165,7 +166,7 @@ const executeShellCommandLine = async (
   const { onSuccess, onFailure, stdin } = opts;
   let maybeStdin;
   if (stdin !== undefined) {
-    const stdinPropValue = getSupportedProperty(ctx, stdin);
+    const stdinPropValue = getSupportedProperty(memoryId, ctx, stdin);
     if (stdinPropValue === undefined) {
       return fail({
         category: 'failed',
@@ -288,11 +289,11 @@ export const executeCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
-  const { line, name, opts } = params;
+  const { line, name, opts, memoryId } = params;
   if (opts.a === 'shell') {
-    return await executeShellCommandLine(ctx, { line, name, opts });
+    return await executeShellCommandLine(ctx, { line, name, opts, memoryId });
   } else {
-    basicCommandExecution(ctx, params.opts);
+    basicCommandExecution(memoryId, ctx, params.opts);
     return succeed({
       format: 'json',
       name,

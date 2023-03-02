@@ -3,6 +3,7 @@ import { AnyDataValue, Ctx } from './build-model.js';
 import { currentTaskLogger } from './logging.js';
 
 export const setDataValue = (
+  memoryId: string,
   ctx: Ctx,
   key: string,
   value: AnyDataValue | undefined
@@ -11,48 +12,43 @@ export const setDataValue = (
     throw new Error('ctx.data should have defined by now');
   }
   if (value === undefined) {
-    delete ctx.data[`${ctx.task.name}::${key}`];
+    delete ctx.data[`${memoryId}::${key}`];
   } else {
-    ctx.data[`${ctx.task.name}::${key}`] = value;
+    ctx.data[`${memoryId}::${key}`] = value;
   }
 };
 
 const getDataProperty = (
+  memoryId: string,
   valuePath: string,
   value?: Record<string, AnyDataValue>
 ): AnyDataValue | undefined => {
   if (value === undefined) {
     return undefined;
   }
-  const [data_prefix, otherKeys] = valuePath.split('.');
+  const [data_prefix, keyName] = valuePath.split('.');
   if (
     data_prefix === undefined ||
     data_prefix !== 'data' ||
-    otherKeys === undefined
+    keyName === undefined
   ) {
     currentTaskLogger.warn(
-      `getDataProperty: Invalid path ${valuePath}: ${data_prefix} and ${otherKeys}`
+      `getDataProperty: Invalid path ${valuePath}: ${data_prefix} and ${keyName}`
     );
     return undefined;
   }
 
-  const [first, second, third] = otherKeys.split('::');
-  if (first === undefined || second === undefined || third === undefined) {
-    currentTaskLogger.warn(
-      `getDataProperty: Invalid path ${valuePath}: ${first} then ${second}  then ${third}`
-    );
-    return undefined;
-  }
-  return value[`${first}::${second}::${third}`];
+  return value[`${memoryId}::${keyName}`];
 };
 
 export const getSupportedProperty = (
+  memoryId: string,
   ctx: Ctx,
   valuePath: string
 ): AnyDataValue | undefined => {
   const isInsideData = valuePath.startsWith('data.');
   const value = isInsideData
-    ? getDataProperty(valuePath, ctx.data)
+    ? getDataProperty(memoryId, valuePath, ctx.data)
     : getProperty(ctx, valuePath);
   return typeof value === 'string' ||
     typeof value === 'number' ||

@@ -5,14 +5,15 @@ import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
 import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
+import { IdGenerator, rootId } from './id-generator.js';
 
 type ExpandedCommandLineInputs = Result<
   CommandLineInput[],
   { messages: string[] }
 >;
 
-const getArray = (ctx: Ctx, name: string): any[] => {
-  const value = getSupportedProperty(ctx, name);
+const getArray = (memoryId: string, ctx: Ctx, name: string): any[] => {
+  const value = getSupportedProperty(memoryId, ctx, name);
   if (value === undefined) {
     return [];
   }
@@ -25,6 +26,7 @@ const getArray = (ctx: Ctx, name: string): any[] => {
 type CommandLocalVars = {
   commandOpts: AnyCommand;
   extra: Record<string, any>;
+  memoryId: string;
 };
 
 const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
@@ -32,7 +34,7 @@ const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
 const expandCommand =
   (ctx: Ctx, batch: BatchStepModel) =>
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
-    const { commandOpts, extra } = current;
+    const { commandOpts, extra, memoryId } = current;
     if (commandOpts.a === 'shell') {
       const { run, title, name, multiline } = commandOpts;
 
@@ -52,6 +54,7 @@ const expandCommand =
         });
       }
       const lineInputs: CommandLineInput[] = lines.map((line) => ({
+        memoryId,
         line,
         name: expandedName,
         opts: commandOpts,
@@ -59,7 +62,7 @@ const expandCommand =
       return succeed(lineInputs);
     } else {
       const { name } = commandOpts;
-      return succeed([{ line: '', name, opts: commandOpts }]);
+      return succeed([{ line: '', name, opts: commandOpts, memoryId }]);
     }
   };
 
@@ -84,7 +87,7 @@ const expandBatchN = (
   extra: Record<string, any>
 ): ExpandedCommandLineInputs => {
   const expanded = batch.commands
-    .map((commandOpts) => ({ commandOpts, extra }))
+    .map((commandOpts) => ({ commandOpts, extra, memoryId: rootId }))
     .map(expandCommand(ctx, batch));
   return mergeExpandedCommandLineInputs(expanded);
 };
@@ -96,12 +99,17 @@ const expandBatch1 = (
   if (loop0 === undefined) {
     return fail({ messages: ['Should have at least one loop'] });
   }
+  const makeId = IdGenerator();
 
-  const arr0 = getArray(ctx, loop0.values).map((value) => ({
+  const arr0 = getArray(rootId, ctx, loop0.values).map((value) => ({
     [loop0.name]: value,
   }));
   const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra) =>
-    batch.commands.map((commandOpts) => ({ commandOpts, extra }))
+    batch.commands.map((commandOpts) => ({
+      commandOpts,
+      extra,
+      memoryId: makeId(),
+    }))
   );
   const expanded = commandLocalVars.flatMap(expandCommand(ctx, batch));
   return mergeExpandedCommandLineInputs(expanded);
@@ -123,17 +131,23 @@ const expandBatch2 = (
     });
   }
 
-  const arr0 = getArray(ctx, loop0.values).map((value) => ({
+  const makeId = IdGenerator();
+
+  const arr0 = getArray(rootId, ctx, loop0.values).map((value) => ({
     [loop0.name]: value,
   }));
-  const arr1 = getArray(ctx, loop1.values).map((value) => ({
+  const arr1 = getArray(rootId, ctx, loop1.values).map((value) => ({
     [loop1.name]: value,
   }));
   const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra0) =>
     arr1
       .map((extra1) => ({ ...extra0, ...extra1 }))
       .flatMap((extra) =>
-        batchStep.commands.map((commandOpts) => ({ commandOpts, extra }))
+        batchStep.commands.map((commandOpts) => ({
+          commandOpts,
+          extra,
+          memoryId: makeId(),
+        }))
       )
   );
   const expanded = commandLocalVars.flatMap(expandCommand(ctx, batchStep));
