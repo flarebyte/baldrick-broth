@@ -19,7 +19,7 @@ export const setDataValue = (
   }
 };
 
-const getDataProperty = (
+const getSpecificDataProperty = (
   memoryId: string,
   valuePath: string,
   value?: Record<string, AnyDataValue>
@@ -42,7 +42,23 @@ const getDataProperty = (
   return value[`${memoryId}::${keyName}`];
 };
 
-const getSpecificSupportedProperty = (
+const getDataProperty = (
+  memoryId: string,
+  valuePath: string,
+  value?: Record<string, AnyDataValue>
+): AnyDataValue | undefined => {
+  const localValue = getSpecificDataProperty(memoryId, valuePath, value);
+  const useLocalValue = localValue !== undefined || memoryId === rootId;
+  if (useLocalValue) {
+    return localValue;
+  }
+  return getSpecificDataProperty(rootId, valuePath, value);
+};
+
+/**
+ * Return the current value or otherwise fallback to root value
+ */
+export const getSupportedProperty = (
   memoryId: string,
   ctx: Ctx,
   valuePath: string
@@ -59,21 +75,6 @@ const getSpecificSupportedProperty = (
     : undefined;
 };
 
-/**
- * Return the current value or otherwise fallback to root value
- */
-export const getSupportedProperty = (
-  memoryId: string,
-  ctx: Ctx,
-  valuePath: string
-): AnyDataValue | undefined => {
-  const localValue = getSpecificSupportedProperty(memoryId, ctx, valuePath);
-  const useLocalValue = localValue !== undefined || memoryId === rootId;
-  if (useLocalValue) {
-    return localValue;
-  }
-  return getSpecificSupportedProperty(rootId, ctx, valuePath);
-};
 /**
  * Check if the the value would generally considered false or empty
  */
