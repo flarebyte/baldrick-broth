@@ -1,5 +1,6 @@
 import { getProperty } from 'dot-prop';
 import { AnyDataValue, Ctx } from './build-model.js';
+import { rootId } from './id-generator.js';
 import { currentTaskLogger } from './logging.js';
 
 export const setDataValue = (
@@ -41,7 +42,7 @@ const getDataProperty = (
   return value[`${memoryId}::${keyName}`];
 };
 
-export const getSupportedProperty = (
+const getSpecificSupportedProperty = (
   memoryId: string,
   ctx: Ctx,
   valuePath: string
@@ -56,6 +57,22 @@ export const getSupportedProperty = (
     typeof value === 'object'
     ? value
     : undefined;
+};
+
+/**
+ * Return the current value or otherwise fallback to root value
+ */
+export const getSupportedProperty = (
+  memoryId: string,
+  ctx: Ctx,
+  valuePath: string
+): AnyDataValue | undefined => {
+  const localValue = getSpecificSupportedProperty(memoryId, ctx, valuePath);
+  const useLocalValue = localValue !== undefined || memoryId === rootId;
+  if (useLocalValue) {
+    return localValue;
+  }
+  return getSpecificSupportedProperty(rootId, ctx, valuePath);
 };
 /**
  * Check if the the value would generally considered false or empty

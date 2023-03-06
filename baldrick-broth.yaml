@@ -92,11 +92,11 @@ workflows:
             - a: split-lines
               name: pest-files
               title: Split the list of pest files
-              value: data.test::pest::pest-files-string
+              value: data.pest-files-string
         main:
           each:
             - name: pest-file
-              values: data.test::pest::pest-files
+              values: data.pest-files
           commands:
             - title: Run regression on file
               name: Run regression on {{pest-file}}
