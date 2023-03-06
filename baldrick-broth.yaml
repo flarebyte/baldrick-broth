@@ -119,18 +119,19 @@ workflows:
               onSuccess:
                 - save
                 - silent
+                - debug
             - a: split-lines
               name: pest-files
               title: Split the list of pest files
-              value: data.test::pest1::pest-files-string
+              value: data.pest-files-string
             - a: prompt-select
               title: Prompt for pest filename
               message: Select pest file
               name: pest-file
-              select: data.test::pest1::pest-files
+              select: data.pest-files
             - title: Run pest file
               name: run
-              run: npx baldrick-pest@latest test --spec-file {{data.test::pest1::pest-file}}
+              run: npx baldrick-pest@latest test --spec-file {{data.R::pest-file}}
       scc:
         title: Count lines of code
         description: Count lines of code

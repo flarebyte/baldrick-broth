@@ -6,6 +6,7 @@ import { stringy } from './field-validation.js';
 import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 import { IdGenerator, rootId } from './id-generator.js';
+import { currentTaskLogger } from './logging.js';
 
 type ExpandedCommandLineInputs = Result<
   CommandLineInput[],
@@ -81,7 +82,7 @@ const mergeExpandedCommandLineInputs = (
   );
   return succeed(inputs);
 };
-const expandBatchN = (
+const expandBatch0 = (
   ctx: Ctx,
   batch: BatchStepModel,
   extra: Record<string, any>
@@ -111,6 +112,7 @@ const expandBatch1 = (
       memoryId: makeId(),
     }))
   );
+  currentTaskLogger.info(`commandLocalVars=${JSON.stringify(commandLocalVars)}`)
   const expanded = commandLocalVars.flatMap(expandCommand(ctx, batch));
   return mergeExpandedCommandLineInputs(expanded);
 };
@@ -160,9 +162,10 @@ export const expandBatchStep = (
 ): ExpandedCommandLineInputs => {
   const numberOfLoops =
     batchStep.each === undefined ? 0 : batchStep.each.length;
+    currentTaskLogger.info(`numberOfLoops=${numberOfLoops}`)
   switch (numberOfLoops) {
     case 0:
-      return expandBatchN(ctx, batchStep, {});
+      return expandBatch0(ctx, batchStep, {});
     case 1:
       return expandBatch1(ctx, batchStep);
     case 2:
