@@ -1,19 +1,20 @@
 status: created
-g::get-property: baldrick-broth
-g::some-truthy: true
-g::some-truthy false: false
-g::some-falsy: true
-g::some-falsy false: false
-g::every-truthy: true
-g::every-falsy: true
-g::every-truthy false: false
-g::every-falsy false: false
-g::not false: false
-g::not true: true
-g::split-string:
+T1::get-property: baldrick-broth
+T1::some-truthy: true
+T1::some-truthy false: false
+T1::some-falsy: true
+T1::some-falsy false: false
+T1::every-truthy: true
+T1::every-falsy: true
+T1::every-truthy false: false
+T1::every-falsy false: false
+T1::not false: false
+T1::not true: true
+T1::split-string:
   - Generate
   - code
-g::masked:
+T1::get-property-previous: baldrick-broth
+T1::masked:
   copyright:
     holder: copyright-holder-fixme
     startYear: 2022
@@ -21,7 +22,7 @@ g::masked:
     - green
     - orange
     - blue
-g::range7:
+T1::range7:
   - 1
   - 2
   - 3
@@ -29,11 +30,11 @@ g::range7:
   - 5
   - 6
   - 7
-g::range5-7:
+T1::range5-7:
   - 5
   - 6
   - 7
-g::range0-20-2:
+T1::range0-20-2:
   - 0
   - 2
   - 4

@@ -1,6 +1,6 @@
 ---
 testing:
-  style: function a b
+  style: function a b c
   import: ./src/basic-execution.ts
   function: basicCommandsExecution
 cases:
@@ -9,6 +9,8 @@ cases:
     snapshot: YAML
     title: some basic execution on the context
     params:
+      - from: string
+        value: T1
       - from: file
         filename: spec/fixtures/context.yaml
         parser: YAML
