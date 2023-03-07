@@ -3,7 +3,7 @@ model:
     title: Build automation tool and task runner
     description: Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.11.0
+    version: 0.12.0
     keywords:
       - CLI
       - Task runner
@@ -102,8 +102,6 @@ workflows:
               name: Run regression on {{_.pest-file}}
               run: npx baldrick-pest@latest test --spec-file {{_.pest-file}}
               multiline: true
-              onSuccess:
-                - debug
       pest1:
         title: Run one acceptance tests for the CLI
         description: Run one acceptance tests declaratively using YAML files
