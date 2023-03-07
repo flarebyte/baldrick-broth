@@ -99,8 +99,8 @@ workflows:
               values: data.pest-files
           commands:
             - title: Run regression on file
-              name: Run regression on {{pest-file}}
-              run: npx baldrick-pest@latest test --spec-file {{pest-file}}
+              name: Run regression on {{_.pest-file}}
+              run: npx baldrick-pest@latest test --spec-file {{_.pest-file}}
               multiline: true
               onSuccess:
                 - debug
@@ -131,7 +131,7 @@ workflows:
               select: data.pest-files
             - title: Run pest file
               name: run
-              run: npx baldrick-pest@latest test --spec-file {{data.R::pest-file}}
+              run: npx baldrick-pest@latest test --spec-file {{_.pest-file}}
       scc:
         title: Count lines of code
         description: Count lines of code

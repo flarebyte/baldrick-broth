@@ -11,7 +11,7 @@ import {
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { basicCommandExecution } from './basic-execution.js';
-import { getSingleCommandLine } from './templating.js';
+import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -148,17 +148,17 @@ const parseCsv = (content: string): CsvParsingResult => {
 const forceString = (value: unknown): string =>
   typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 
-const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
-
 const executeShellCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts, memoryId } = params;
 
-  const templateCtx = forceJson({
-    ...ctx,
-    opts,
+  const templateCtx = mergeTemplateContext({
+    memoryId,
+    ctx,
+    command: opts,
+    extra: ctx.data,
   });
   const runnableLine = opts.multiline
     ? line

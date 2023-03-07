@@ -1,5 +1,5 @@
 import Handlebars from 'handlebars';
-import { AnyCommand, BatchStepModel, Ctx } from './build-model.js';
+import { AnyCommand, Ctx } from './build-model.js';
 import { splitDataKey, withMemoryPrefix } from './data-value-utils.js';
 import { rootId } from './id-generator.js';
 
@@ -68,9 +68,10 @@ export const mergeTemplateContext = ({
   extra: Record<string, any>;
   command: AnyCommand;
 }) => {
+  const relevantData = getTemplateData(memoryId, extra)
   return forceJson({
     ...ctx,
-    ...extra,
+    _: relevantData,
     command,
   });
 };

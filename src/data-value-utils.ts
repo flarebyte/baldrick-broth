@@ -3,6 +3,9 @@ import { AnyDataValue, Ctx } from './build-model.js';
 import { rootId } from './id-generator.js';
 import { currentTaskLogger } from './logging.js';
 
+export const createDataId = (memoryId: string, key: string) =>
+  `${memoryId}::${key}`;
+
 export const setDataValue = (
   memoryId: string,
   ctx: Ctx,
@@ -25,13 +28,13 @@ export const withMemoryPrefix = (memoryId: string) => (key: string) =>
 export const splitDataKey = (dataKey: string): [string, string] => {
   const [memoryId, key] = dataKey.split('::');
   if (memoryId === undefined) {
-    throw new Error('MemoryId should not be undefined')
+    throw new Error('MemoryId should not be undefined');
   }
   if (key === undefined) {
-    throw new Error('Key should not be undefined')
+    throw new Error('Key should not be undefined');
   }
-  return [memoryId, key] 
-}
+  return [memoryId, key];
+};
 
 const getSpecificDataProperty = (
   memoryId: string,
