@@ -19,6 +19,20 @@ export const setDataValue = (
   }
 };
 
+export const withMemoryPrefix = (memoryId: string) => (key: string) =>
+  key.startsWith(`${memoryId}::`);
+
+export const splitDataKey = (dataKey: string): [string, string] => {
+  const [memoryId, key] = dataKey.split('::');
+  if (memoryId === undefined) {
+    throw new Error('MemoryId should not be undefined')
+  }
+  if (key === undefined) {
+    throw new Error('Key should not be undefined')
+  }
+  return [memoryId, key] 
+}
+
 const getSpecificDataProperty = (
   memoryId: string,
   valuePath: string,
