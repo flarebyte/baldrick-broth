@@ -68,7 +68,7 @@ export const mergeTemplateContext = ({
   extra: Record<string, any>;
   command: AnyCommand;
 }) => {
-  const relevantData = getTemplateData(memoryId, extra)
+  const relevantData = getTemplateData(memoryId, extra);
   return forceJson({
     ...ctx,
     _: relevantData,

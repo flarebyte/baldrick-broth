@@ -202,7 +202,7 @@ export const createTaskAction =
     const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
     const started = process.hrtime();
     const task = ctx.task;
-    let listTasks: ListrTask[] = [];
+    const listTasks: ListrTask[] = [];
     if (task.before !== undefined) {
       const beforeStep = toBatchStepAction(ctx, task.before);
       if (beforeStep.status === 'failure') {

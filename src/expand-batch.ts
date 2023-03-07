@@ -1,5 +1,9 @@
 import { BatchStepModel, Ctx, AnyCommand } from './build-model.js';
-import { getExpandedName, getCommandLines, mergeTemplateContext } from './templating.js';
+import {
+  getExpandedName,
+  getCommandLines,
+  mergeTemplateContext,
+} from './templating.js';
 import { createDataId, getSupportedProperty } from './data-value-utils.js';
 import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
@@ -37,7 +41,12 @@ const expandCommand =
       const { run, title, name, multiline } = commandOpts;
 
       const preferredName = name === undefined ? dasherizeTitle(title) : name;
-      const templateCtx = mergeTemplateContext({memoryId, ctx, command: commandOpts, extra})
+      const templateCtx = mergeTemplateContext({
+        memoryId,
+        ctx,
+        command: commandOpts,
+        extra,
+      });
       const lines = multiline ? getCommandLines(run, templateCtx) : [run];
       const expandedName = getExpandedName(preferredName, templateCtx);
       const validatedName = stringy.customKey.safeParse(expandedName);
@@ -102,7 +111,7 @@ const expandBatch1 = (
     batch.commands.map((commandOpts) => ({
       commandOpts,
       extra: {
-        [createDataId(rootId, extra.name)]: extra.value
+        [createDataId(rootId, extra.name)]: extra.value,
       },
       memoryId: makeId(),
     }))
@@ -144,7 +153,7 @@ const expandBatch2 = (
         batchStep.commands.map((commandOpts) => ({
           commandOpts,
           extra: {
-            [createDataId(rootId, extra.name)]: extra.value
+            [createDataId(rootId, extra.name)]: extra.value,
           },
           memoryId: makeId(),
         }))

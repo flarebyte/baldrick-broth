@@ -98,9 +98,9 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        asStringOrBlank(getSupportedProperty(memoryId, ctx, anyCommand.value)).split(
-          anyCommand.separator
-        )
+        asStringOrBlank(
+          getSupportedProperty(memoryId, ctx, anyCommand.value)
+        ).split(anyCommand.separator)
       );
       return success;
     case 'split-lines':
@@ -131,7 +131,8 @@ export const basicCommandExecution = (
       );
       return success;
     case 'mask-object':
-      const objectValue = getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
+      const objectValue =
+        getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
       if (typeof objectValue !== 'object') {
         return fail({
           message: `mask-object for path ${
