@@ -60,11 +60,12 @@ const expandCommand =
         line,
         name: expandedName,
         opts: commandOpts,
+        extra,
       }));
       return succeed(lineInputs);
     } else {
       const { name } = commandOpts;
-      return succeed([{ line: '', name, opts: commandOpts, memoryId }]);
+      return succeed([{ line: '', name, opts: commandOpts, memoryId, extra }]);
     }
   };
 

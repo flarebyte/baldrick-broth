@@ -29,6 +29,7 @@ export interface CommandLineInput {
   line: string;
   name: string;
   opts: AnyCommand;
+  extra: Record<string, any>;
 }
 
 type ExecuteCommandLineFailure = {
@@ -154,18 +155,18 @@ const executeShellCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
-  const { line, name, opts, memoryId } = params;
+  const { line, name, opts, memoryId, extra } = params;
 
   const templateCtx = mergeTemplateContext({
     memoryId,
     ctx,
     command: opts,
-    extra: ctx.data,
+    extra: { ...ctx.data, ...extra },
   });
   const runnableLine = opts.multiline
     ? line
     : getSingleCommandLine(line, templateCtx);
-  currentTaskLogger.info(`> ${coloration.running(runnableLine)}`)
+  currentTaskLogger.info(`> ${coloration.running(runnableLine)}`);
   const { onSuccess, onFailure, stdin } = opts;
   let maybeStdin;
   if (stdin !== undefined) {
@@ -292,9 +293,15 @@ export const executeCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
-  const { line, name, opts, memoryId } = params;
+  const { line, name, opts, memoryId, extra } = params;
   if (opts.a === 'shell') {
-    return await executeShellCommandLine(ctx, { line, name, opts, memoryId });
+    return await executeShellCommandLine(ctx, {
+      line,
+      name,
+      opts,
+      memoryId,
+      extra,
+    });
   } else {
     basicCommandExecution(memoryId, ctx, params.opts);
     return succeed({
