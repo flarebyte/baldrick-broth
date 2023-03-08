@@ -12,6 +12,8 @@ import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { basicCommandExecution } from './basic-execution.js';
 import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
+import { currentTaskLogger } from './logging.js';
+import { coloration } from './coloration.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -163,6 +165,7 @@ const executeShellCommandLine = async (
   const runnableLine = opts.multiline
     ? line
     : getSingleCommandLine(line, templateCtx);
+  currentTaskLogger.info(`> ${coloration.running(runnableLine)}`)
   const { onSuccess, onFailure, stdin } = opts;
   let maybeStdin;
   if (stdin !== undefined) {

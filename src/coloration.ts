@@ -26,4 +26,7 @@ export const coloration = {
   get jsonBlock() {
     return chalk.hex('#875f00');
   },
+  get running() {
+    return chalk.hex('#8f5902');
+  },
 };
