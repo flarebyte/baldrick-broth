@@ -11,7 +11,9 @@ import {
 import { Result, succeed, fail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { basicCommandExecution } from './basic-execution.js';
-import { getSingleCommandLine } from './templating.js';
+import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
+import { currentTaskLogger } from './logging.js';
+import { coloration } from './coloration.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -23,9 +25,11 @@ type ExecuteCommandLineFailedCategory =
   | 'parse-csv-failed';
 
 export interface CommandLineInput {
+  memoryId: string;
   line: string;
   name: string;
   opts: AnyCommand;
+  extra: Record<string, any>;
 }
 
 type ExecuteCommandLineFailure = {
@@ -147,25 +151,26 @@ const parseCsv = (content: string): CsvParsingResult => {
 const forceString = (value: unknown): string =>
   typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 
-const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
-
 const executeShellCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput & { opts: { a: 'shell' } }
 ): Promise<ExecuteCommandLineResult> => {
-  const { line, name, opts } = params;
+  const { line, name, opts, memoryId, extra } = params;
 
-  const templateCtx = forceJson({
-    ...ctx,
-    opts,
+  const templateCtx = mergeTemplateContext({
+    memoryId,
+    ctx,
+    command: opts,
+    extra: { ...ctx.data, ...extra },
   });
   const runnableLine = opts.multiline
     ? line
     : getSingleCommandLine(line, templateCtx);
+  currentTaskLogger.info(`> ${coloration.running(runnableLine)}`);
   const { onSuccess, onFailure, stdin } = opts;
   let maybeStdin;
   if (stdin !== undefined) {
-    const stdinPropValue = getSupportedProperty(ctx, stdin);
+    const stdinPropValue = getSupportedProperty(memoryId, ctx, stdin);
     if (stdinPropValue === undefined) {
       return fail({
         category: 'failed',
@@ -288,11 +293,17 @@ export const executeCommandLine = async (
   ctx: Ctx,
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
-  const { line, name, opts } = params;
+  const { line, name, opts, memoryId, extra } = params;
   if (opts.a === 'shell') {
-    return await executeShellCommandLine(ctx, { line, name, opts });
+    return await executeShellCommandLine(ctx, {
+      line,
+      name,
+      opts,
+      memoryId,
+      extra,
+    });
   } else {
-    basicCommandExecution(ctx, params.opts);
+    basicCommandExecution(memoryId, ctx, params.opts);
     return succeed({
       format: 'json',
       name,

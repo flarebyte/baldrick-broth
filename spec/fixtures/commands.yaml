@@ -66,7 +66,7 @@
 - a: get-property
   title: Read a property from data
   name: get-property-previous
-  value: data.g.get-property
+  value: data.get-property
 - a: mask-object
   title: Select specific fields from an object
   name: masked

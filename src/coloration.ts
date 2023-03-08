@@ -23,7 +23,10 @@ export const coloration = {
   get stepTitle() {
     return chalk.hex('#4B0082');
   },
-  get jsonBlock(){
-    return chalk.hex('#875f00')
-  }
+  get jsonBlock() {
+    return chalk.hex('#875f00');
+  },
+  get running() {
+    return chalk.hex('#8f5902');
+  },
 };

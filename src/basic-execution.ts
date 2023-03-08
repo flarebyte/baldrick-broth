@@ -14,10 +14,11 @@ import { dasherizeTitle } from './string-utils.js';
 type BasicExecution = Result<Ctx, LogMessage>;
 
 const getPropertyList = (
+  memoryId: string,
   ctx: Ctx,
   valuePaths: string[]
 ): (AnyDataValue | undefined)[] =>
-  valuePaths.map((path) => getSupportedProperty(ctx, path));
+  valuePaths.map((path) => getSupportedProperty(memoryId, ctx, path));
 
 const asStringOrBlank = (value: unknown): string =>
   typeof value === 'string' ? value : '';
@@ -37,6 +38,7 @@ const range = (stop: number, start = 1, step = 1) => {
 };
 
 export const basicCommandExecution = (
+  memoryId: string,
   ctx: Ctx,
   anyCommand: AnyCommand
 ): BasicExecution => {
@@ -48,58 +50,65 @@ export const basicCommandExecution = (
       : anyCommand.name;
   switch (a) {
     case 'get-property':
-      const value = getSupportedProperty(ctx, anyCommand.value);
-      setDataValue(ctx, name, value);
+      const value = getSupportedProperty(memoryId, ctx, anyCommand.value);
+      setDataValue(memoryId, ctx, name, value);
       return success;
     case 'some-truthy':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        getPropertyList(ctx, anyCommand.values).some(isTruthy)
+        getPropertyList(memoryId, ctx, anyCommand.values).some(isTruthy)
       );
       return success;
     case 'some-falsy':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        getPropertyList(ctx, anyCommand.values).some(isFalsy)
+        getPropertyList(memoryId, ctx, anyCommand.values).some(isFalsy)
       );
       return success;
     case 'every-truthy':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        getPropertyList(ctx, anyCommand.values).every(isTruthy)
+        getPropertyList(memoryId, ctx, anyCommand.values).every(isTruthy)
       );
       return success;
     case 'every-falsy':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        getPropertyList(ctx, anyCommand.values).every(isFalsy)
+        getPropertyList(memoryId, ctx, anyCommand.values).every(isFalsy)
       );
       return success;
     case 'not':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        isFalsy(getSupportedProperty(ctx, anyCommand.value))
+        isFalsy(getSupportedProperty(memoryId, ctx, anyCommand.value))
       );
       return success;
     case 'split-string':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        asStringOrBlank(getSupportedProperty(ctx, anyCommand.value)).split(
-          anyCommand.separator
-        )
+        asStringOrBlank(
+          getSupportedProperty(memoryId, ctx, anyCommand.value)
+        ).split(anyCommand.separator)
       );
       return success;
     case 'split-lines':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        asStringOrBlank(getSupportedProperty(ctx, anyCommand.value))
+        asStringOrBlank(getSupportedProperty(memoryId, ctx, anyCommand.value))
           .split('\n')
           .map((line) => line.trim())
           .filter((line) => line.length > 0)
@@ -107,6 +116,7 @@ export const basicCommandExecution = (
       return success;
     case 'range':
       setDataValue(
+        memoryId,
         ctx,
         name,
         range(anyCommand.end, anyCommand.start, anyCommand.step)
@@ -114,13 +124,15 @@ export const basicCommandExecution = (
       return success;
     case 'concat-array':
       setDataValue(
+        memoryId,
         ctx,
         name,
-        getPropertyList(ctx, anyCommand.values).flatMap(asAnyArray)
+        getPropertyList(memoryId, ctx, anyCommand.values).flatMap(asAnyArray)
       );
       return success;
     case 'mask-object':
-      const objectValue = getSupportedProperty(ctx, anyCommand.value) || {};
+      const objectValue =
+        getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
       if (typeof objectValue !== 'object') {
         return fail({
           message: `mask-object for path ${
@@ -134,7 +146,7 @@ export const basicCommandExecution = (
         });
       }
       const masked = json_mask(objectValue, anyCommand.mask);
-      setDataValue(ctx, name, masked);
+      setDataValue(memoryId, ctx, name, masked);
       return success;
   }
 
@@ -145,11 +157,12 @@ export const basicCommandExecution = (
  * Mostly used for testing purpose
  */
 export const basicCommandsExecution = (
+  memoryId: string,
   ctx: Ctx,
   anyCommands: AnyCommand[]
 ): BasicExecution => {
   for (const anyCommand of anyCommands) {
-    const result = basicCommandExecution(ctx, anyCommand);
+    const result = basicCommandExecution(memoryId, ctx, anyCommand);
     if (result.status === 'failure') {
       return result;
     }
