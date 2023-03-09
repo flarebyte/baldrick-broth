@@ -12,6 +12,12 @@ export const getExpandedName = (name: string, context: any): string => {
   return expandedName;
 };
 
+export const getStringFromTemplate = (hbsTemplate: string, context: any): string => {
+  const template = createTemplate(hbsTemplate);
+  const expandedName = template(context).trim();
+  return expandedName;
+};
+
 export const getCommandLines = (run: string, context: any): string[] => {
   const template = createTemplate(run);
   const lines = template(context)

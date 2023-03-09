@@ -317,6 +317,19 @@ const choicePromptStep = z
     choices: z.array(stringy.varValue).min(2).max(30),
   })
   .describe('Prompt that allows the user to choose an option');
+
+  const templateStep = z
+  .strictObject({
+    a: z.literal('template'),
+    ...metadataStep,
+
+    template: z
+      .string()
+      .min(1)
+      .max(5000)
+      .describe('Resolve the handlebars template as a atring. https://handlebarsjs.com/guide/'),
+  })
+  .describe('Uses JSON mask to select parts of the json object');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -333,6 +346,7 @@ const anyCommand = z
       rangeStep,
       invertObjectStep,
       maskJsonStep,
+      templateStep,
       inputPromptStep,
       confirmPromptStep,
       passwordPromptStep,

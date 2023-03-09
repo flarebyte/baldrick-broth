@@ -10,6 +10,7 @@ import {
 import { LogMessage } from './log-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
+import { getStringFromTemplate } from './templating.js'
 
 type BasicExecution = Result<Ctx, LogMessage>;
 
@@ -130,7 +131,7 @@ export const basicCommandExecution = (
         getPropertyList(memoryId, ctx, anyCommand.values).flatMap(asAnyArray)
       );
       return success;
-    case 'mask-object':
+    case 'mask-object': {
       const objectValue =
         getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
       if (typeof objectValue !== 'object') {
@@ -148,6 +149,12 @@ export const basicCommandExecution = (
       const masked = json_mask(objectValue, anyCommand.mask);
       setDataValue(memoryId, ctx, name, masked);
       return success;
+    }
+    case 'template': {
+      const stringValue = getStringFromTemplate(anyCommand.template, ctx)
+      setDataValue(memoryId, ctx, name, stringValue);
+      return success;
+    }
   }
 
   return success;
