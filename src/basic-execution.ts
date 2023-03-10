@@ -10,7 +10,7 @@ import {
 import { LogMessage } from './log-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
-import { getStringFromTemplate } from './templating.js'
+import { getStringFromTemplate, mergeTemplateContext } from './templating.js';
 
 type BasicExecution = Result<Ctx, LogMessage>;
 
@@ -41,7 +41,8 @@ const range = (stop: number, start = 1, step = 1) => {
 export const basicCommandExecution = (
   memoryId: string,
   ctx: Ctx,
-  anyCommand: AnyCommand
+  anyCommand: AnyCommand,
+  extra: Record<string, any>
 ): BasicExecution => {
   const { a } = anyCommand;
   const success: BasicExecution = succeed(ctx);
@@ -151,7 +152,16 @@ export const basicCommandExecution = (
       return success;
     }
     case 'template': {
-      const stringValue = getStringFromTemplate(anyCommand.template, ctx)
+      const templateContext = mergeTemplateContext({
+        memoryId,
+        ctx,
+        extra,
+        command: anyCommand,
+      });
+      const stringValue = getStringFromTemplate(
+        anyCommand.template,
+        templateContext
+      );
       setDataValue(memoryId, ctx, name, stringValue);
       return success;
     }
@@ -169,7 +179,7 @@ export const basicCommandsExecution = (
   anyCommands: AnyCommand[]
 ): BasicExecution => {
   for (const anyCommand of anyCommands) {
-    const result = basicCommandExecution(memoryId, ctx, anyCommand);
+    const result = basicCommandExecution(memoryId, ctx, anyCommand, {});
     if (result.status === 'failure') {
       return result;
     }

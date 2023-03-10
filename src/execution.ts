@@ -303,7 +303,7 @@ export const executeCommandLine = async (
       extra,
     });
   } else {
-    basicCommandExecution(memoryId, ctx, params.opts);
+    basicCommandExecution(memoryId, ctx, params.opts, extra);
     return succeed({
       format: 'json',
       name,
