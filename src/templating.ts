@@ -12,7 +12,10 @@ export const getExpandedName = (name: string, context: any): string => {
   return expandedName;
 };
 
-export const getStringFromTemplate = (hbsTemplate: string, context: any): string => {
+export const getStringFromTemplate = (
+  hbsTemplate: string,
+  context: any
+): string => {
   const template = createTemplate(hbsTemplate);
   const expandedName = template(context).trim();
   return expandedName;
@@ -63,6 +66,11 @@ const getTemplateData = (
   return results;
 };
 
+const mergeExtraData = (
+  ctxData: Record<string, any>,
+  extra: Record<string, any>
+): Record<string, any> => ({ ...ctxData, ...extra });
+
 export const mergeTemplateContext = ({
   memoryId,
   ctx,
@@ -74,7 +82,8 @@ export const mergeTemplateContext = ({
   extra: Record<string, any>;
   command: AnyCommand;
 }) => {
-  const relevantData = getTemplateData(memoryId, extra);
+  const mergedExtra = mergeExtraData(ctx.data, extra);
+  const relevantData = getTemplateData(memoryId, mergedExtra);
   return forceJson({
     ...ctx,
     _: relevantData,

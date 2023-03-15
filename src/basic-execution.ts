@@ -11,7 +11,6 @@ import { LogMessage } from './log-model.js';
 import { Result, succeed, fail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 import { getStringFromTemplate, mergeTemplateContext } from './templating.js';
-
 type BasicExecution = Result<Ctx, LogMessage>;
 
 const getPropertyList = (

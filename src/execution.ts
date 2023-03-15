@@ -294,6 +294,7 @@ export const executeCommandLine = async (
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts, memoryId, extra } = params;
+  currentTaskLogger.info(`>> ${coloration.running(params.line)}`);
   if (opts.a === 'shell') {
     return await executeShellCommandLine(ctx, {
       line,

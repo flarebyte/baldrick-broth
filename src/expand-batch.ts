@@ -84,6 +84,7 @@ const mergeExpandedCommandLineInputs = (
   );
   return succeed(inputs);
 };
+
 const expandBatch0 = (
   ctx: Ctx,
   batch: BatchStepModel,
@@ -94,6 +95,7 @@ const expandBatch0 = (
     .map(expandCommand(ctx, batch));
   return mergeExpandedCommandLineInputs(expanded);
 };
+
 const expandBatch1 = (
   ctx: Ctx,
   batch: BatchStepModel
