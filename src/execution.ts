@@ -140,7 +140,9 @@ const parseCsv = (content: string): CsvParsingResult => {
       });
     }
     if (data.length === 0) {
-      return willFail({ message: 'Length of csv data should be more than zero' });
+      return willFail({
+        message: 'Length of csv data should be more than zero',
+      });
     }
     return succeed(data);
   } catch (error) {
@@ -294,7 +296,6 @@ export const executeCommandLine = async (
   params: CommandLineInput
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts, memoryId, extra } = params;
-  currentTaskLogger.info(`>> ${coloration.running(params.line)}`);
   if (opts.a === 'shell') {
     return await executeShellCommandLine(ctx, {
       line,

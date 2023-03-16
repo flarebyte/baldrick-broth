@@ -132,8 +132,6 @@ workflows:
             - title: Run pest file
               name: run
               run: npx baldrick-pest@latest test --spec-file {{_.pest-file}}
-              onSuccess:
-                - debug
       scc:
         title: Count lines of code
         description: Count lines of code
