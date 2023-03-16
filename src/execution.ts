@@ -8,7 +8,7 @@ import {
   onCommandSuccess,
   onCommandFailure,
 } from './build-model.js';
-import { Result, succeed, fail } from './railway.js';
+import { Result, succeed, willFail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { basicCommandExecution } from './basic-execution.js';
 import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
@@ -107,7 +107,7 @@ const parseJson = (content: string): JsonParsingResult => {
     const parsed: AnyDataValue = JSON.parse(content);
     return succeed(parsed);
   } catch (error) {
-    return fail({ message: getErrorMessage(error) });
+    return willFail({ message: getErrorMessage(error) });
   }
 };
 const parseYaml = (content: string): JsonParsingResult => {
@@ -115,7 +115,7 @@ const parseYaml = (content: string): JsonParsingResult => {
     const parsed: AnyDataValue = YAML.parse(content);
     return succeed(parsed);
   } catch (error) {
-    return fail({ message: getErrorMessage(error) });
+    return willFail({ message: getErrorMessage(error) });
   }
 };
 type CsvParsingResult = Result<Record<string, string>[], { message: string }>;
@@ -133,18 +133,18 @@ const parseCsv = (content: string): CsvParsingResult => {
     });
     const { data, errors } = parsed;
     if (errors.length > 0) {
-      return fail({
+      return willFail({
         message: errors
           .map((err) => `Row ${err.row}: ${err.message}`)
           .join('\n'),
       });
     }
     if (data.length === 0) {
-      return fail({ message: 'Length of csv data should be more than zero' });
+      return willFail({ message: 'Length of csv data should be more than zero' });
     }
     return succeed(data);
   } catch (error) {
-    return fail({ message: getErrorMessage(error) });
+    return willFail({ message: getErrorMessage(error) });
   }
 };
 
@@ -172,7 +172,7 @@ const executeShellCommandLine = async (
   if (stdin !== undefined) {
     const stdinPropValue = getSupportedProperty(memoryId, ctx, stdin);
     if (stdinPropValue === undefined) {
-      return fail({
+      return willFail({
         category: 'failed',
         line: runnableLine,
         stdout: '',
@@ -210,7 +210,7 @@ const executeShellCommandLine = async (
     if (onSuccess.includes('json')) {
       const parsed = parseJson(stdout);
       return parsed.status === 'failure'
-        ? fail({
+        ? willFail({
             category: 'parse-json-failed',
             line,
             stdout,
@@ -230,7 +230,7 @@ const executeShellCommandLine = async (
     if (onSuccess.includes('yaml')) {
       const parsed = parseYaml(stdout);
       return parsed.status === 'failure'
-        ? fail({
+        ? willFail({
             category: 'parse-yaml-failed',
             line,
             stdout,
@@ -250,7 +250,7 @@ const executeShellCommandLine = async (
     if (onSuccess.includes('csv')) {
       const parsed = parseCsv(stdout);
       return parsed.status === 'failure'
-        ? fail({
+        ? willFail({
             category: 'parse-csv-failed',
             line,
             stdout,
@@ -274,7 +274,7 @@ const executeShellCommandLine = async (
 
     return succeed({ format: 'string', name, line, data, onSuccess });
   } else {
-    return fail({
+    return willFail({
       category: 'failed',
       line,
       stdout,

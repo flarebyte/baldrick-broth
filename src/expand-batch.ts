@@ -7,7 +7,7 @@ import {
 import { createDataId, getSupportedProperty } from './data-value-utils.js';
 import { CommandLineInput } from './execution.js';
 import { stringy } from './field-validation.js';
-import { Result, succeed, fail } from './railway.js';
+import { Result, succeed, willFail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 import { IdGenerator, rootId } from './id-generator.js';
 
@@ -51,7 +51,7 @@ const expandCommand =
       const expandedName = getExpandedName(preferredName, templateCtx);
       const validatedName = stringy.customKey.safeParse(expandedName);
       if (!validatedName.success) {
-        return fail({
+        return willFail({
           messages: [`Expanded name was not supported: ${expandedName}`],
         });
       }
@@ -77,7 +77,7 @@ const mergeExpandedCommandLineInputs = (
     const messages = inputsWithErrors.flatMap((i) =>
       i.status === 'failure' ? i.error.messages : []
     );
-    return fail({ messages });
+    return willFail({ messages });
   }
   const inputs = inputsArray.flatMap((i) =>
     i.status === 'success' ? i.value : []
@@ -102,7 +102,7 @@ const expandBatch1 = (
 ): ExpandedCommandLineInputs => {
   const loop0 = batch.each === undefined ? undefined : batch.each[0];
   if (loop0 === undefined) {
-    return fail({ messages: ['Should have at least one loop'] });
+    return willFail({ messages: ['Should have at least one loop'] });
   }
   const makeId = IdGenerator();
 
@@ -128,13 +128,13 @@ const expandBatch2 = (
   batchStep: BatchStepModel
 ): ExpandedCommandLineInputs => {
   if (batchStep.each === undefined) {
-    return fail({
+    return willFail({
       messages: ['batch.each should not be undefined'],
     });
   }
   const [loop0, loop1] = batchStep.each;
   if (loop0 === undefined || loop1 === undefined) {
-    return fail({
+    return willFail({
       messages: ['The two first items of each should be defined'],
     });
   }

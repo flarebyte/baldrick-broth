@@ -8,7 +8,7 @@ import {
   isFalsy,
 } from './data-value-utils.js';
 import { LogMessage } from './log-model.js';
-import { Result, succeed, fail } from './railway.js';
+import { Result, succeed, willFail } from './railway.js';
 import { dasherizeTitle } from './string-utils.js';
 import { getStringFromTemplate, mergeTemplateContext } from './templating.js';
 type BasicExecution = Result<Ctx, LogMessage>;
@@ -135,7 +135,7 @@ export const basicCommandExecution = (
       const objectValue =
         getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
       if (typeof objectValue !== 'object') {
-        return fail({
+        return willFail({
           message: `mask-object for path ${
             anyCommand.value
           } expects an object but got ${typeof objectValue}`,

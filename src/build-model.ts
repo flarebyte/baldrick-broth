@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { stringy } from './field-validation.js';
 import { formatMessage, ValidationError } from './format-message.js';
-import { Result, succeed, fail } from './railway.js';
+import { Result, succeed, willFail } from './railway.js';
 
 /**JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
@@ -451,7 +451,7 @@ export const safeParseBuild = (content: unknown): BuildModelValidation => {
     error: { issues },
   } = result;
   const errors = issues.map(formatMessage);
-  return fail(errors);
+  return willFail(errors);
 };
 
 export const getSchema = (_name: 'default') => {

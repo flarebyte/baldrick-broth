@@ -20,7 +20,7 @@ export const succeed = <a>(a: a): Success<a> => ({
 /**
  * Return a failure result
  */
-export const fail = <e>(e: e): Failure<e> => ({ status: 'failure', error: e });
+export const willFail = <e>(e: e): Failure<e> => ({ status: 'failure', error: e });
 
 export const withDefault =
   <a, e>(defaultValue: a) =>

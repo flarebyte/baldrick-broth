@@ -1,6 +1,6 @@
 import YAML from 'yaml';
 import fs from 'node:fs/promises';
-import { Result, fail } from './railway.js';
+import { Result, willFail } from './railway.js';
 import { AnyDataValue } from './build-model.js';
 export type LoadingStatus = Result<
   AnyDataValue,
@@ -12,7 +12,7 @@ export const readYaml = async (filename: string): Promise<LoadingStatus> => {
   try {
     content = await fs.readFile(filename, { encoding: 'utf8' });
   } catch {
-    return fail({
+    return willFail({
       message: `The yaml file cannot be found: ${filename}`,
       filename,
     });
@@ -25,7 +25,7 @@ export const readYaml = async (filename: string): Promise<LoadingStatus> => {
       value,
     };
   } catch {
-    return fail({
+    return willFail({
       message: `The yaml file cannot be parsed: ${filename}`,
       filename,
     });
