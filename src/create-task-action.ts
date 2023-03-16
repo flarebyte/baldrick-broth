@@ -117,7 +117,7 @@ const toCommandLineAction = (
         if (!successFlags.silent) {
           const dataView =
             cmdLineResult.value.format === 'string'
-              ? data
+              ? `${data}`
               : JSON.stringify(data, null, 2);
           currentTaskLogger.info(coloration.stepTitle(`◼ ${title}`));
           currentTaskLogger.info(dataView);

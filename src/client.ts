@@ -6,6 +6,7 @@ import { readYaml } from './file-io.js';
 import { ValidationError } from './format-message.js';
 import { andThen } from './railway.js';
 import { version } from './version.js';
+import { writeFile } from 'fs/promises';
 
 const exitWithError = (message: string, value?: object) => {
   value === undefined ? console.error(message) : console.error(message, value);
@@ -21,6 +22,17 @@ export async function runClient() {
   }
 }
 
+/**
+ * We reset existing log file
+ */
+async function deleteLog() {
+  try {
+    await writeFile('temp/log/baldrick-broth-log.txt', '', {
+      encoding: 'utf-8',
+    });
+  } catch (e) {}
+}
+
 type RunClientFailure =
   | { message: string; filename: string }
   | ValidationError[];
@@ -28,6 +40,7 @@ type RunClientFailure =
  * Run the client without trapping all exceptions
  */
 async function unsafeRunClient() {
+  await deleteLog();
   const buildReadingResult = await readYaml(buildFilePath);
   const buildModelResult = andThen<AnyDataValue, BuildModel, RunClientFailure>(
     safeParseBuild

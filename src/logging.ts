@@ -9,16 +9,36 @@ const consoleLikeFormat = printf(({ message }) => {
   return message;
 });
 
-export const currentTaskLogger = winston.createLogger({
-  level: 'info',
-  transports: [
-    new winston.transports.File({
-      filename: 'temp/log/baldrick-broth-log.txt',
-      options: { flags: 'w' },
-      format: consoleLikeFormat,
-    }),
-  ],
-});
+class BrothLogger {
+  thatLogger: winston.Logger;
+  constructor() {
+    this.thatLogger = winston.createLogger({
+      level: 'info',
+      transports: [
+        new winston.transports.File({
+          filename: `temp/log/baldrick-broth-log.txt`,
+          options: { flags: 'a' },
+          format: consoleLikeFormat,
+        }),
+      ],
+    });
+  }
+  info(message: string | object) {
+    this.thatLogger.info(message);
+  }
+  warn(message: string | object) {
+    this.thatLogger.warn(message);
+  }
+  error(message: string | object) {
+    this.thatLogger.error(message);
+  }
+}
+
+/**
+ * Warning: despite expectation the currentTaskLogger is instanciated multiple times,
+ * possibly because the file is imported multiple times.
+ */
+export const currentTaskLogger = new BrothLogger();
 
 export const currentTaskWarn = (content: LogMessage) => {
   if (isCI) {
