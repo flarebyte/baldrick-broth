@@ -331,7 +331,7 @@ workflows:
               run: yarn audit
             - name: rm-report
               title: Remove previous report
-              run: rm -f .github/pr_template_relevant.md
+              run: rm -f .github/pull_request_relevant.md
             - name: report
               a: template
               title: Create a report
@@ -350,7 +350,7 @@ workflows:
               a: append-to-file
               title: Write the report
               value: data.report
-              filename: .github/pr_template_relevant.md
+              filename: .github/pull_request_relevant.md
       publish:
         title: Publish the current library
         description: Publih the current library to npm

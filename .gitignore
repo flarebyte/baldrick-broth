@@ -6,4 +6,4 @@ report/
 temp/
 .message
 .todo.yaml
-.github/pr_template_relevant.md
+.github/pull_request_relevant.md
