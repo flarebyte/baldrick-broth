@@ -1,10 +1,10 @@
 import Handlebars from 'handlebars';
-import { AnyCommand, Ctx } from './build-model.js';
-import { splitDataKey, withMemoryPrefix } from './data-value-utils.js';
-import { rootId } from './id-generator.js';
+import {type AnyCommand, type Ctx} from './build-model.js';
+import {splitDataKey, withMemoryPrefix} from './data-value-utils.js';
+import {rootId} from './id-generator.js';
 
 const createTemplate = (run: string) =>
-  Handlebars.compile(run, { noEscape: true });
+  Handlebars.compile(run, {noEscape: true});
 
 export const getExpandedName = (name: string, context: any): string => {
   const template = createTemplate(name);
@@ -52,9 +52,11 @@ const getTemplateData = (
     const [_, key] = splitDataKey(dataKey);
     results[key] = extra[dataKey];
   }
+
   if (memoryId === rootId) {
     return results;
   }
+
   const rootKeys = keys.filter(withMemoryPrefix(rootId));
   for (const dataKey of rootKeys) {
     const [_, key] = splitDataKey(dataKey);
@@ -63,13 +65,14 @@ const getTemplateData = (
       results[key] = extra[dataKey];
     }
   }
+
   return results;
 };
 
 const mergeExtraData = (
   ctxData: Record<string, any>,
   extra: Record<string, any>
-): Record<string, any> => ({ ...ctxData, ...extra });
+): Record<string, any> => ({...ctxData, ...extra});
 
 export const mergeTemplateContext = ({
   memoryId,

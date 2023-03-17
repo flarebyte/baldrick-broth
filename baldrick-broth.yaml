@@ -258,7 +258,7 @@ workflows:
           commands:
             - name: check
               title: Lint check sources
-              run: npx baldrick-dev-ts@latest lint check -s src test
+              run: npx xo
       fix:
         title: Fix static code analysis
         description: Fix problems in Typescript code
@@ -267,7 +267,7 @@ workflows:
           commands:
             - name: fix
               title: Fix source code
-              run: npx baldrick-dev-ts@latest lint fix -s src test
+              run: npx xo --fix
   md:
     title: Markdown documentation
     description: Manage markdown documentation
@@ -316,7 +316,7 @@ workflows:
               run: npx baldrick-dev-ts@latest release check
             - name: lint
               title: Check linting
-              run: npx baldrick-dev-ts@latest lint check -s src test
+              run: npx xo
             - name: markdown
               title: Check markdown files
               run: npx baldrick-dev-ts@latest markdown check

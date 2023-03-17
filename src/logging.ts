@@ -1,11 +1,11 @@
-import { readFile } from 'node:fs/promises';
+import {readFile} from 'node:fs/promises';
 import winston from 'winston';
-import { coloration } from './coloration.js';
-import { isCI } from './is-ci.js';
-import { LogMessage } from './log-model.js';
+import {coloration} from './coloration.js';
+import {isCI} from './is-ci.js';
+import {type LogMessage} from './log-model.js';
 
-const { printf } = winston.format;
-const consoleLikeFormat = printf(({ message }) => {
+const {printf} = winston.format;
+const consoleLikeFormat = printf(({message}) => {
   return message;
 });
 
@@ -17,19 +17,22 @@ class BrothLogger {
       transports: [
         new winston.transports.File({
           filename: `temp/log/baldrick-broth-log.txt`,
-          options: { flags: 'a' },
+          options: {flags: 'a'},
           format: consoleLikeFormat,
         }),
       ],
     });
   }
-  info(message: string | object) {
+
+  info(message: string | Record<string, unknown>) {
     this.thatLogger.info(message);
   }
-  warn(message: string | object) {
+
+  warn(message: string | Record<string, unknown>) {
     this.thatLogger.warn(message);
   }
-  error(message: string | object) {
+
+  error(message: string | Record<string, unknown>) {
     this.thatLogger.error(message);
   }
 }
