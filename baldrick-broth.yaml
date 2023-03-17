@@ -1,7 +1,8 @@
 model:
   project:
     title: Build automation tool and task runner
-    description: Take your developer workflow to the next level with a custom CLI
+    description:
+      Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
     version: 0.13.0
     keywords:
@@ -125,10 +126,6 @@ workflows:
               message: Select pest file
               name: pest-file
               select: data.pest-files
-            - a: template
-              title: Display template
-              template: Current {{_.pest-file}} After
-              name: current
             - title: Run pest file
               name: run
               run: npx baldrick-pest@latest test --spec-file {{_.pest-file}}
@@ -159,7 +156,8 @@ workflows:
       cli:
         title: Run client directly
         description: Run the client with ts-node during development
-        motivation: Simulate a CLI app in development without the need to install it
+        motivation:
+          Simulate a CLI app in development without the need to install it
           globally
         main:
           commands:
@@ -286,7 +284,8 @@ workflows:
               run: npx baldrick-dev-ts@latest markdown check -s .github/
       fix:
         title: Fix Markdown files
-        description: Modify the markdown documents to ensure they follow some consistent
+        description:
+          Modify the markdown documents to ensure they follow some consistent
           guidelines
         motivation: Make the markdown documents consistent in style
         main:
@@ -300,7 +299,8 @@ workflows:
     tasks:
       ready:
         title: Ready for publishing
-        description: Run a sequence of commands to check that the library is ready to be
+        description:
+          Run a sequence of commands to check that the library is ready to be
           published
         motivation: Detect quality flaws before pushing the code
         main:
@@ -353,9 +353,15 @@ workflows:
             - name: build
               title: Build the project
               run: yarn build
+            - name: publish
+              title: Publish to NPM
+              run: npm publish
             - name: release
-              title: Release the library to NPM and Github
-              run: npx baldrick-dev-ts@latest release ci
+              title: Release the library to Github
+              run: gh release create "v${{build.model.project.version}}" --generate-notes
+            - name: refresh
+              title: Get the latest tag from Github
+              run: git fetch --all
   scaffold:
     title: Scaffolding for the project
     tasks:
@@ -394,7 +400,8 @@ workflows:
             - title: Create all github repositories
               run: mkdir -p .github/workflows .github/ISSUE_TEMPLATE
             - title: Github - create bug report form
-              run: npx baldrick-whisker@latest object .github/ISSUE_TEMPLATE/bug_report.yaml
+              run:
+                npx baldrick-whisker@latest object .github/ISSUE_TEMPLATE/bug_report.yaml
                 github:flarebyte:baldrick-reserve:data/ts/bug-report.yaml
             - title: Github - create feature request form
               run: npx baldrick-whisker@latest object
@@ -417,11 +424,13 @@ workflows:
               links:
                 - title: Specify files to ignore in source control
                   url: https://git-scm.com/docs/gitignore
-              run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+              run:
+                npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                 github:flarebyte:baldrick-reserve:template/ts/gitignore.hbs
                 .gitignore.sh
             - title: Create .editorconfig
-              run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+              run:
+                npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                 github:flarebyte:baldrick-reserve:template/editorconfig.hbs
                 .editorconfig.sh
               links:
@@ -470,7 +479,8 @@ workflows:
                 github:flarebyte:baldrick-reserve:template/ts/maintenance.hbs
                 MAINTENANCE.md
             - title: Create LICENSE
-              run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+              run:
+                npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
                 github:flarebyte:baldrick-reserve:template/ts/license.hbs
                 LICENSE.md
             - title: Fix markdown
