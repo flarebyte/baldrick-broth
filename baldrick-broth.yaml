@@ -341,7 +341,7 @@ workflows:
                 ## Code check
 
                 {{#if _.result-of-build}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Transpile to javascript
-                {{#if _.result-of-release-check}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} The version has been incremented
+                {{#if _.result-of-release-check}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} The version has been incremented to "v{{build.model.project.version}}"
                 {{#if _.result-of-lint}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Static analysis and linting
                 {{#if _.result-of-markdown}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Markdown formatting
                 {{#if _.result-of-outdated}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} No outdated NPM libraries
@@ -380,7 +380,7 @@ workflows:
               run: npm publish
             - name: release
               title: Release the library to Github
-              run: gh release create "v${{build.model.project.version}}" --generate-notes
+              run: gh release create "v{{build.model.project.version}}" --generate-notes
             - name: refresh
               title: Get the latest tag from Github
               run: git fetch --all

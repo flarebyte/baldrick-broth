@@ -352,7 +352,7 @@ export const executeCommandLine = async (
     });
   }
   if (opts.a === 'append-to-file') {
-    await appendVarToFile(memoryId, ctx, opts);
+    return await appendVarToFile(memoryId, ctx, opts);
   }
 
   basicCommandExecution(memoryId, ctx, opts, extra);
