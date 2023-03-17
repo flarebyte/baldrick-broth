@@ -1,12 +1,12 @@
-import {z} from 'zod';
-import {stringy} from './field-validation.js';
-import {formatMessage, type ValidationError} from './format-message.js';
-import {type Result, succeed, willFail} from './railway.js';
+import { z } from 'zod';
+import { stringy } from './field-validation.js';
+import { formatMessage, type ValidationError } from './format-message.js';
+import { type Result, succeed, willFail } from './railway.js';
 
 /** JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
-type Json = Literal | {[key: string]: Json} | Json[];
+type Json = Literal | { [key: string]: Json } | Json[];
 const jsonishSchema: z.ZodType<Json> = z
   .lazy(() =>
     z.union([literalSchema, z.array(jsonishSchema), z.record(jsonishSchema)])
@@ -332,6 +332,16 @@ const templateStep = z
       ),
   })
   .describe('Uses JSON mask to select parts of the json object');
+
+const appendToFileStep = z
+  .strictObject({
+    a: z.literal('append-to-file'),
+    ...metadataStep,
+
+    value: stringy.varValue,
+    filename: z.string().min(1).max(200).describe('Filename to write to'),
+  })
+  .describe('Uses JSON mask to select parts of the json object');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -354,6 +364,7 @@ const anyCommand = z
       passwordPromptStep,
       selectPromptStep,
       choicePromptStep,
+      appendToFileStep,
     ]),
     advancedShell,
   ])
@@ -451,7 +462,7 @@ export const safeParseBuild = (content: unknown): BuildModelValidation => {
   }
 
   const {
-    error: {issues},
+    error: { issues },
   } = result;
   const errors = issues.map(formatMessage);
   return willFail(errors);

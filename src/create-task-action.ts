@@ -1,31 +1,31 @@
 import path from 'node:path';
-import {Listr, type ListrTaskWrapper, type ListrTask} from 'listr2';
+import { Listr, type ListrTaskWrapper, type ListrTask } from 'listr2';
 import type {
   BatchStepModel,
   Ctx,
   OnShellCommandFinish,
   RuntimeContext,
 } from './build-model.js';
-import {type CommandLineInput, executeCommandLine} from './execution.js';
-import {expandBatchStep} from './expand-batch.js';
+import { type CommandLineInput, executeCommandLine } from './execution.js';
+import { expandBatchStep } from './expand-batch.js';
 import {
   currentTaskLogger,
   replayLogToConsole,
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
-import {type Result, succeed} from './railway.js';
+import { type Result, succeed } from './railway.js';
 import {
   getSupportedProperty,
   isTruthy,
   setDataValue,
 } from './data-value-utils.js';
-import {coloration} from './coloration.js';
-import {isStringArray} from './string-utils.js';
+import { coloration } from './coloration.js';
+import { isStringArray } from './string-utils.js';
 
 const SLEEP_KO = 800;
 const SLEEP_MIN = 150;
-type BatchStepAction = Result<ListrTask, {messages: string[]}>;
+type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
 async function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -58,7 +58,7 @@ const asJSONLog = (value: any): string =>
 
 const debugContext = (ctx: Ctx) => {
   currentTaskLogger.info(
-    asJSONLog({keys: Object.keys(ctx), runtime: ctx.runtime, data: ctx.data})
+    asJSONLog({ keys: Object.keys(ctx), runtime: ctx.runtime, data: ctx.data })
   );
 };
 
@@ -104,7 +104,7 @@ const toCommandLineAction = (
       await sleep(SLEEP_MIN);
       if (cmdLineResult.status === 'success') {
         const {
-          value: {data, name},
+          value: { data, name },
         } = cmdLineResult;
         task.title = name;
         if (successFlags.save) {
@@ -115,6 +115,12 @@ const toCommandLineAction = (
             data
           );
         }
+        setDataValue(
+          commandLineInput.memoryId,
+          ctx,
+          `result-of-${commandLineInput.name}`,
+          true
+        );
 
         if (!successFlags.silent) {
           const dataView =
@@ -170,7 +176,7 @@ const toBatchStepAction = (
     async task(_, task) {
       const commandsForStep = expandBatchStep(ctx, batchStep);
       if (commandsForStep.status === 'failure') {
-        currentTaskLogger.warn({messages: commandsForStep.error.messages});
+        currentTaskLogger.warn({ messages: commandsForStep.error.messages });
         task.output = coloration.warn('KO');
       }
 
@@ -178,7 +184,7 @@ const toBatchStepAction = (
         const commandTasks = commandsForStep.value.map((input) =>
           toCommandLineAction(ctx, input)
         );
-        return task.newListr([...commandTasks], {exitOnError: false});
+        return task.newListr([...commandTasks], { exitOnError: false });
       } else {
         return;
       }
@@ -207,9 +213,9 @@ export const createTaskAction =
     };
     currentTaskLogger.info(coloration.taskTitle(buildCtx.task.title));
 
-    const ctx: Ctx = {...buildCtx, runtime, data: {status: 'created'}};
+    const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
     const started = process.hrtime();
-    const {task} = ctx;
+    const { task } = ctx;
     const listTasks: ListrTask[] = [];
     if (task.before !== undefined) {
       const beforeStep = toBatchStepAction(ctx, task.before);
