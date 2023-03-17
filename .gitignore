@@ -6,3 +6,4 @@ report/
 temp/
 .message
 .todo.yaml
+.github/pr_template_relevant.md

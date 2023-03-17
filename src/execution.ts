@@ -14,7 +14,7 @@ import { basicCommandExecution } from './basic-execution.js';
 import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
 import { currentTaskLogger } from './logging.js';
 import { coloration } from './coloration.js';
-import { writeFile } from 'fs/promises';
+import { appendFile } from 'fs/promises';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -313,7 +313,7 @@ const appendVarToFile = async (
     getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
   const content = forceString(objectValue);
   try {
-    await writeFile(anyCommand.filename, content, { encoding: 'utf8' });
+    await appendFile(anyCommand.filename, content, { encoding: 'utf8' });
     return succeed({
       format: 'json',
       name: anyCommand.name,

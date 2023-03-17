@@ -326,9 +326,31 @@ workflows:
             - name: outdated
               title: Check whether some libraries are outdated
               run: yarn outdated
-            - name: outdated
+            - name: audit
               title: Audit some libraries
               run: yarn audit
+            - name: rm-report
+              title: Remove previous report
+              run: rm -f .github/pr_template_relevant.md
+            - name: report
+              a: template
+              title: Create a report
+              template: |
+                # Summary of the change
+
+                ## Code check
+
+                {{#if _.result-of-build}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Transpile to javascript
+                {{#if _.result-of-release-check}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} The version has been incremented
+                {{#if _.result-of-lint}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Static analysis and linting
+                {{#if _.result-of-markdown}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Markdown formatting
+                {{#if _.result-of-outdated}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} No outdated NPM libraries
+                {{#if _.result-of-audit}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Security audit
+            - name: write-report
+              a: append-to-file
+              title: Write the report
+              value: data.report
+              filename: .github/pr_template_relevant.md
       publish:
         title: Publish the current library
         description: Publih the current library to npm
