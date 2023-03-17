@@ -1,13 +1,12 @@
 import path from 'node:path';
-import { Listr, ListrTaskWrapper } from 'listr2';
-import type { ListrTask } from 'listr2';
+import { Listr, type ListrTaskWrapper, type ListrTask } from 'listr2';
 import type {
   BatchStepModel,
   Ctx,
   OnShellCommandFinish,
   RuntimeContext,
 } from './build-model.js';
-import { CommandLineInput, executeCommandLine } from './execution.js';
+import { type CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
   currentTaskLogger,
@@ -15,7 +14,7 @@ import {
   telemetryTaskLogger,
   telemetryTaskRefLogger,
 } from './logging.js';
-import { Result, succeed } from './railway.js';
+import { type Result, succeed } from './railway.js';
 import {
   getSupportedProperty,
   isTruthy,
@@ -28,18 +27,18 @@ const SLEEP_KO = 800;
 const SLEEP_MIN = 150;
 type BatchStepAction = Result<ListrTask, { messages: string[] }>;
 
-function sleep(ms: number) {
+async function sleep(ms: number) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
 }
 
-interface OnResultFlags {
+type OnResultFlags = {
   save: boolean;
   silent: boolean;
   debug: boolean;
   exit: boolean;
-}
+};
 const defaultOnResultFlags: OnResultFlags = {
   save: false,
   silent: false,
@@ -73,23 +72,25 @@ const toCommandLineAction = (
 
   const commandTask: ListrTask = {
     title,
-    enabled: (_) => {
+    enabled(_) {
       const ifPath =
         commandLineInput.opts.a === 'shell' && commandLineInput.opts.if;
       if (ifPath === undefined || ifPath === false) {
         return true;
       }
+
       const shouldEnable = isTruthy(
         getSupportedProperty(commandLineInput.memoryId, ctx, ifPath)
       );
       return shouldEnable;
     },
-    task: async (taskContext, task): Promise<void> => {
+    async task(taskContext, task): Promise<void> {
       const isPrompt = commandLineInput.opts.a.startsWith('prompt-');
       if (isPrompt) {
         await interactivePrompt(commandLineInput, taskContext, task, ctx);
         return;
       }
+
       task.output = commandLineInput.line;
       const cmdLineResult = await executeCommandLine(ctx, commandLineInput);
       const successFlags =
@@ -114,17 +115,26 @@ const toCommandLineAction = (
             data
           );
         }
+        setDataValue(
+          commandLineInput.memoryId,
+          ctx,
+          `result-of-${commandLineInput.name}`,
+          true
+        );
+
         if (!successFlags.silent) {
           const dataView =
             cmdLineResult.value.format === 'string'
-              ? data
+              ? `${data}`
               : JSON.stringify(data, null, 2);
           currentTaskLogger.info(coloration.stepTitle(`◼ ${title}`));
           currentTaskLogger.info(dataView);
         }
+
         if (successFlags.debug) {
           debugContext(ctx);
         }
+
         task.output = 'OK';
       } else if (cmdLineResult.status === 'failure') {
         if (!failureFlags.silent) {
@@ -136,13 +146,16 @@ const toCommandLineAction = (
             ].join('\n\n')
           );
         }
+
         if (failureFlags.debug) {
           debugContext(ctx);
         }
+
         task.output = 'KO';
         await sleep(SLEEP_KO);
         throw new Error(`KO: ${title}`);
       }
+
       await sleep(SLEEP_MIN);
     },
   };
@@ -160,12 +173,13 @@ const toBatchStepAction = (
 
   const batchTask: ListrTask = {
     title,
-    task: async (_, task) => {
+    async task(_, task) {
       const commandsForStep = expandBatchStep(ctx, batchStep);
       if (commandsForStep.status === 'failure') {
         currentTaskLogger.warn({ messages: commandsForStep.error.messages });
         task.output = coloration.warn('KO');
       }
+
       if (commandsForStep.status === 'success') {
         const commandTasks = commandsForStep.value.map((input) =>
           toCommandLineAction(ctx, input)
@@ -201,7 +215,7 @@ export const createTaskAction =
 
     const ctx: Ctx = { ...buildCtx, runtime, data: { status: 'created' } };
     const started = process.hrtime();
-    const task = ctx.task;
+    const { task } = ctx;
     const listTasks: ListrTask[] = [];
     if (task.before !== undefined) {
       const beforeStep = toBatchStepAction(ctx, task.before);
@@ -247,6 +261,7 @@ export const createTaskAction =
       }
     }
   };
+
 async function interactivePrompt(
   commandLineInput: CommandLineInput,
   taskContext: any,
@@ -265,6 +280,7 @@ async function interactivePrompt(
       taskContext.input
     );
   }
+
   if (commandLineInput.opts.a === 'prompt-password') {
     taskContext.input = await task.prompt<string>({
       type: 'Password',
@@ -277,6 +293,7 @@ async function interactivePrompt(
       taskContext.input
     );
   }
+
   if (commandLineInput.opts.a === 'prompt-choices') {
     taskContext.input = await task.prompt<string>({
       type: 'Select',
@@ -290,6 +307,7 @@ async function interactivePrompt(
       taskContext.input
     );
   }
+
   if (commandLineInput.opts.a === 'prompt-confirm') {
     taskContext.input = await task.prompt<string>({
       type: 'Confirm',
@@ -302,6 +320,7 @@ async function interactivePrompt(
       taskContext.input
     );
   }
+
   if (commandLineInput.opts.a === 'prompt-select') {
     const possibleChoices = getSupportedProperty(
       commandLineInput.memoryId,

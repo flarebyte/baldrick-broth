@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import {z} from 'zod';
 
 const isSingleLine = (value: string) => value.split(/[\n\r]/).length <= 1;
 
@@ -20,7 +20,7 @@ export const stringy = {
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, { message: 'title should be a single line' })
+    .refine(isSingleLine, {message: 'title should be a single line'})
     .describe('A short title that summarizes this section of script'),
   description: z
     .string()
@@ -42,14 +42,14 @@ export const stringy = {
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, { message: 'message should be a single line' })
+    .refine(isSingleLine, {message: 'message should be a single line'})
     .describe('A short message that will display in the prompt'),
   choice: z
     .string()
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, { message: 'choice should be a single line' })
+    .refine(isSingleLine, {message: 'choice should be a single line'})
     .describe('A possible choice'),
 };
 export const safeParseField = (
@@ -59,5 +59,6 @@ export const safeParseField = (
   if (name === 'title') {
     return stringy.title.safeParse(content);
   }
+
   return `${name} is not supported`;
 };

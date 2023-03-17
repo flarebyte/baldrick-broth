@@ -2,18 +2,19 @@ import { execaCommand } from 'execa';
 import YAML from 'yaml';
 import CSV from 'papaparse';
 import {
-  AnyDataValue,
-  AnyCommand,
-  Ctx,
-  onCommandSuccess,
-  onCommandFailure,
+  type AnyDataValue,
+  type AnyCommand,
+  type Ctx,
+  type onCommandSuccess,
+  type onCommandFailure,
 } from './build-model.js';
-import { Result, succeed, fail } from './railway.js';
+import { type Result, succeed, willFail } from './railway.js';
 import { getSupportedProperty } from './data-value-utils.js';
 import { basicCommandExecution } from './basic-execution.js';
 import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
 import { currentTaskLogger } from './logging.js';
 import { coloration } from './coloration.js';
+import { appendFile } from 'fs/promises';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -24,13 +25,13 @@ type ExecuteCommandLineFailedCategory =
   | 'parse-yaml-failed'
   | 'parse-csv-failed';
 
-export interface CommandLineInput {
+export type CommandLineInput = {
   memoryId: string;
   line: string;
   name: string;
   opts: AnyCommand;
   extra: Record<string, any>;
-}
+};
 
 type ExecuteCommandLineFailure = {
   category: ExecuteCommandLineFailedCategory;
@@ -81,18 +82,23 @@ const toStatus = (params: {
   if (failed) {
     return 'failed';
   }
+
   if (isCanceled) {
     return 'canceled';
   }
+
   if (timedOut) {
     return 'timeout';
   }
+
   if (killed) {
     return 'killed';
   }
+
   if (exitCode > 0) {
     return 'failed';
   }
+
   return 'success';
 };
 
@@ -102,23 +108,29 @@ function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
   return String(error);
 }
+
 const parseJson = (content: string): JsonParsingResult => {
   try {
     const parsed: AnyDataValue = JSON.parse(content);
     return succeed(parsed);
   } catch (error) {
-    return fail({ message: getErrorMessage(error) });
+    return willFail({ message: getErrorMessage(error) });
   }
 };
+
 const parseYaml = (content: string): JsonParsingResult => {
   try {
     const parsed: AnyDataValue = YAML.parse(content);
     return succeed(parsed);
   } catch (error) {
-    return fail({ message: getErrorMessage(error) });
+    return willFail({ message: getErrorMessage(error) });
   }
 };
-type CsvParsingResult = Result<Record<string, string>[], { message: string }>;
+
+type CsvParsingResult = Result<
+  Array<Record<string, string>>,
+  { message: string }
+>;
 
 const prepareCsv = (content: string): string =>
   content
@@ -133,18 +145,22 @@ const parseCsv = (content: string): CsvParsingResult => {
     });
     const { data, errors } = parsed;
     if (errors.length > 0) {
-      return fail({
+      return willFail({
         message: errors
           .map((err) => `Row ${err.row}: ${err.message}`)
           .join('\n'),
       });
     }
+
     if (data.length === 0) {
-      return fail({ message: 'Length of csv data should be more than zero' });
+      return willFail({
+        message: 'Length of csv data should be more than zero',
+      });
     }
+
     return succeed(data);
   } catch (error) {
-    return fail({ message: getErrorMessage(error) });
+    return willFail({ message: getErrorMessage(error) });
   }
 };
 
@@ -172,7 +188,7 @@ const executeShellCommandLine = async (
   if (stdin !== undefined) {
     const stdinPropValue = getSupportedProperty(memoryId, ctx, stdin);
     if (stdinPropValue === undefined) {
-      return fail({
+      return willFail({
         category: 'failed',
         line: runnableLine,
         stdout: '',
@@ -181,9 +197,9 @@ const executeShellCommandLine = async (
         onFailure,
         message: `Could not get property for stdin ${stdin}`,
       });
-    } else {
-      maybeStdin = { input: forceString(stdinPropValue) };
     }
+
+    maybeStdin = { input: forceString(stdinPropValue) };
   } else {
     maybeStdin = {};
   }
@@ -210,7 +226,7 @@ const executeShellCommandLine = async (
     if (onSuccess.includes('json')) {
       const parsed = parseJson(stdout);
       return parsed.status === 'failure'
-        ? fail({
+        ? willFail({
             category: 'parse-json-failed',
             line,
             stdout,
@@ -227,10 +243,11 @@ const executeShellCommandLine = async (
             onSuccess,
           });
     }
+
     if (onSuccess.includes('yaml')) {
       const parsed = parseYaml(stdout);
       return parsed.status === 'failure'
-        ? fail({
+        ? willFail({
             category: 'parse-yaml-failed',
             line,
             stdout,
@@ -247,10 +264,11 @@ const executeShellCommandLine = async (
             onSuccess,
           });
     }
+
     if (onSuccess.includes('csv')) {
       const parsed = parseCsv(stdout);
       return parsed.status === 'failure'
-        ? fail({
+        ? willFail({
             category: 'parse-csv-failed',
             line,
             stdout,
@@ -273,15 +291,45 @@ const executeShellCommandLine = async (
       : all || stdout;
 
     return succeed({ format: 'string', name, line, data, onSuccess });
-  } else {
-    return fail({
+  }
+
+  return willFail({
+    category: 'failed',
+    line,
+    stdout,
+    stderr,
+    exitCode,
+    onFailure,
+    message: `Failed with exit code ${exitCode}`,
+  });
+};
+
+const appendVarToFile = async (
+  memoryId: string,
+  ctx: Ctx,
+  anyCommand: AnyCommand & { a: 'append-to-file' }
+): Promise<ExecuteCommandLineResult> => {
+  const objectValue =
+    getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
+  const content = forceString(objectValue);
+  try {
+    await appendFile(anyCommand.filename, content, { encoding: 'utf8' });
+    return succeed({
+      format: 'json',
+      name: anyCommand.name,
+      line: '',
+      data: {},
+      onSuccess: [],
+    });
+  } catch (e) {
+    return willFail({
       category: 'failed',
-      line,
-      stdout,
-      stderr,
-      exitCode,
-      onFailure,
-      message: `Failed with exit code ${exitCode}`,
+      line: '',
+      stdout: '',
+      stderr: '',
+      exitCode: 1,
+      onFailure: [],
+      message: `Could not write to file ${anyCommand.filename}: ${e}`,
     });
   }
 };
@@ -295,21 +343,24 @@ export const executeCommandLine = async (
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts, memoryId, extra } = params;
   if (opts.a === 'shell') {
-    return await executeShellCommandLine(ctx, {
+    return executeShellCommandLine(ctx, {
       line,
       name,
       opts,
       memoryId,
       extra,
     });
-  } else {
-    basicCommandExecution(memoryId, ctx, params.opts);
-    return succeed({
-      format: 'json',
-      name,
-      line,
-      data: {},
-      onSuccess: [],
-    });
   }
+  if (opts.a === 'append-to-file') {
+    return await appendVarToFile(memoryId, ctx, opts);
+  }
+
+  basicCommandExecution(memoryId, ctx, opts, extra);
+  return succeed({
+    format: 'json',
+    name,
+    line,
+    data: {},
+    onSuccess: [],
+  });
 };

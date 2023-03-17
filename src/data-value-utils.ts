@@ -1,7 +1,7 @@
-import { getProperty } from 'dot-prop';
-import { AnyDataValue, Ctx } from './build-model.js';
-import { rootId } from './id-generator.js';
-import { currentTaskLogger } from './logging.js';
+import {getProperty} from 'dot-prop';
+import {type AnyDataValue, type Ctx} from './build-model.js';
+import {rootId} from './id-generator.js';
+import {currentTaskLogger} from './logging.js';
 
 export const createDataId = (memoryId: string, key: string) =>
   `${memoryId}::${key}`;
@@ -15,6 +15,7 @@ export const setDataValue = (
   if (ctx.data === undefined) {
     throw new Error('ctx.data should have defined by now');
   }
+
   if (value === undefined) {
     delete ctx.data[`${memoryId}::${key}`];
   } else {
@@ -30,9 +31,11 @@ export const splitDataKey = (dataKey: string): [string, string] => {
   if (memoryId === undefined) {
     throw new Error('MemoryId should not be undefined');
   }
+
   if (key === undefined) {
     throw new Error('Key should not be undefined');
   }
+
   return [memoryId, key];
 };
 
@@ -44,6 +47,7 @@ const getSpecificDataProperty = (
   if (value === undefined) {
     return undefined;
   }
+
   const [data_prefix, keyName] = valuePath.split('.');
   if (
     data_prefix === undefined ||
@@ -69,6 +73,7 @@ const getDataProperty = (
   if (useLocalValue) {
     return localValue;
   }
+
   return getSpecificDataProperty(rootId, valuePath, value);
 };
 

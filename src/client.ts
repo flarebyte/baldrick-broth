@@ -1,11 +1,16 @@
-import { Command } from 'commander';
-import { AnyDataValue, BuildModel, safeParseBuild } from './build-model.js';
-import { createCommands } from './commands-creator.js';
-import { buildFilePath } from './env-variables.js';
-import { readYaml } from './file-io.js';
-import { ValidationError } from './format-message.js';
-import { andThen } from './railway.js';
-import { version } from './version.js';
+import {writeFile} from 'node:fs/promises';
+import {Command} from 'commander';
+import {
+  type AnyDataValue,
+  type BuildModel,
+  safeParseBuild,
+} from './build-model.js';
+import {createCommands} from './commands-creator.js';
+import {buildFilePath} from './env-variables.js';
+import {readYaml} from './file-io.js';
+import {type ValidationError} from './format-message.js';
+import {andThen} from './railway.js';
+import {version} from './version.js';
 
 const exitWithError = (message: string, value?: object) => {
   value === undefined ? console.error(message) : console.error(message, value);
@@ -21,13 +26,23 @@ export async function runClient() {
   }
 }
 
-type RunClientFailure =
-  | { message: string; filename: string }
-  | ValidationError[];
+/**
+ * We reset existing log file
+ */
+async function deleteLog() {
+  try {
+    await writeFile('temp/log/baldrick-broth-log.txt', '', {
+      encoding: 'utf-8',
+    });
+  } catch {}
+}
+
+type RunClientFailure = {message: string; filename: string} | ValidationError[];
 /**
  * Run the client without trapping all exceptions
  */
 async function unsafeRunClient() {
+  await deleteLog();
   const buildReadingResult = await readYaml(buildFilePath);
   const buildModelResult = andThen<AnyDataValue, BuildModel, RunClientFailure>(
     safeParseBuild
@@ -39,6 +54,7 @@ async function unsafeRunClient() {
       buildModelResult.error
     );
   }
+
   if (buildModelResult.status === 'success') {
     const program = new Command();
     createCommands(program, buildModelResult);

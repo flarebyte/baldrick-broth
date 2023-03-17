@@ -1,24 +1,47 @@
-import { readFile } from 'node:fs/promises';
+import {readFile} from 'node:fs/promises';
 import winston from 'winston';
-import { coloration } from './coloration.js';
-import { isCI } from './is-ci.js';
-import { LogMessage } from './log-model.js';
+import {coloration} from './coloration.js';
+import {isCI} from './is-ci.js';
+import {type LogMessage} from './log-model.js';
 
-const { printf } = winston.format;
-const consoleLikeFormat = printf(({ message }) => {
+const {printf} = winston.format;
+const consoleLikeFormat = printf(({message}) => {
   return message;
 });
 
-export const currentTaskLogger = winston.createLogger({
-  level: 'info',
-  transports: [
-    new winston.transports.File({
-      filename: 'temp/log/baldrick-broth-log.txt',
-      options: { flags: 'w' },
-      format: consoleLikeFormat,
-    }),
-  ],
-});
+class BrothLogger {
+  thatLogger: winston.Logger;
+  constructor() {
+    this.thatLogger = winston.createLogger({
+      level: 'info',
+      transports: [
+        new winston.transports.File({
+          filename: `temp/log/baldrick-broth-log.txt`,
+          options: {flags: 'a'},
+          format: consoleLikeFormat,
+        }),
+      ],
+    });
+  }
+
+  info(message: string | Record<string, unknown>) {
+    this.thatLogger.info(message);
+  }
+
+  warn(message: string | Record<string, unknown>) {
+    this.thatLogger.warn(message);
+  }
+
+  error(message: string | Record<string, unknown>) {
+    this.thatLogger.error(message);
+  }
+}
+
+/**
+ * Warning: despite expectation the currentTaskLogger is instanciated multiple times,
+ * possibly because the file is imported multiple times.
+ */
+export const currentTaskLogger = new BrothLogger();
 
 export const currentTaskWarn = (content: LogMessage) => {
   if (isCI) {

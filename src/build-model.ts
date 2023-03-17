@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { stringy } from './field-validation.js';
-import { formatMessage, ValidationError } from './format-message.js';
-import { Result, succeed, fail } from './railway.js';
+import { formatMessage, type ValidationError } from './format-message.js';
+import { type Result, succeed, willFail } from './railway.js';
 
-/**JSON like */
+/** JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
 type Json = Literal | { [key: string]: Json } | Json[];
@@ -317,6 +317,31 @@ const choicePromptStep = z
     choices: z.array(stringy.varValue).min(2).max(30),
   })
   .describe('Prompt that allows the user to choose an option');
+
+const templateStep = z
+  .strictObject({
+    a: z.literal('template'),
+    ...metadataStep,
+
+    template: z
+      .string()
+      .min(1)
+      .max(5000)
+      .describe(
+        'Resolve the handlebars template as a atring. https://handlebarsjs.com/guide/'
+      ),
+  })
+  .describe('Uses JSON mask to select parts of the json object');
+
+const appendToFileStep = z
+  .strictObject({
+    a: z.literal('append-to-file'),
+    ...metadataStep,
+
+    value: stringy.varValue,
+    filename: z.string().min(1).max(200).describe('Filename to write to'),
+  })
+  .describe('Uses JSON mask to select parts of the json object');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -333,11 +358,13 @@ const anyCommand = z
       rangeStep,
       invertObjectStep,
       maskJsonStep,
+      templateStep,
       inputPromptStep,
       confirmPromptStep,
       passwordPromptStep,
       selectPromptStep,
       choicePromptStep,
+      appendToFileStep,
     ]),
     advancedShell,
   ])
@@ -418,7 +445,7 @@ export type BuildModel = z.infer<typeof schema>;
 export type TaskModel = z.infer<typeof task>;
 export type BatchStepModel = z.infer<typeof batchStep>;
 export type AnyCommand = z.infer<typeof anyCommand>;
-// export type CommandOptionsModel = z.infer<typeof advancedShell>;
+// Export type CommandOptionsModel = z.infer<typeof advancedShell>;
 export type onCommandSuccess = z.infer<typeof onShellCommandFinish>;
 export type onCommandFailure = z.infer<typeof onShellCommandFinish>;
 export type Ctx = z.infer<typeof context>;
@@ -433,11 +460,12 @@ export const safeParseBuild = (content: unknown): BuildModelValidation => {
   if (result.success) {
     return succeed(result.data);
   }
+
   const {
     error: { issues },
   } = result;
   const errors = issues.map(formatMessage);
-  return fail(errors);
+  return willFail(errors);
 };
 
 export const getSchema = (_name: 'default') => {
@@ -451,13 +479,16 @@ export const unsafeParse =
       context.parse(content);
       return content;
     }
+
     if (name === 'batchStep') {
       batchStep.parse(content);
       return content;
     }
+
     if (name === 'commands') {
       z.array(anyCommand).parse(content);
       return content;
     }
+
     return `${name} is not supported (979839)`;
   };

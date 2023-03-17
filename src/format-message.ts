@@ -1,13 +1,13 @@
-import { z } from 'zod';
+import {type z} from 'zod';
 
-export interface ValidationError {
+export type ValidationError = {
   message: string;
   path: string;
-}
+};
 export const formatMessage = (issue: z.ZodIssue): ValidationError => {
   const path = issue.path.join('.');
   switch (issue.code) {
-    case 'invalid_type':
+    case 'invalid_type': {
       return {
         path,
         message: [
@@ -15,7 +15,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `I would expect ${issue.expected} instead of ${issue.received}`,
         ].join('; '),
       };
-    case 'invalid_string':
+    }
+
+    case 'invalid_string': {
       return {
         path,
         message: [
@@ -23,8 +25,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `${issue.message} and ${issue.validation}`,
         ].join('; '),
       };
+    }
 
-    case 'invalid_enum_value':
+    case 'invalid_enum_value': {
       return {
         path,
         message: [
@@ -32,8 +35,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `I would expect any of ${issue.options} instead of ${issue.received}`,
         ].join('; '),
       };
+    }
 
-    case 'invalid_literal':
+    case 'invalid_literal': {
       return {
         path,
         message: [
@@ -41,8 +45,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `I would expect ${issue.expected}`,
         ].join('; '),
       };
+    }
 
-    case 'invalid_union_discriminator':
+    case 'invalid_union_discriminator': {
       return {
         path,
         message: [
@@ -50,7 +55,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `I would expect any of ${issue.options}`,
         ].join('; '),
       };
-    case 'invalid_union':
+    }
+
+    case 'invalid_union': {
       return {
         path,
         message: [
@@ -60,7 +67,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
             .map((i) => i.message)}`,
         ].join('; '),
       };
-    case 'too_big':
+    }
+
+    case 'too_big': {
       return {
         path,
         message: [
@@ -68,8 +77,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `I would expect the maximum to be ${issue.maximum}`,
         ].join('; '),
       };
+    }
 
-    case 'too_small':
+    case 'too_small': {
       return {
         path,
         message: [
@@ -77,8 +87,9 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `I would expect the minimum to be ${issue.minimum}`,
         ].join('; '),
       };
+    }
 
-    default:
+    default: {
       return {
         path,
         message: [
@@ -86,5 +97,6 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
           `${issue.message}`,
         ].join('; '),
       };
+    }
   }
 };

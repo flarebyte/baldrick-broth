@@ -1,0 +1,11 @@
+{
+    "prettier": true,
+    "nodeVersion": 18,
+    "envs": ["es2022", "node"],
+    "rules": {
+        "unicorn/prevent-abbreviations": "off",
+        "unicorn/no-array-callback-reference": "off", 
+        "unicorn/prefer-json-parse-buffer": "off",
+        "unicorn/no-array-reduce": "off"
+    }
+}

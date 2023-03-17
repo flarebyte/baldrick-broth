@@ -1,11 +1,11 @@
-interface Success<a> {
+type Success<a> = {
   status: 'success';
   value: a;
-}
-interface Failure<e> {
+};
+type Failure<e> = {
   status: 'failure';
   error: e;
-}
+};
 
 export type Result<a, e> = Success<a> | Failure<e>;
 
@@ -20,7 +20,10 @@ export const succeed = <a>(a: a): Success<a> => ({
 /**
  * Return a failure result
  */
-export const fail = <e>(e: e): Failure<e> => ({ status: 'failure', error: e });
+export const willFail = <e>(e: e): Failure<e> => ({
+  status: 'failure',
+  error: e,
+});
 
 export const withDefault =
   <a, e>(defaultValue: a) =>
