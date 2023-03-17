@@ -1006,6 +1006,48 @@
                                     ],
                                     "additionalProperties": false,
                                     "description": "Prompt that allows the user to choose an option"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "append-to-file"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links"
+                                      },
+                                      "value": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
+                                      },
+                                      "filename": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 200,
+                                        "description": "Filename to write to"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "value",
+                                      "filename"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Uses JSON mask to select parts of the json object"
                                   }
                                 ]
                               },
