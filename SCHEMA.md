@@ -1,27 +1,34 @@
 # Schema for baldrick-broth
 
--  baldrick-broth-schema: Settings for a baldrick-broth file
-  - ◆ engine: Settings for the baldrick-broth engine
-    - ◆ telemetry: Preferences for telemetry
-      - ◆ name: _
-      - ◆ verbosity: _
-      - ◆ filepath: A relative path to a file
+-  baldrick-broth-schema (object): Settings for a baldrick-broth file
+  - ◆ engine (object): Settings for the baldrick-broth engine
+    - ◆ telemetry (object): Preferences for telemetry
+      - ◆ name (string): _
+      - ◆ verbosity (string): _
+      - ◆ filepath (string): A relative path to a file
   - ◆ model: Any JSON document without null values
-  - ◆ workflows: _
-    - ◇ title: A short title that summarizes this section of script
-    - ◇ description: The main purpose of this section of script
-    - ◇ tasks: _
-      - ◇ name: _
+  - ◆ workflows (object): _
+    - ◇ title (string): A short title that summarizes this section of script
+    - ◇ description (string): The main purpose of this section of script
+    - ◇ tasks (object): _
+      - ◇ name (string): _
       - ◇ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
       - ◇ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/descriptionThe main purpose of this section of script
-      - ◇ motivation: The main reason why this section of script is needed
-      - ◇ links: A list of useful links
-      - ◇ parameters: _
-      - ◇ main: A batch of shell commands to run
-        - ◆ name: _
-        - ◆ if: A condition that must be satisfied to enable the batch
-        - ◆ each: The same batch will be run multiple times for each loop
-        - ◆ commands: A list of batch shell scripts to run
+      - ◇ motivation (string): The main reason why this section of script is needed
+      - ◇ links (array): A list of useful links
+        - ○ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+        - ○ url (string): A https link to a webpage
+      - ◇ parameters (array): _
+        - ○ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/description_
+        - ○ flags (string): _
+        - ○ default (string): _
+      - ◇ main (object): A batch of shell commands to run
+        - ◆ name (string): _
+        - ◆ if (string): A condition that must be satisfied to enable the batch
+        - ◆ each (array): The same batch will be run multiple times for each loop
+          - ○ name (string): A short name that can used as variable
+          - ○ values (string): _
+        - ◆ commands (array): A list of batch shell scripts to run
       - ◇ before: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/mainA batch of shell commands to run
       - ◇ after: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/mainA batch of shell commands to run
 

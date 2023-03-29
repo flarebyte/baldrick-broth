@@ -13,10 +13,10 @@ const pad = (count) => ' '.repeat(count * 2);
 function getProperties(obj, level, kind) {
   let content = '';
   for (const [key, value] of Object.entries(obj)) {
-    console.log(key);
+    const levelType = typeof value.type === 'undefined' ? '': ` (${value.type})`
     const description = value.description || '_';
     const ref = value['$ref'] || ''
-    content += `${pad(level)}- ${kind} ${key}: ${ref}${description}\n`;
+    content += `${pad(level)}- ${kind} ${key}${levelType}: ${ref}${description}\n`;
     if (value.properties) {
       content += getProperties(value.properties, level + 1, '◆');
     }
@@ -28,6 +28,13 @@ function getProperties(obj, level, kind) {
         '◇'
       );
     }
+    if (value.items?.properties) {
+        content += getProperties(
+          value.items.properties,
+          level + 1,
+          '○'
+        );
+      }
   }
 
   return content;
