@@ -7,11 +7,6 @@
       - ◆ verbosity (string): _
       - ◆ filepath (string): A relative path to a file
   - ◆ model: Any JSON document without null values
-    - ->> anyOf: _
-    - ->> type: _
-    - ->> items: #/definitions/baldrick-broth-schema/properties/model_
-    - ->> type: _
-    - ->> additionalProperties: #/definitions/baldrick-broth-schema/properties/model_
   - ◆ workflows (object): _
     - ◇ title (string): A short title that summarizes this section of script
     - ◇ description (string): The main purpose of this section of script
@@ -34,12 +29,190 @@
           - ○ name (string): A short name that can used as variable
           - ○ values (string): _
         - ◆ commands (array): A list of batch shell scripts to run
-          - >>> anyOf: _
-          - >>> type: _
-          - >>> properties: [object Object]
-          - >>> required: _
-          - >>> additionalProperties: _
-          - >>> description: _
+            - ⁘ object: Get a property using a dot prop path
+              - ◆ a (string): _
+              - ◆ name (string): A short name that could be used a key or variable for the step
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/descriptionThe main purpose of this section of script
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivationThe main reason why this section of script is needed
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+            - ⁘ object: Process on a list of strings
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+              - ◆ onSuccess (string): _
+              - ◆ filters (array): A list of filters on strings
+                - ○ if (string): Filter criteria
+                - ○ anyOf (array): A list of references to match against
+            - ⁘ object: Concatenate several arrays together
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ values (array): _
+            - ⁘ object: Split a string into multiple strings
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ separator (string): A separator to split the string
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+            - ⁘ object: Split a string into multiple lines
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+            - ⁘ object: Return true if at least one of values is truthy
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ values (array): _
+            - ⁘ object: Return true if at least one of values is falsy
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ values (array): _
+            - ⁘ object: Return true if all the values are truthy
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ values (array): _
+            - ⁘ object: Return true if all the values are falsy
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ values (array): _
+            - ⁘ object: Return the opposite boolean value
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+            - ⁘ object: Generate a range of numbers
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ start (integer): The number to start the range with
+              - ◆ end (integer): The number at the end of the range
+              - ◆ step (integer): A step to increment the range, usually 1
+            - ⁘ object: Invert keys and values into a new object
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+            - ⁘ object: Uses JSON mask to select parts of the json object
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+              - ◆ mask (string): JSON mask to select parts of the json object
+            - ⁘ object: Uses JSON mask to select parts of the json object
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ template (string): Resolve the handlebars template as a atring. https://handlebarsjs.com/guide/
+            - ⁘ object: Prompt that takes user input and returns a string
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ message (string): A short message that will display in the prompt
+            - ⁘ object: Prompt that returns true or false
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ message: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/14/properties/message_
+            - ⁘ object: Prompt that takes user input, hides it from the terminal, and returns a string
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ message: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/14/properties/message_
+            - ⁘ object: Prompt that allows the user to select from a list of options
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ message: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/14/properties/message_
+              - ◆ select: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+            - ⁘ object: Prompt that allows the user to choose an option
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ message: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/14/properties/message_
+              - ◆ choices (array): _
+            - ⁘ object: Uses JSON mask to select parts of the json object
+              - ◆ a (string): _
+              - ◆ name: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name_
+              - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+              - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description_
+              - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation_
+              - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+              - ◆ value: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if_
+              - ◆ filename (string): Filename to write to
+          - ⁘ object: Configuration for the batch shell script
+            - ◆ name (string): A short name that could be used a key or variable
+            - ◆ title: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/title_
+            - ◆ description: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/descriptionThe main purpose of this section of script
+            - ◆ motivation: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/motivationThe main reason why this section of script is needed
+            - ◆ links: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links_
+            - ◆ a (string): _
+            - ◆ onFailure (array): List of flags to describe the default behavior in case of failure
+            - ◆ onSuccess (array): List of flags to describe the default behavior in case of success
+            - ◆ if: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/ifreference to JSON path that must be satisfied for the step to run
+            - ◆ stdin: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/ifProvide stdin with a value read from a dot prop path
+            - ◆ run (string): A line of shell script
+            - ◆ multiline (boolean): Should the run command spread on multiple lines
       - ◇ before: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/mainA batch of shell commands to run
       - ◇ after: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/mainA batch of shell commands to run
 

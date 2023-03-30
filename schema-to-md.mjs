@@ -1,5 +1,5 @@
 #!/usr/bin/env zx
-
+// @ts-check
 const fs = require('node:fs');
 
 const schemaPath = 'spec/snapshots/build-model/get-schema--schema.json';
@@ -9,6 +9,30 @@ const title = 'baldrick-broth';
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 
 const pad = (count) => ' '.repeat(count * 2);
+
+function getOneOfAny(value, level, kind) {
+  let content = '';
+  if (value.anyOf) {
+    for (const oneOf of value.anyOf) {
+      content += getOneOfAny(oneOf, level + 1, kind);
+    }
+  } else if (typeof value.type !== 'undefined') {
+    const description = value.description || '_';
+    content += `${pad(level)}- ⁘ ${value.type}: ${description}\n`;
+    if (value.properties) {
+      content += getProperties(value.properties, level + 1, '◆');
+    }
+
+    if (value.additionalProperties) {
+      content += getProperties(
+        value.additionalProperties.properties,
+        level + 1,
+        '◇'
+      );
+    }
+  }
+  return content;
+}
 
 function getProperties(obj, level, kind) {
   let content = '';
@@ -36,12 +60,7 @@ function getProperties(obj, level, kind) {
     }
     if (value.items?.anyOf) {
       for (const oneOf of value.items?.anyOf) {
-        content += getProperties(oneOf, level + 1, '>>>');
-      }
-    }
-    if (value.anyOf) {
-      for (const oneOf of value.anyOf) {
-        content += getProperties(oneOf, level + 1, '->>');
+        content += getOneOfAny(oneOf, level + 1, '>>>');
       }
     }
   }
