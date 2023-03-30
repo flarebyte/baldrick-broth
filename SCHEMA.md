@@ -7,6 +7,11 @@
       - ◆ verbosity (string): _
       - ◆ filepath (string): A relative path to a file
   - ◆ model: Any JSON document without null values
+    - ->> anyOf: _
+    - ->> type: _
+    - ->> items: #/definitions/baldrick-broth-schema/properties/model_
+    - ->> type: _
+    - ->> additionalProperties: #/definitions/baldrick-broth-schema/properties/model_
   - ◆ workflows (object): _
     - ◇ title (string): A short title that summarizes this section of script
     - ◇ description (string): The main purpose of this section of script
@@ -29,6 +34,12 @@
           - ○ name (string): A short name that can used as variable
           - ○ values (string): _
         - ◆ commands (array): A list of batch shell scripts to run
+          - >>> anyOf: _
+          - >>> type: _
+          - >>> properties: [object Object]
+          - >>> required: _
+          - >>> additionalProperties: _
+          - >>> description: _
       - ◇ before: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/mainA batch of shell commands to run
       - ◇ after: #/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/mainA batch of shell commands to run
 
