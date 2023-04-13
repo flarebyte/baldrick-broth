@@ -3,6 +3,14 @@ import { stringy } from './field-validation.js';
 import { formatMessage, type ValidationError } from './format-message.js';
 import { type Result, succeed, willFail } from './railway.js';
 
+const describeEnum = (intro: string, objectValue: { [k: string]: string }) => {
+  const description = [`${intro} with either:`];
+  for (const [name, title] of Object.entries(objectValue)) {
+    description.push(`${name}: ${title}`);
+  }
+  return description.join('\n');
+};
+
 /** JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
@@ -106,8 +114,12 @@ const valuesLoopEach = z.string().min(1).max(300);
 
 const loopEach = z
   .object({
-    name: stringy.customKey,
-    values: valuesLoopEach,
+    name: stringy.customKey.describe(
+      'The name of the variable to be used as an input to the script or command during each iteration'
+    ),
+    values: valuesLoopEach.describe(
+      'The variable to the array of values to be iterated over'
+    ),
   })
   .describe('Configuration of every loop');
 
@@ -381,13 +393,17 @@ const batchStep = z
     name: z.enum(['unknown', 'main', 'before', 'after']).default('unknown'),
     if: stringy.varValue
       .optional()
-      .describe('A condition that must be satisfied to enable the batch'),
+      .describe(
+        'A conditional statement that determines whether or not this script or command should be executed'
+      ),
     each: z
       .array(loopEach)
       .min(1)
       .max(3)
       .optional()
-      .describe('The same batch will be run multiple times for each loop'),
+      .describe(
+        'An array of values to be iterated over, with each iteration executing the script or command with the current value as an input'
+      ),
     commands,
   })
   .describe('A batch of shell commands to run');
@@ -400,32 +416,75 @@ const parameter = z
   .describe('Settings for a task parameter');
 const task = z
   .object({
-    name: z.string().max(1).default(''),
-    title: stringy.title,
-    description: stringy.description.optional(),
-    motivation: stringy.motivation.optional(),
-    links,
-    parameters: z.array(parameter).max(20).optional(),
-    main: batchStep,
+    name: z
+      .string()
+      .max(1)
+      .default('')
+      .describe('A unique identifier for this task'),
+    title: stringy.title.describe(
+      'A brief and descriptive title for this task'
+    ),
+    description: stringy.description
+      .optional()
+      .describe(
+        'A detailed explanation of the purpose and function of this task'
+      ),
+    motivation: stringy.motivation
+      .optional()
+      .describe(
+        'The reason why this task is necessary within the context of the workflow'
+      ),
+    links: links.describe(
+      'A list of relevant resources and references related to this task'
+    ),
+    parameters: z
+      .array(parameter)
+      .max(20)
+      .optional()
+      .describe('A list of configurable options for this task'),
+    main: batchStep.describe(
+      'The primary script or command to be executed for this task'
+    ),
     before: batchStep.optional(),
     after: batchStep.optional(),
   })
   .describe('Settings for a task');
 const domain = z
   .object({
-    title: stringy.title,
-    description: stringy.description.optional(),
-    tasks: z.record(stringy.customKey, task),
+    title: stringy.title.describe(
+      'A brief and descriptive title for this workflow'
+    ),
+    description: stringy.description
+      .optional()
+      .describe(
+        'A detailed explanation of the purpose and function of this workflow'
+      ),
+    tasks: z
+      .record(stringy.customKey, task)
+      .describe('A list of individual tasks that make up this workflow'),
   })
   .describe('A domain for a list of tasks');
+
+const workflows = z
+  .record(stringy.customKey, domain)
+  .describe(
+    'A collection of related tasks and processes that achieve a specific goal'
+  );
 export const schema = z
   .object({
     engine,
     model: jsonishSchema,
-    workflows: z.record(stringy.customKey, domain),
+    workflows,
   })
   .describe('Settings for a baldrick-broth file')
   .strict();
+
+const lightSchema = z
+  .object({
+    engine,
+    workflows,
+  })
+  .describe('Settings for a baldrick-broth file');
 
 const runtimeContext = z.object({
   pwd: stringy.path,
@@ -468,8 +527,9 @@ export const safeParseBuild = (content: unknown): BuildModelValidation => {
   return willFail(errors);
 };
 
+/** Only used by conversion to json schema */
 export const getSchema = (_name: 'default') => {
-  return schema;
+  return lightSchema;
 };
 
 export const unsafeParse =
