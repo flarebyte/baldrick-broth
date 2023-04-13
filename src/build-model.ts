@@ -33,16 +33,30 @@ const engine = z
   .optional()
   .describe('Settings for the baldrick-broth engine');
 
-const onShellCommandFinish = z.enum([
-  'exit',
-  'silent',
-  'trim',
-  'json',
-  'yaml',
-  'csv',
-  'save',
-  'debug',
-]);
+const onShellCommandFinishEnum = {
+  exit: 'Exit the shell after the command has finished.',
+  silent: 'Suppress any output from the command.',
+  trim: 'Remove any leading or trailing whitespace from the output.',
+  json: 'Format the output as a JSON object.',
+  yaml: 'Format the output as a YAML object.',
+  csv: 'Format the output as a CSV file.',
+  save: 'Save the output to a file.',
+  debug: 'Print debugging information about the command execution.',
+};
+
+const onShellCommandFinishEnumKeys = Object.keys(onShellCommandFinishEnum) as [
+  string,
+  ...string[]
+];
+
+const onShellCommandFinish = z
+  .enum(onShellCommandFinishEnumKeys)
+  .describe(
+    describeEnum(
+      'Options for when the shell command finish',
+      onShellCommandFinishEnum
+    )
+  );
 
 const linkPage = z
   .object({
