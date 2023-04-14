@@ -11,6 +11,8 @@ const describeEnum = (intro: string, objectValue: { [k: string]: string }) => {
   return description.join('\n');
 };
 
+const asEnumKeys = (value: {}) => Object.keys(value) as [string, ...string[]];
+
 /** JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
@@ -44,13 +46,8 @@ const onShellCommandFinishEnum = {
   debug: 'Print debugging information about the command execution.',
 };
 
-const onShellCommandFinishEnumKeys = Object.keys(onShellCommandFinishEnum) as [
-  string,
-  ...string[]
-];
-
 const onShellCommandFinish = z
-  .enum(onShellCommandFinishEnumKeys)
+  .enum(asEnumKeys(onShellCommandFinishEnum))
   .describe(
     describeEnum(
       'Options for when the shell command finish',
@@ -145,22 +142,43 @@ const getPropertyStep = z
   })
   .describe('Get a property using a dot prop path');
 
-const onStringArraySuccess = z.enum(['sort', 'unique', 'filled', 'reverse']);
+const onStringArraySuccessEnum = {
+  sort: 'Sorts the array of strings in ascending order.',
+  unique: 'Removes any duplicate strings from the array.',
+  filled: 'Removes any empty or undefined elements from the array.',
+  reverse: 'Reverses the order of the elements in the array.',
+};
+
+const onStringArraySuccess = z
+  .enum(asEnumKeys(onStringArraySuccessEnum))
+  .describe(
+    describeEnum(
+      'Options for the transforming the resulting array of string',
+      onStringArraySuccessEnum
+    )
+  );
+
+const stringArrayFilterByEnum = {
+  'starts-with': 'Match items that start with a specific value',
+  'ends-with': 'Match items that end with a specific value',
+  contains: 'Match items that contain a specific value',
+  equals: 'Match items that are equal to a specific value',
+  'not starts-with': 'Match items that do not start with a specific value',
+  'not ends-with': 'Match items that do not end with a specific value',
+  'not contains': 'Match items that do not contain a specific value',
+  'not equals': 'Match items that are not equal to a specific value',
+};
 
 const stringArrayFilterBy = z
   .strictObject({
     if: z
-      .enum([
-        'starts-with',
-        'ends-with',
-        'contains',
-        'equals',
-        'not starts-with',
-        'not ends-with',
-        'not contains',
-        'not equals',
-      ])
-      .describe('Filter criteria'),
+      .enum(asEnumKeys(stringArrayFilterByEnum))
+      .describe(
+        describeEnum(
+          'A conditional statement that determines whether or not the string should be kept',
+          stringArrayFilterByEnum
+        )
+      ),
     anyOf: z
       .array(stringy.varValue)
       .min(1)
@@ -402,9 +420,20 @@ const commands = z
   .max(50)
   .describe('A list of batch shell scripts to run');
 
+const batchStepNameEmum = {
+  unknown:
+    'Describe any unknown or uncertain aspects of the process (should not pick this)',
+  main: 'Describe the main step of the process',
+  before: 'Describe a step that need to be taken before the process begins',
+  after: 'Describe a step that need to be taken after the process is completed',
+};
+
 const batchStep = z
   .strictObject({
-    name: z.enum(['unknown', 'main', 'before', 'after']).default('unknown'),
+    name: z
+      .enum(asEnumKeys(batchStepNameEmum))
+      .default('unknown')
+      .describe(describeEnum('Name of the step', batchStepNameEmum)),
     if: stringy.varValue
       .optional()
       .describe(

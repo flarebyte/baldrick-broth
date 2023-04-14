@@ -1,4 +1,3 @@
-[2K[1G[2m$ node --loader ts-node/esm src/cli.mts --help[22m
 Usage: baldrick-broth [options] [command]
 
 CLI for build automation and running tasks
