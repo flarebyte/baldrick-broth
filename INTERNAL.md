@@ -18,6 +18,8 @@ class `basic-execution.ts`{
   +basicCommandsExecution()
 }
 class `build-model.ts`{
+  - describeEnum()
+  - asEnumKeys()
   - jsonishSchema()
   +safeParseBuild()
   +getSchema()
@@ -69,6 +71,7 @@ class `execution.ts`{
   - forceString()
   - executeShellCommandLine()
   - appendVarToFile()
+  - writeVarToFile()
   +executeCommandLine()
 }
 class `expand-batch.ts`{
@@ -117,6 +120,7 @@ class `string-utils.ts`{
   +isStringArray()
 }
 class `templating.ts`{
+  - escapeSpace()
   - createTemplate()
   +getExpandedName()
   +getStringFromTemplate()
@@ -260,6 +264,7 @@ class `./basic-execution.js`{
   +basicCommandExecution()
 }
 class `fs/promises`{
+  +writeFile()
   +appendFile()
 }
 class `winston`{

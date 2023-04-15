@@ -18,6 +18,8 @@ Table of vocabulary found in the code base
 | basic command execution              | 3          | basic-execution.ts    |
 | basic commands execution             | 3          | basic-execution.ts    |
 | basic execution                      | 2          | basic-execution.ts    |
+| describe enum                        | 2          | build-model.ts        |
+| as enum keys                         | 3          | build-model.ts        |
 | jsonish schema                       | 2          | build-model.ts        |
 | safe parse build                     | 3          | build-model.ts        |
 | get schema                           | 2          | build-model.ts        |
@@ -74,6 +76,7 @@ Table of vocabulary found in the code base
 | force string                         | 2          | execution.ts          |
 | execute shell command line           | 4          | execution.ts          |
 | append var to file                   | 4          | execution.ts          |
+| write var to file                    | 4          | execution.ts          |
 | execute command line                 | 3          | execution.ts          |
 | execute command line failed category | 5          | execution.ts          |
 | command line input                   | 3          | execution.ts          |
@@ -114,6 +117,7 @@ Table of vocabulary found in the code base
 | keep alpha numeric                   | 3          | string-utils.ts       |
 | dasherize title                      | 2          | string-utils.ts       |
 | is string array                      | 3          | string-utils.ts       |
+| escape space                         | 2          | templating.ts         |
 | create template                      | 2          | templating.ts         |
 | get expanded name                    | 3          | templating.ts         |
 | get string from template             | 4          | templating.ts         |
@@ -139,6 +143,7 @@ Table showing the popularity of some n-gram in the code base
 | task        | 10        |
 | to          | 8         |
 | is          | 8         |
+| as          | 8         |
 | result      | 8         |
 | execute     | 8         |
 | batch       | 8         |
@@ -147,7 +152,7 @@ Table showing the popularity of some n-gram in the code base
 | build       | 7         |
 | parse       | 6         |
 | merge       | 6         |
-| as          | 6         |
+| to          | 6         |
 | template    | 6         |
 | on          | 6         |
 | expanded    | 6         |
@@ -164,7 +169,7 @@ Table showing the popularity of some n-gram in the code base
 | force       | 4         |
 | execute     | 4         |
 | basic       | 4         |
-| to          | 4         |
+| var         | 4         |
 | single      | 4         |
 | shell       | 4         |
 | run         | 4         |
@@ -179,9 +184,11 @@ Table showing the popularity of some n-gram in the code base
 | success     | 3         |
 | id          | 3         |
 | execution   | 3         |
+| enum        | 3         |
 | context     | 3         |
 | commands    | 3         |
 | array       | 3         |
+| write       | 2         |
 | will        | 2         |
 | split       | 2         |
 | set         | 2         |
@@ -196,6 +203,8 @@ Table showing the popularity of some n-gram in the code base
 | interactive | 2         |
 | format      | 2         |
 | exit        | 2         |
+| escape      | 2         |
+| describe    | 2         |
 | delete      | 2         |
 | debug       | 2         |
 | dasherize   | 2         |
@@ -206,7 +215,6 @@ Table showing the popularity of some n-gram in the code base
 | and         | 2         |
 | yaml        | 2         |
 | with        | 2         |
-| var         | 2         |
 | value       | 2         |
 | supported   | 2         |
 | status      | 2         |
@@ -221,6 +229,7 @@ Table showing the popularity of some n-gram in the code base
 | inputs      | 2         |
 | from        | 2         |
 | flags       | 2         |
+| file        | 2         |
 | failed      | 2         |
 | extra       | 2         |
 | ctx         | 2         |

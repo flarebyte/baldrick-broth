@@ -13,9 +13,18 @@ model:
       - Make
   readme:
     highlights:
-      - Written in `Typescript`
+      - Automate tasks such as minification, concatenation, testing, and compilation of code.
+      - Reduce the amount of time needed to set up a project
+      - YAML configuration with json-schema allowing code assistance in editor.
+      - Provide clear documentation for each step of a project build
+      - Ensure that documentation is always up-to-date and available in the CLI
+      - Run certain tasks only if certain conditions are met
+      - Allow developers to define their own model for their project
+      - Provide an easy way for developers to provide interactive input when running the program
     links:
       - "[Usage](USAGE.md)"
+      - "[Json schema for broth yaml file](spec/snapshots/build-model/get-schema--schema.json)"
+      - "[Overview for the json schema for broth yaml file](SCHEMA.md)"
     related:
       - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
         ne) Run tests declaratively with a few cunning plans"
@@ -37,6 +46,7 @@ model:
       - zod
       - railway
       - commander
+  # todo npx zx https://raw.githubusercontent.com/flarebyte/baldrick-reserve/main/reserve-schema/schema-to-md.mjs --schema spec/snapshots/build-model/get-schema--schema.json --md SCHEMA.md --title "baldrick-broth" 
   workflow-version: 0.3.0
 workflows:
   test:
