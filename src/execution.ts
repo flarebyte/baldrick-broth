@@ -14,7 +14,7 @@ import { basicCommandExecution } from './basic-execution.js';
 import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
 import { currentTaskLogger } from './logging.js';
 import { coloration } from './coloration.js';
-import { appendFile } from 'fs/promises';
+import { appendFile, writeFile } from 'fs/promises';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -329,6 +329,36 @@ const appendVarToFile = async (
       stderr: '',
       exitCode: 1,
       onFailure: [],
+      message: `Could not append to file ${anyCommand.filename}: ${e}`,
+    });
+  }
+};
+
+const writeVarToFile = async (
+  memoryId: string,
+  ctx: Ctx,
+  anyCommand: AnyCommand & { a: 'write-to-file' }
+): Promise<ExecuteCommandLineResult> => {
+  const objectValue =
+    getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
+  const content = forceString(objectValue);
+  try {
+    await writeFile(anyCommand.filename, content, { encoding: 'utf8' });
+    return succeed({
+      format: 'json',
+      name: anyCommand.name,
+      line: '',
+      data: {},
+      onSuccess: [],
+    });
+  } catch (e) {
+    return willFail({
+      category: 'failed',
+      line: '',
+      stdout: '',
+      stderr: '',
+      exitCode: 1,
+      onFailure: [],
       message: `Could not write to file ${anyCommand.filename}: ${e}`,
     });
   }
@@ -353,6 +383,10 @@ export const executeCommandLine = async (
   }
   if (opts.a === 'append-to-file') {
     return await appendVarToFile(memoryId, ctx, opts);
+  }
+
+  if (opts.a === 'write-to-file') {
+    return await writeVarToFile(memoryId, ctx, opts);
   }
 
   basicCommandExecution(memoryId, ctx, opts, extra);

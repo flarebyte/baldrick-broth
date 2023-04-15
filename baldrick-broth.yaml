@@ -412,7 +412,7 @@ workflows:
               title: Title for the pull request
               description: A short title used for the pull request
               message: Short title describing the pull request
-            - run: gh pr create --title '{{_.category}}:{{_.title}}' --body-file temp/pull_request_relevant.md
+            - run: gh pr create --title {{escapeSpace _.category}}:{{escapeSpace _.title}} --body-file temp/pull_request_relevant.md
               title: Create the pull request
       publish:
         title: Publish the current library

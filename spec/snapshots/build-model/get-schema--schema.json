@@ -1013,7 +1013,7 @@
                                         "type": "string",
                                         "minLength": 1,
                                         "maxLength": 200,
-                                        "description": "Filename to write to"
+                                        "description": "The name of the file to which data will be appended"
                                       }
                                     },
                                     "required": [
@@ -1024,7 +1024,49 @@
                                       "filename"
                                     ],
                                     "additionalProperties": false,
-                                    "description": "Uses JSON mask to select parts of the json object"
+                                    "description": "Step where data is appended to a file"
+                                  },
+                                  {
+                                    "type": "object",
+                                    "properties": {
+                                      "a": {
+                                        "type": "string",
+                                        "const": "write-to-file"
+                                      },
+                                      "name": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/name"
+                                      },
+                                      "title": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/links/items/properties/title"
+                                      },
+                                      "description": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/description"
+                                      },
+                                      "motivation": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/motivation"
+                                      },
+                                      "links": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/0/anyOf/0/properties/links"
+                                      },
+                                      "value": {
+                                        "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
+                                      },
+                                      "filename": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 200,
+                                        "description": "The name of the file to which data will be written"
+                                      }
+                                    },
+                                    "required": [
+                                      "a",
+                                      "name",
+                                      "title",
+                                      "value",
+                                      "filename"
+                                    ],
+                                    "additionalProperties": false,
+                                    "description": "Step where data is written to a file"
                                   }
                                 ]
                               },

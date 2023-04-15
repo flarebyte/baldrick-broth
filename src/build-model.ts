@@ -383,9 +383,27 @@ const appendToFileStep = z
     ...metadataStep,
 
     value: stringy.varValue,
-    filename: z.string().min(1).max(200).describe('Filename to write to'),
+    filename: z
+      .string()
+      .min(1)
+      .max(200)
+      .describe('The name of the file to which data will be appended'),
   })
-  .describe('Uses JSON mask to select parts of the json object');
+  .describe('Step where data is appended to a file');
+
+const writeToFileStep = z
+  .strictObject({
+    a: z.literal('write-to-file'),
+    ...metadataStep,
+
+    value: stringy.varValue,
+    filename: z
+      .string()
+      .min(1)
+      .max(200)
+      .describe('The name of the file to which data will be written'),
+  })
+  .describe('Step where data is written to a file');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -409,6 +427,7 @@ const anyCommand = z
       selectPromptStep,
       choicePromptStep,
       appendToFileStep,
+      writeToFileStep,
     ]),
     advancedShell,
   ])
