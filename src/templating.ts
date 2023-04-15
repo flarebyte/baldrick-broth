@@ -1,10 +1,14 @@
 import Handlebars from 'handlebars';
-import {type AnyCommand, type Ctx} from './build-model.js';
-import {splitDataKey, withMemoryPrefix} from './data-value-utils.js';
-import {rootId} from './id-generator.js';
+import { type AnyCommand, type Ctx } from './build-model.js';
+import { splitDataKey, withMemoryPrefix } from './data-value-utils.js';
+import { rootId } from './id-generator.js';
+
+const escapeSpace = (text: string): string => text.replace(/ /g, '\\ ');
+
+Handlebars.registerHelper('escapeSpace', escapeSpace);
 
 const createTemplate = (run: string) =>
-  Handlebars.compile(run, {noEscape: true});
+  Handlebars.compile(run, { noEscape: true });
 
 export const getExpandedName = (name: string, context: any): string => {
   const template = createTemplate(name);
@@ -72,7 +76,7 @@ const getTemplateData = (
 const mergeExtraData = (
   ctxData: Record<string, any>,
   extra: Record<string, any>
-): Record<string, any> => ({...ctxData, ...extra});
+): Record<string, any> => ({ ...ctxData, ...extra });
 
 export const mergeTemplateContext = ({
   memoryId,

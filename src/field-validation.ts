@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import { z } from 'zod';
 
 const isSingleLine = (value: string) => value.split(/[\n\r]/).length <= 1;
 
@@ -8,19 +8,19 @@ export const stringy = {
     .min(1)
     .max(60)
     .regex(/[a-z][\d_a-z]+/)
-    .describe('A short name that can used as variable'),
+    .describe('A short name that can used as reference'),
   varValue: z
     .string()
     .min(1)
     .max(300)
     .regex(/(([\d._a-z]+)|(\[\d+]))+/)
-    .describe('A dot prop path'),
+    .describe('A dot prop path. See https://github.com/sindresorhus/dot-prop'),
   title: z
     .string()
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, {message: 'title should be a single line'})
+    .refine(isSingleLine, { message: 'title should be a single line' })
     .describe('A short title that summarizes this section of script'),
   description: z
     .string()
@@ -36,20 +36,23 @@ export const stringy = {
     .describe('The main reason why this section of script is needed'),
   url: z.string().url().max(300).describe('A https link to a webpage'),
   path: z.string().max(300).describe('A relative path to a file'),
-  propPath: z.string().max(300).describe('A dot prop path'),
+  propPath: z
+    .string()
+    .max(300)
+    .describe('A dot prop path. See https://github.com/sindresorhus/dot-prop'),
   promptMessage: z
     .string()
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, {message: 'message should be a single line'})
+    .refine(isSingleLine, { message: 'message should be a single line' })
     .describe('A short message that will display in the prompt'),
   choice: z
     .string()
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, {message: 'choice should be a single line'})
+    .refine(isSingleLine, { message: 'choice should be a single line' })
     .describe('A possible choice'),
 };
 export const safeParseField = (

@@ -4,7 +4,7 @@ model:
     description:
       Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.13.0
+    version: 0.14.0
     keywords:
       - CLI
       - Task runner
@@ -13,9 +13,18 @@ model:
       - Make
   readme:
     highlights:
-      - Written in `Typescript`
+      - Automate tasks such as minification, concatenation, testing, and compilation of code.
+      - Reduce the amount of time needed to set up a project
+      - YAML configuration with json-schema allowing code assistance in editor.
+      - Provide clear documentation for each step of a project build
+      - Ensure that documentation is always up-to-date and available in the CLI
+      - Run certain tasks only if certain conditions are met
+      - Allow developers to define their own model for their project
+      - Provide an easy way for developers to provide interactive input when running the program
     links:
       - "[Usage](USAGE.md)"
+      - "[Json schema for broth yaml file](spec/snapshots/build-model/get-schema--schema.json)"
+      - "[Overview for the json schema for broth yaml file](SCHEMA.md)"
     related:
       - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
         ne) Run tests declaratively with a few cunning plans"
@@ -37,6 +46,7 @@ model:
       - zod
       - railway
       - commander
+  # todo npx zx https://raw.githubusercontent.com/flarebyte/baldrick-reserve/main/reserve-schema/schema-to-md.mjs --schema spec/snapshots/build-model/get-schema--schema.json --md SCHEMA.md --title "baldrick-broth" 
   workflow-version: 0.3.0
 workflows:
   test:
@@ -303,6 +313,11 @@ workflows:
           Run a sequence of commands to check that the library is ready to be
           published
         motivation: Detect quality flaws before pushing the code
+        parameters:
+          - description: |
+              Pull request mode.
+              Run the pest and zest tests.
+            flags: -pr, --pull-request
         main:
           commands:
             - name: remove-build
@@ -329,9 +344,41 @@ workflows:
             - name: audit
               title: Audit some libraries
               run: yarn audit
+            - name: has-pest-files
+              title: Check if there are any pest files
+              run: find . -type f -name *.pest.yaml
+              onSuccess:
+                - save
+                - silent
+            - a: every-truthy
+              name: should-run-pest
+              title: Is this a PR and is there some pest files
+              values:
+                - data.has-pest-files
+                - runtime.parameters.pullRequest
+            - name: pest
+              title: Run the integration pest tests
+              if: data.should-run-pest
+              run: npx baldrick-broth@latest test pest
+            - name: has-zest-files
+              title: Check if there are any zest files
+              run: find . -type f -name *.zest.yaml
+              onSuccess:
+                - save
+                - silent
+            - a: every-truthy
+              name: should-run-zest
+              title: Is this a PR and is there some zest files
+              values:
+                - data.has-zest-files
+                - runtime.parameters.pullRequest
+            - name: zest
+              title: Run the unit zest tests
+              if: data.should-run-zest
+              run: npx npx baldrick-broth@latest test spec
             - name: rm-report
               title: Remove previous report
-              run: rm -f .github/PULL_REQUEST_TEMPLATE/pull_request_relevant.md
+              run: rm -f temp/pull_request_relevant.md
             - name: report
               a: template
               title: Create a report
@@ -346,11 +393,37 @@ workflows:
                 {{#if _.result-of-markdown}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Markdown formatting
                 {{#if _.result-of-outdated}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} No outdated NPM libraries
                 {{#if _.result-of-audit}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Security audit
+                {{#if _.result-of-pest}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Integration tests with baldrick-pest {{#unless _.should-run-pest}}(Not supported yet){{/unless}}
+                {{#if _.result-of-zest}}- :heavy_check_mark:{{else}}- :heavy_exclamation_mark:{{/if}} Unit tests with baldrick-zest {{#unless _.should-run-zest}}(Not supported yet){{/unless}}
             - name: write-report
               a: append-to-file
               title: Write the report
               value: data.report
-              filename: .github/PULL_REQUEST_TEMPLATE/pull_request_relevant.md
+              filename: temp/pull_request_relevant.md
+      pr:
+        title: Pull request for the project
+        description: Create a pull request for the branch
+        motivation: Automate the body of pull request
+        main:
+          commands:
+            - a: prompt-choices
+              name: category
+              title: Category for the pull request
+              message: Classify the pull request
+              choices:
+                - feat
+                - fix
+                - chore
+                - docs
+                - style
+                - refactor
+            - a: prompt-input
+              name: title
+              title: Title for the pull request
+              description: A short title used for the pull request
+              message: Short title describing the pull request
+            - run: gh pr create --title {{escapeSpace _.category}}:{{escapeSpace _.title}} --body-file temp/pull_request_relevant.md
+              title: Create the pull request
       publish:
         title: Publish the current library
         description: Publih the current library to npm
@@ -402,12 +475,11 @@ workflows:
               title: Extract model from this baldrick-broth.yaml
               value: build
               mask: model
-            - title: Save baldrick-broth file with existing model
-              stdin: data.scaffold::upgrade::broth-model
-              run: sponge temp/broth/baldrick-broth-model.json
-              links:
-                - title: sponge from MoreUtils homepage
-                  url: https://formulae.brew.sh/formula/moreutils
+            - name: save-old-model
+              a: write-to-file
+              title: Save baldrick-broth file with existing model
+              value: data.broth-model
+              filename: temp/broth/baldrick-broth-model.json
             - title: merge model with new workflow
               run: npx baldrick-whisker@latest object baldrick-broth.yaml
                 temp/broth/baldrick-broth-model.json
@@ -517,11 +589,11 @@ workflows:
             - a: mask-object
               title: Extracts dependencies from package.json
               name: package-json-deps
-              value: data.scaffold::norm::package-json
+              value: data.package-json
               mask: dependencies,devDependencies,peerDependencies
             - name: save-package-json-deps
               title: Save package.json with only dependencies
-              stdin: data.scaffold::norm::package-json-deps
+              stdin: data.package-json-deps
               run: sponge temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
               run: npx baldrick-whisker@latest render baldrick-broth.yaml
@@ -547,12 +619,13 @@ workflows:
             - a: mask-object
               title: Extracts dependencies from package.json
               name: package-json-deps
-              value: data.scaffold::norm-package::package-json
+              value: data.package-json
               mask: dependencies,devDependencies,peerDependencies
-            - name: save-package-json-deps
+            - a: write-to-file
               title: Save package.json with only dependencies
-              stdin: data.scaffold::norm-package::package-json-deps
-              run: sponge temp/broth/package-deps.json
+              name: save-package-json-deps
+              value: data.package-json-deps
+              filename: temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
               run: npx baldrick-whisker@latest render baldrick-broth.yaml
                 github:flarebyte:baldrick-reserve:template/ts/package.hbs

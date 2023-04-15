@@ -1,8 +1,5 @@
-[2K[1G[2m$ node --loader ts-node/esm src/cli.mts test spec[22m
-✓ baldrick-broth is done. Version 0.13.0
 [STARTED] Main
 [STARTED] Run all baldrick zest files
-[DATA] node --loader ts-node/esm .baldrick-zest.ts
 [TITLE] run-all-baldrick-zest-files
 [DATA] OK
 [SUCCESS] run-all-baldrick-zest-files
@@ -10,7 +7,6 @@
 
 
 [38;2;128;0;128m[1m[4mRun unit tests declaratively[24m[22m[39m
-> [38;2;143;89;2mnode --loader ts-node/esm .baldrick-zest.ts[39m
 [38;2;75;0;130m◼ Run all baldrick zest files[39m
 [1m⦿ Function basicCommandsExecution[22m [90m./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml[39m
   [32m✓ PASS[39m [1msome basic execution on the context[22m   [90m📷 spec/snapshots/basic-execution/basic-execution--basic.yaml[39m

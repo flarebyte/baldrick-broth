@@ -3,6 +3,16 @@ import { stringy } from './field-validation.js';
 import { formatMessage, type ValidationError } from './format-message.js';
 import { type Result, succeed, willFail } from './railway.js';
 
+const describeEnum = (intro: string, objectValue: { [k: string]: string }) => {
+  const description = [`${intro} with either:`];
+  for (const [name, title] of Object.entries(objectValue)) {
+    description.push(`${name}: ${title}`);
+  }
+  return description.join('\n');
+};
+
+const asEnumKeys = (value: {}) => Object.keys(value) as [string, ...string[]];
+
 /** JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
 type Literal = z.infer<typeof literalSchema>;
@@ -25,16 +35,25 @@ const engine = z
   .optional()
   .describe('Settings for the baldrick-broth engine');
 
-const onShellCommandFinish = z.enum([
-  'exit',
-  'silent',
-  'trim',
-  'json',
-  'yaml',
-  'csv',
-  'save',
-  'debug',
-]);
+const onShellCommandFinishEnum = {
+  exit: 'Exit the shell after the command has finished.',
+  silent: 'Suppress any output from the command.',
+  trim: 'Remove any leading or trailing whitespace from the output.',
+  json: 'Format the output as a JSON object.',
+  yaml: 'Format the output as a YAML object.',
+  csv: 'Format the output as a CSV file.',
+  save: 'Save the output to a file.',
+  debug: 'Print debugging information about the command execution.',
+};
+
+const onShellCommandFinish = z
+  .enum(asEnumKeys(onShellCommandFinishEnum))
+  .describe(
+    describeEnum(
+      'Options for when the shell command finish',
+      onShellCommandFinishEnum
+    )
+  );
 
 const linkPage = z
   .object({
@@ -106,8 +125,12 @@ const valuesLoopEach = z.string().min(1).max(300);
 
 const loopEach = z
   .object({
-    name: stringy.customKey,
-    values: valuesLoopEach,
+    name: stringy.customKey.describe(
+      'The name of the variable to be used as an input to the script or command during each iteration'
+    ),
+    values: valuesLoopEach.describe(
+      'The variable to the array of values to be iterated over'
+    ),
   })
   .describe('Configuration of every loop');
 
@@ -119,22 +142,43 @@ const getPropertyStep = z
   })
   .describe('Get a property using a dot prop path');
 
-const onStringArraySuccess = z.enum(['sort', 'unique', 'filled', 'reverse']);
+const onStringArraySuccessEnum = {
+  sort: 'Sorts the array of strings in ascending order.',
+  unique: 'Removes any duplicate strings from the array.',
+  filled: 'Removes any empty or undefined elements from the array.',
+  reverse: 'Reverses the order of the elements in the array.',
+};
+
+const onStringArraySuccess = z
+  .enum(asEnumKeys(onStringArraySuccessEnum))
+  .describe(
+    describeEnum(
+      'Options for the transforming the resulting array of string',
+      onStringArraySuccessEnum
+    )
+  );
+
+const stringArrayFilterByEnum = {
+  'starts-with': 'Match items that start with a specific value',
+  'ends-with': 'Match items that end with a specific value',
+  contains: 'Match items that contain a specific value',
+  equals: 'Match items that are equal to a specific value',
+  'not starts-with': 'Match items that do not start with a specific value',
+  'not ends-with': 'Match items that do not end with a specific value',
+  'not contains': 'Match items that do not contain a specific value',
+  'not equals': 'Match items that are not equal to a specific value',
+};
 
 const stringArrayFilterBy = z
   .strictObject({
     if: z
-      .enum([
-        'starts-with',
-        'ends-with',
-        'contains',
-        'equals',
-        'not starts-with',
-        'not ends-with',
-        'not contains',
-        'not equals',
-      ])
-      .describe('Filter criteria'),
+      .enum(asEnumKeys(stringArrayFilterByEnum))
+      .describe(
+        describeEnum(
+          'A conditional statement that determines whether or not the string should be kept',
+          stringArrayFilterByEnum
+        )
+      ),
     anyOf: z
       .array(stringy.varValue)
       .min(1)
@@ -339,9 +383,27 @@ const appendToFileStep = z
     ...metadataStep,
 
     value: stringy.varValue,
-    filename: z.string().min(1).max(200).describe('Filename to write to'),
+    filename: z
+      .string()
+      .min(1)
+      .max(200)
+      .describe('The name of the file to which data will be appended'),
   })
-  .describe('Uses JSON mask to select parts of the json object');
+  .describe('Step where data is appended to a file');
+
+const writeToFileStep = z
+  .strictObject({
+    a: z.literal('write-to-file'),
+    ...metadataStep,
+
+    value: stringy.varValue,
+    filename: z
+      .string()
+      .min(1)
+      .max(200)
+      .describe('The name of the file to which data will be written'),
+  })
+  .describe('Step where data is written to a file');
 const anyCommand = z
   .union([
     z.discriminatedUnion('a', [
@@ -365,6 +427,7 @@ const anyCommand = z
       selectPromptStep,
       choicePromptStep,
       appendToFileStep,
+      writeToFileStep,
     ]),
     advancedShell,
   ])
@@ -376,18 +439,33 @@ const commands = z
   .max(50)
   .describe('A list of batch shell scripts to run');
 
+const batchStepNameEmum = {
+  unknown:
+    'Describe any unknown or uncertain aspects of the process (should not pick this)',
+  main: 'Describe the main step of the process',
+  before: 'Describe a step that need to be taken before the process begins',
+  after: 'Describe a step that need to be taken after the process is completed',
+};
+
 const batchStep = z
   .strictObject({
-    name: z.enum(['unknown', 'main', 'before', 'after']).default('unknown'),
+    name: z
+      .enum(asEnumKeys(batchStepNameEmum))
+      .default('unknown')
+      .describe(describeEnum('Name of the step', batchStepNameEmum)),
     if: stringy.varValue
       .optional()
-      .describe('A condition that must be satisfied to enable the batch'),
+      .describe(
+        'A conditional statement that determines whether or not this script or command should be executed'
+      ),
     each: z
       .array(loopEach)
       .min(1)
       .max(3)
       .optional()
-      .describe('The same batch will be run multiple times for each loop'),
+      .describe(
+        'An array of values to be iterated over, with each iteration executing the script or command with the current value as an input'
+      ),
     commands,
   })
   .describe('A batch of shell commands to run');
@@ -400,32 +478,75 @@ const parameter = z
   .describe('Settings for a task parameter');
 const task = z
   .object({
-    name: z.string().max(1).default(''),
-    title: stringy.title,
-    description: stringy.description.optional(),
-    motivation: stringy.motivation.optional(),
-    links,
-    parameters: z.array(parameter).max(20).optional(),
-    main: batchStep,
+    name: z
+      .string()
+      .max(1)
+      .default('')
+      .describe('A unique identifier for this task'),
+    title: stringy.title.describe(
+      'A brief and descriptive title for this task'
+    ),
+    description: stringy.description
+      .optional()
+      .describe(
+        'A detailed explanation of the purpose and function of this task'
+      ),
+    motivation: stringy.motivation
+      .optional()
+      .describe(
+        'The reason why this task is necessary within the context of the workflow'
+      ),
+    links: links.describe(
+      'A list of relevant resources and references related to this task'
+    ),
+    parameters: z
+      .array(parameter)
+      .max(20)
+      .optional()
+      .describe('A list of configurable options for this task'),
+    main: batchStep.describe(
+      'The primary script or command to be executed for this task'
+    ),
     before: batchStep.optional(),
     after: batchStep.optional(),
   })
   .describe('Settings for a task');
 const domain = z
   .object({
-    title: stringy.title,
-    description: stringy.description.optional(),
-    tasks: z.record(stringy.customKey, task),
+    title: stringy.title.describe(
+      'A brief and descriptive title for this workflow'
+    ),
+    description: stringy.description
+      .optional()
+      .describe(
+        'A detailed explanation of the purpose and function of this workflow'
+      ),
+    tasks: z
+      .record(stringy.customKey, task)
+      .describe('A list of individual tasks that make up this workflow'),
   })
   .describe('A domain for a list of tasks');
+
+const workflows = z
+  .record(stringy.customKey, domain)
+  .describe(
+    'A collection of related tasks and processes that achieve a specific goal'
+  );
 export const schema = z
   .object({
     engine,
     model: jsonishSchema,
-    workflows: z.record(stringy.customKey, domain),
+    workflows,
   })
   .describe('Settings for a baldrick-broth file')
   .strict();
+
+const lightSchema = z
+  .object({
+    engine,
+    workflows,
+  })
+  .describe('Settings for a baldrick-broth file');
 
 const runtimeContext = z.object({
   pwd: stringy.path,
@@ -468,8 +589,9 @@ export const safeParseBuild = (content: unknown): BuildModelValidation => {
   return willFail(errors);
 };
 
+/** Only used by conversion to json schema */
 export const getSchema = (_name: 'default') => {
-  return schema;
+  return lightSchema;
 };
 
 export const unsafeParse =
