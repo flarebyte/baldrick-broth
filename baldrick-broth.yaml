@@ -465,12 +465,11 @@ workflows:
               title: Extract model from this baldrick-broth.yaml
               value: build
               mask: model
-            - title: Save baldrick-broth file with existing model
-              stdin: data.scaffold::upgrade::broth-model
-              run: sponge temp/broth/baldrick-broth-model.json
-              links:
-                - title: sponge from MoreUtils homepage
-                  url: https://formulae.brew.sh/formula/moreutils
+            - name: save-old-model
+              a: write-to-file
+              title: Save baldrick-broth file with existing model
+              value: data.broth-model
+              filename: temp/broth/baldrick-broth-model.json
             - title: merge model with new workflow
               run: npx baldrick-whisker@latest object baldrick-broth.yaml
                 temp/broth/baldrick-broth-model.json
@@ -612,10 +611,11 @@ workflows:
               name: package-json-deps
               value: data.package-json
               mask: dependencies,devDependencies,peerDependencies
-            - name: save-package-json-deps
+            - a: write-to-file
               title: Save package.json with only dependencies
-              stdin: data.package-json-deps
-              run: sponge temp/broth/package-deps.json
+              name: save-package-json-deps
+              value: data.package-json-deps
+              filename: temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
               run: npx baldrick-whisker@latest render baldrick-broth.yaml
                 github:flarebyte:baldrick-reserve:template/ts/package.hbs
