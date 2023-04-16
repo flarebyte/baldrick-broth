@@ -1,5 +1,45 @@
 # Usage
 
+## Overview
+
+The `baldrick-broth.yaml` YAML file for a task tool consists of two main
+sections: model and workflows. The model section defines a model that is
+specific to the user and the project, such as the name, description, version,
+dependencies, etc. The workflows section defines one or more domains that
+represent different areas of functionality or responsibility in the project,
+such as testing, deployment, documentation, etc. Each domain has a name and a
+description that briefly explains its purpose.
+
+Within each domain, there are one or more tasks that represent jobs that can
+be executed in the terminal. Each task has a name and a description that
+briefly explains what it does. Each task also has one or more commands that
+specify the actual commands that run in the terminal when the task is
+invoked. The commands can be simple strings or complex expressions that use
+variables, operators, functions, etc, using a specific YAML syntax.
+
+```mermaid
+erDiagram
+    WORKFLOW {
+        string domains
+    }
+    DOMAIN {
+        string name
+        string description
+        yaml tasks
+    }
+    TASK {
+        string name
+        string description
+        yaml commands
+    }
+    COMMAND {
+        yaml expression
+    }
+    WORKFLOW ||--|{ DOMAIN : has
+    DOMAIN ||--|{ TASK : has
+    TASK ||--|{ COMMAND : has
+```
+
 ## Workflows
 
 ### Simple task
@@ -110,16 +150,21 @@ A list of functions that are supported:
 
 ### Interactive task
 
-Interactive prompts provide a better user experience by guiding users through a series of questions and options instead of requiring them to remember complex commands or syntax.
+Interactive prompts provide a better user experience by guiding users through
+a series of questions and options instead of requiring them to remember
+complex commands or syntax.
 
-This can help reduce errors by validating user input and providing feedback when input is invalid.
+This can help reduce errors by validating user input and providing feedback
+when input is invalid.
 
-Interactive prompts can help increase productivity by automating repetitive tasks and reducing the time required to perform complex tasks.
-
+Interactive prompts can help increase productivity by automating repetitive
+tasks and reducing the time required to perform complex tasks.
 
 Let's dive into an example.
 
-This code is describing a task that creates a pull request for a project. The task has two parts: “Classify the pull request” and “Create the pull request”.
+This code is describing a task that creates a pull request for a project. The
+task has two parts: “Classify the pull request” and “Create the pull
+request”.
 
 ```mermaid
 graph TD
@@ -151,22 +196,115 @@ pr:
         title: Title for the pull request
         description: A short title used for the pull request
         message: Short title describing the pull request
-      - run: gh pr create --title {{escapeSpace _.category}}:{{escapeSpace _.title}} --body-file temp/pull_request_relevant.md
+      - run: gh pr create --title {{escapeSpace _.category}}:{{escapeSpace
+_.title}} --body-file temp/pull_request_relevant.md
         title: Create the pull request
 ```
 
-The first part of the task has a prompt-choices command that asks the user to classify the pull request into one of these categories: feat, fix, chore, docs, style, refactor. Then it has a prompt-input command that asks the user to provide a short title for the pull request.
+The first part of the task has a prompt-choices command that asks the user to
+classify the pull request into one of these categories: feat, fix, chore,
+docs, style, refactor. Then it has a prompt-input command that asks the user
+to provide a short title for the pull request.
 
-The second part of the task has a run command that creates the pull request with a title that concatenates category and title provided by user separated by colon and space. The body of the pull request is then stored in temp/pull_request_relevant.md file.
+The second part of the task has a run command that creates the pull request
+with a title that concatenates category and title provided by user separated
+by colon and space. The body of the pull request is then stored in
+temp/pull\_request\_relevant.md file.
 
-As a developer, you have several options for prompting users within your code:
+As a developer, you have several options for prompting users within your
+code:
 
-- For simple string input, you can use `prompt-input`, which takes user input and returns a string. You can customize the prompt with a short message to guide the user.
+-   For simple string input, you can use `prompt-input`, which takes user
+    input and returns a string. You can customize the prompt with a short
+    message to guide the user.
 
-- If you need a yes/no or true/false answer, you can use `prompt-confirm`. This prompt will return a boolean value based on the user's response. Again, you can add a message to prompt the user with a more specific question.
+-   If you need a yes/no or true/false answer, you can use
+    `prompt-confirm`. This prompt will return a boolean value based on the
+    user's response. Again, you can add a message to prompt the user with a
+    more specific question.
 
-- For password or sensitive data, you can use `prompt-password`, which masks the user's input with asterisks or other symbols. Like the other prompts, you can include a message to guide the user.
+-   For password or sensitive data, you can use `prompt-password`, which
+    masks the user's input with asterisks or other symbols. Like the other
+    prompts, you can include a message to guide the user.
 
-- If you want the user to choose from a list of options, you can use `prompt-select`. This prompt will display a list of choices and return the user's selection. You can include a short message to guide the user and a select statement to determine when the prompt should appear.
+-   If you want the user to choose from a list of options, you can use
+    `prompt-select`. This prompt will display a list of choices and return
+    the user's selection. You can include a short message to guide the user
+    and a select statement to determine when the prompt should appear.
 
-- Finally, if you want the user to choose from a set of predefined options, you can use `prompt-choices`. This prompt will display a list of choices and return the user's selection. Once again, you can include a message to prompt the user to make a choice.
+-   Finally, if you want the user to choose from a set of predefined
+    options, you can use `prompt-choices`. This prompt will display a list
+    of choices and return the user's selection. Once again, you can include
+    a message to prompt the user to make a choice.
+
+## Custom model
+
+As a developer, you have the ability to create a custom model in YAML format
+that can be utilized by tasks.
+The model will be available in the task context under `build.model`.
+
+```yaml
+model:
+  project:
+    title: Build automation tool and task runner
+    description:
+      Take your developer workflow to the next level with a custom CLI
+      with relevant documentation for running your task
+    version: 0.14.0
+    keywords:
+      - CLI
+      - Task runner
+      - Build system
+      - Build tool
+      - Make
+```
+
+In the example above, the project version can then be referenced in your
+build process using the dot path `build.model.project.version` or with
+`{{build.model.project.version}}` in `run` shell commands (handlebars
+templates).
+
+[dot-prop](https://github.com/sindresorhus/dot-prop) is a library for
+accessing nested JavaScript objects using a string path. It allows you to
+access deeply nested properties without checking if each level of the object
+exists.
+
+[Handlebars](https://handlebarsjs.com/) is a simple templating language that
+allows, in this case, to generate a command using a template and the task
+context. Handlebars templates look like regular text with embedded Handlebars
+expressions:
+
+-   `{{expression}}`: This is used to insert dynamic values into templates
+    using curly braces.
+-   `{{#each}} {{/each}}`: This is used to loop through an array and
+    display each item.
+-   `{{#if}} {{/if}}`: This is used to conditionally render a block of
+    content.
+-   `{{!-- comment --}}`: This is used to write comments in your templates.
+-   \`\`\`{{escapeSpace \_.title}}\`: render the title from the context but
+    escape the spaces.
+
+## Visual Studio code
+
+[YAML Language Support by Red
+Hat](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
+is an extension that provides comprehensive YAML language support to Visual
+Studio Code, via the yaml-language-server.
+
+It uses JSON Schemas to understand the shape of a YAML file, including its
+value sets, defaults and descriptions.
+It offers features such as YAML validation, document outlining, auto
+completion, hover support and formatter.
+Auto completion and hover support are provided by the schema, so if a json
+schema exists for a YAML file, the extension can suggest possible values and
+show descriptions for each node.
+
+You can set it up for `baldrick-broth` by adding the following code in your
+visual code studio settings:
+
+```json
+
+"yaml.schemas": {
+  "https://raw.githubusercontent.com/flarebyte/baldrick-broth/main/spec/snapshots/build-model/get-schema--schema.json": "*/baldrick-broth.yaml"
+    },
+```
