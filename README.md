@@ -19,18 +19,19 @@ relevant documentation for running your task
 
 Highlights:
 
--   Automate tasks such as minification, concatenation, testing, and
+-   Automate tasks such as testing, scaffolding, minification, and
     compilation of code.
--   Reduce the amount of time needed to set up a project
--   YAML configuration with json-schema allowing code assistance in editor.
+-   Reduce the amount of time needed to set up new projects
+-   YAML configuration with json-schema allowing code assistance in the
+    editor (eg. visual studio code).
 -   Provide clear documentation for each step of a project build
 -   Ensure that documentation is always up-to-date and available in the CLI
 -   Run certain tasks only if certain conditions are met
 -   Allow developers to define their own model for their project
 -   Provide an easy way for developers to provide interactive input when
-    running the program
+    running a task
 
-![Example of baldrick-broth CLI](baldrick-broth-cli.gif "cli")
+![Example of baldrick-broth usage](baldrick-broth-usage.gif "cli")
 
 ## Documentation and links
 
@@ -45,9 +46,9 @@ Highlights:
 -   [Contributors](https://github.com/flarebyte/baldrick-broth/graphs/contributors)
 -   [Dependencies](https://github.com/flarebyte/baldrick-broth/network/dependencies)
 -   [Usage](USAGE.md)
+-   [Overview for the json schema for broth yaml file](SCHEMA.md)
 -   [Json schema for broth yaml
     file](spec/snapshots/build-model/get-schema--schema.json)
--   [Overview for the json schema for broth yaml file](SCHEMA.md)
 
 ## Related
 

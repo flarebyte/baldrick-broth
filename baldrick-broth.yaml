@@ -28,6 +28,9 @@ model:
     related:
       - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
         ne) Run tests declaratively with a few cunning plans"
+    tags:
+      - image-hero
+      - image-demo
   github:
     account: flarebyte
     name: baldrick-broth
