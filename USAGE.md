@@ -6,19 +6,19 @@
 
 Here are some steps you can follow to write a command:
 
-1. Create a `baldrick-broth.yaml` file at the root of your project.
+1.  Create a `baldrick-broth.yaml` file at the root of your project.
 
-1. Start by defining a workflow that describes the tasks you want to perform.
+2.  Start by defining a workflow that describes the tasks you want to
+    perform.
 
-1. Define a task that describes the command you want to run.
+3.  Define a task that describes the command you want to run.
 
-1. Define a command that describes the specific command you want to run.
+4.  Define a command that describes the specific command you want to run.
 
-1. Add any additional parameters or options that are required for your command.
-
+5.  Add any additional parameters or options that are required for your
+    command.
 
 Here’s an example of how you could write a command in YAML:
-
 
 ```yaml
 workflows:
@@ -46,20 +46,21 @@ workflows:
               run: yarn jest
             - title: Test all test files in demo folder
               run: yarn jest demo/
-
 ```
 
 Good practices:
 
-- Use descriptive titles and descriptions for your workflows and tasks.
-- Explain why each workflow and task is important.
-- Include any relevant links that might be helpful for users.
-- Use descriptive command names.
-- Provide detailed descriptions of what each command does.
+-   Use descriptive titles and descriptions for your workflows and tasks.
+-   Explain why each workflow and task is important.
+-   Include any relevant links that might be helpful for users.
+-   Use descriptive command names.
+-   Provide detailed descriptions of what each command does.
 
 ### Conditional logic in a task
 
-To add conditional logic in YAML, you can use an if statement inside of your build task list. Here’s an example of how you could add conditional logic to your YAML file:
+To add conditional logic in YAML, you can use an if statement inside of your
+build task list. Here’s an example of how you could add conditional logic to
+your YAML file:
 
 ```YAML
 - name: has-pest-files
@@ -80,12 +81,11 @@ To add conditional logic in YAML, you can use an if statement inside of your bui
   run: npx baldrick-broth@latest test pest
 ```
 
-In this example, the if attribute checks the boolean value of the variable in the context and runs the pest step only if it’s true.
+In this example, the if attribute checks the boolean value of the variable in
+the context and runs the pest step only if it’s true.
 
 The benefits of being able to add conditional logic include:
 
-- More control over your build process.
-- The ability to run certain steps only when certain conditions are met.
-- The ability to skip certain steps when they’re not needed.
-
-
+-   More control over your build process.
+-   The ability to run certain steps only when certain conditions are met.
+-   The ability to skip certain steps when they’re not needed.

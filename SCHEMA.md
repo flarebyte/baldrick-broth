@@ -45,7 +45,7 @@
                     over
             -   ◆ commands (array): A list of batch shell scripts to run
                 -   ⁘ object: Get a property using a dot prop path
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): get-property
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -60,7 +60,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Process on a list of strings
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): string-array
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -91,7 +91,7 @@
                             are not equal to a specific value
                         -   ○ anyOf (array): A list of references to match against
                 -   ⁘ object: Concatenate several arrays together
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): concat-array
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -105,7 +105,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Split a string into multiple strings
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): split-string
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -121,7 +121,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Split a string into multiple lines
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): split-lines
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -136,7 +136,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Return true if at least one of values is truthy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): some-truthy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -150,7 +150,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if at least one of values is falsy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): some-falsy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -164,7 +164,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if all the values are truthy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): every-truthy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -178,7 +178,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if all the values are falsy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): every-falsy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -192,7 +192,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return the opposite boolean value
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): not
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -207,7 +207,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Generate a range of numbers
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): range
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -223,7 +223,7 @@
                     -   ◆ end (integer): The number at the end of the range
                     -   ◆ step (integer): A step to increment the range, usually 1
                 -   ⁘ object: Invert keys and values into a new object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): invert-object
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -238,7 +238,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Uses JSON mask to select parts of the json object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): mask-object
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -254,7 +254,7 @@
                         not this script or command should be executed
                     -   ◆ mask (string): JSON mask to select parts of the json object
                 -   ⁘ object: Uses JSON mask to select parts of the json object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): template
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -269,7 +269,7 @@
                     -   ◆ template (string): Resolve the handlebars template as a atring.
                         <https://handlebarsjs.com/guide/>
                 -   ⁘ object: Prompt that takes user input and returns a string
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-input
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -283,7 +283,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that returns true or false
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-confirm
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -298,7 +298,7 @@
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that takes user input, hides it from the terminal, and
                     returns a string
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-password
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -312,7 +312,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that allows the user to select from a list of options
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-select
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -328,7 +328,7 @@
                     -   ◆ select (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Prompt that allows the user to choose an option
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-choices
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -343,7 +343,7 @@
                     -   ◆ message (string): A short message that will display in the prompt
                     -   ◆ choices (array): \_
                 -   ⁘ object: Step where data is appended to a file
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): append-to-file
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -360,7 +360,7 @@
                     -   ◆ filename (string): The name of the file to which data will be
                         appended
                 -   ⁘ object: Step where data is written to a file
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): write-to-file
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -386,7 +386,7 @@
                         this task
                         -   ○ title (string): A brief and descriptive title for this workflow
                         -   ○ url (string): A https link to a webpage
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): shell
                     -   ◆ onFailure (array): List of flags to describe the default behavior in
                         case of failure
                     -   ◆ onSuccess (array): List of flags to describe the default behavior in
@@ -414,7 +414,7 @@
                     over
             -   ◆ commands (array): A list of batch shell scripts to run
                 -   ⁘ object: Get a property using a dot prop path
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): get-property
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -429,7 +429,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Process on a list of strings
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): string-array
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -460,7 +460,7 @@
                             are not equal to a specific value
                         -   ○ anyOf (array): A list of references to match against
                 -   ⁘ object: Concatenate several arrays together
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): concat-array
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -474,7 +474,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Split a string into multiple strings
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): split-string
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -490,7 +490,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Split a string into multiple lines
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): split-lines
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -505,7 +505,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Return true if at least one of values is truthy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): some-truthy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -519,7 +519,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if at least one of values is falsy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): some-falsy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -533,7 +533,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if all the values are truthy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): every-truthy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -547,7 +547,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if all the values are falsy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): every-falsy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -561,7 +561,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return the opposite boolean value
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): not
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -576,7 +576,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Generate a range of numbers
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): range
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -592,7 +592,7 @@
                     -   ◆ end (integer): The number at the end of the range
                     -   ◆ step (integer): A step to increment the range, usually 1
                 -   ⁘ object: Invert keys and values into a new object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): invert-object
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -607,7 +607,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Uses JSON mask to select parts of the json object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): mask-object
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -623,7 +623,7 @@
                         not this script or command should be executed
                     -   ◆ mask (string): JSON mask to select parts of the json object
                 -   ⁘ object: Uses JSON mask to select parts of the json object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): template
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -638,7 +638,7 @@
                     -   ◆ template (string): Resolve the handlebars template as a atring.
                         <https://handlebarsjs.com/guide/>
                 -   ⁘ object: Prompt that takes user input and returns a string
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-input
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -652,7 +652,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that returns true or false
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-confirm
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -667,7 +667,7 @@
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that takes user input, hides it from the terminal, and
                     returns a string
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-password
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -681,7 +681,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that allows the user to select from a list of options
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-select
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -697,7 +697,7 @@
                     -   ◆ select (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Prompt that allows the user to choose an option
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-choices
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -712,7 +712,7 @@
                     -   ◆ message (string): A short message that will display in the prompt
                     -   ◆ choices (array): \_
                 -   ⁘ object: Step where data is appended to a file
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): append-to-file
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -729,7 +729,7 @@
                     -   ◆ filename (string): The name of the file to which data will be
                         appended
                 -   ⁘ object: Step where data is written to a file
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): write-to-file
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -755,7 +755,7 @@
                         this task
                         -   ○ title (string): A brief and descriptive title for this workflow
                         -   ○ url (string): A https link to a webpage
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): shell
                     -   ◆ onFailure (array): List of flags to describe the default behavior in
                         case of failure
                     -   ◆ onSuccess (array): List of flags to describe the default behavior in
@@ -783,7 +783,7 @@
                     over
             -   ◆ commands (array): A list of batch shell scripts to run
                 -   ⁘ object: Get a property using a dot prop path
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): get-property
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -798,7 +798,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Process on a list of strings
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): string-array
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -829,7 +829,7 @@
                             are not equal to a specific value
                         -   ○ anyOf (array): A list of references to match against
                 -   ⁘ object: Concatenate several arrays together
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): concat-array
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -843,7 +843,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Split a string into multiple strings
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): split-string
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -859,7 +859,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Split a string into multiple lines
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): split-lines
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -874,7 +874,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Return true if at least one of values is truthy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): some-truthy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -888,7 +888,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if at least one of values is falsy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): some-falsy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -902,7 +902,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if all the values are truthy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): every-truthy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -916,7 +916,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return true if all the values are falsy
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): every-falsy
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -930,7 +930,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ values (array): \_
                 -   ⁘ object: Return the opposite boolean value
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): not
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -945,7 +945,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Generate a range of numbers
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): range
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -961,7 +961,7 @@
                     -   ◆ end (integer): The number at the end of the range
                     -   ◆ step (integer): A step to increment the range, usually 1
                 -   ⁘ object: Invert keys and values into a new object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): invert-object
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -976,7 +976,7 @@
                     -   ◆ value (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Uses JSON mask to select parts of the json object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): mask-object
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -992,7 +992,7 @@
                         not this script or command should be executed
                     -   ◆ mask (string): JSON mask to select parts of the json object
                 -   ⁘ object: Uses JSON mask to select parts of the json object
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): template
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1007,7 +1007,7 @@
                     -   ◆ template (string): Resolve the handlebars template as a atring.
                         <https://handlebarsjs.com/guide/>
                 -   ⁘ object: Prompt that takes user input and returns a string
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-input
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1021,7 +1021,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that returns true or false
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-confirm
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1036,7 +1036,7 @@
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that takes user input, hides it from the terminal, and
                     returns a string
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-password
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1050,7 +1050,7 @@
                         -   ○ url (string): A https link to a webpage
                     -   ◆ message (string): A short message that will display in the prompt
                 -   ⁘ object: Prompt that allows the user to select from a list of options
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-select
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1066,7 +1066,7 @@
                     -   ◆ select (string): A conditional statement that determines whether or
                         not this script or command should be executed
                 -   ⁘ object: Prompt that allows the user to choose an option
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): prompt-choices
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1081,7 +1081,7 @@
                     -   ◆ message (string): A short message that will display in the prompt
                     -   ◆ choices (array): \_
                 -   ⁘ object: Step where data is appended to a file
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): append-to-file
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1098,7 +1098,7 @@
                     -   ◆ filename (string): The name of the file to which data will be
                         appended
                 -   ⁘ object: Step where data is written to a file
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): write-to-file
                     -   ◆ name (string): A short name that could be used a key or variable for
                         the step
                     -   ◆ title (string): A brief and descriptive title for this workflow
@@ -1124,7 +1124,7 @@
                         this task
                         -   ○ title (string): A brief and descriptive title for this workflow
                         -   ○ url (string): A https link to a webpage
-                    -   ◆ a (string): \_
+                    -   ◆ a (string): shell
                     -   ◆ onFailure (array): List of flags to describe the default behavior in
                         case of failure
                     -   ◆ onSuccess (array): List of flags to describe the default behavior in
