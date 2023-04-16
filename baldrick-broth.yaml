@@ -13,21 +13,24 @@ model:
       - Make
   readme:
     highlights:
-      - Automate tasks such as minification, concatenation, testing, and compilation of code.
-      - Reduce the amount of time needed to set up a project
-      - YAML configuration with json-schema allowing code assistance in editor.
+      - Automate tasks such as testing, scaffolding, minification, and compilation of code.
+      - Reduce the amount of time needed to set up new projects
+      - YAML configuration with json-schema allowing code assistance in the editor (eg. visual studio code).
       - Provide clear documentation for each step of a project build
       - Ensure that documentation is always up-to-date and available in the CLI
       - Run certain tasks only if certain conditions are met
       - Allow developers to define their own model for their project
-      - Provide an easy way for developers to provide interactive input when running the program
+      - Provide an easy way for developers to provide interactive input when running a task
     links:
       - "[Usage](USAGE.md)"
-      - "[Json schema for broth yaml file](spec/snapshots/build-model/get-schema--schema.json)"
       - "[Overview for the json schema for broth yaml file](SCHEMA.md)"
+      - "[Json schema for broth yaml file](spec/snapshots/build-model/get-schema--schema.json)"
     related:
       - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
         ne) Run tests declaratively with a few cunning plans"
+    tags:
+      - image-hero
+      - image-demo
   github:
     account: flarebyte
     name: baldrick-broth
@@ -46,7 +49,6 @@ model:
       - zod
       - railway
       - commander
-  # todo npx zx https://raw.githubusercontent.com/flarebyte/baldrick-reserve/main/reserve-schema/schema-to-md.mjs --schema spec/snapshots/build-model/get-schema--schema.json --md SCHEMA.md --title "baldrick-broth" 
   workflow-version: 0.3.0
 workflows:
   test:
@@ -633,3 +635,11 @@ workflows:
             - title: merge dependencies with broth model info
               run: npx baldrick-whisker@latest object package.json
                 temp/broth/package-specific.json temp/broth/package-deps.json
+      custom:
+        title: Normalize using the custom script
+        description: Normalize the project using a custom script for this project
+        motivation: Enable an imperative approach for some of normalisation to keep the model simple
+        main:
+          commands:
+            - title: Normalize using the custom script
+              run: sh custom-scaffolding.sh
