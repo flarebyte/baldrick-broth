@@ -107,3 +107,66 @@ A list of functions that are supported:
 | range        | Generate a range of numbers                      | The number to start the range with, The number at the end of the range, A step to increment the range, usually 1                                                                                                                                                                                             |
 | invert-title | Invert keys and values into a new title          |                                                                                                                                                                                                                                                                                                              |
 | mask-title   | Uses JSON mask to select parts of the json title | JSON mask to select parts of the json title                                                                                                                                                                                                                                                                  |
+
+### Interactive task
+
+Interactive prompts provide a better user experience by guiding users through a series of questions and options instead of requiring them to remember complex commands or syntax.
+
+This can help reduce errors by validating user input and providing feedback when input is invalid.
+
+Interactive prompts can help increase productivity by automating repetitive tasks and reducing the time required to perform complex tasks.
+
+
+Let's dive into an example.
+
+This code is describing a task that creates a pull request for a project. The task has two parts: “Classify the pull request” and “Create the pull request”.
+
+```mermaid
+graph TD
+E[Category for the pull request] --> F[choices: feat, fix, chore ? ]
+F --> M[Prompt title for the pull request ?]
+M --> P[Create pull request]
+```
+
+```YAML
+pr:
+  title: Pull request for the project
+  description: Create a pull request for the branch
+  motivation: Automate the body of pull request
+  main:
+    commands:
+      - a: prompt-choices
+        name: category
+        title: Category for the pull request
+        message: Classify the pull request
+        choices:
+          - feat
+          - fix
+          - chore
+          - docs
+          - style
+          - refactor
+      - a: prompt-input
+        name: title
+        title: Title for the pull request
+        description: A short title used for the pull request
+        message: Short title describing the pull request
+      - run: gh pr create --title {{escapeSpace _.category}}:{{escapeSpace _.title}} --body-file temp/pull_request_relevant.md
+        title: Create the pull request
+```
+
+The first part of the task has a prompt-choices command that asks the user to classify the pull request into one of these categories: feat, fix, chore, docs, style, refactor. Then it has a prompt-input command that asks the user to provide a short title for the pull request.
+
+The second part of the task has a run command that creates the pull request with a title that concatenates category and title provided by user separated by colon and space. The body of the pull request is then stored in temp/pull_request_relevant.md file.
+
+As a developer, you have several options for prompting users within your code:
+
+- For simple string input, you can use `prompt-input`, which takes user input and returns a string. You can customize the prompt with a short message to guide the user.
+
+- If you need a yes/no or true/false answer, you can use `prompt-confirm`. This prompt will return a boolean value based on the user's response. Again, you can add a message to prompt the user with a more specific question.
+
+- For password or sensitive data, you can use `prompt-password`, which masks the user's input with asterisks or other symbols. Like the other prompts, you can include a message to guide the user.
+
+- If you want the user to choose from a list of options, you can use `prompt-select`. This prompt will display a list of choices and return the user's selection. You can include a short message to guide the user and a select statement to determine when the prompt should appear.
+
+- Finally, if you want the user to choose from a set of predefined options, you can use `prompt-choices`. This prompt will display a list of choices and return the user's selection. Once again, you can include a message to prompt the user to make a choice.
