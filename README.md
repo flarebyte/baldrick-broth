@@ -8,6 +8,8 @@ status](https://github.com/flarebyte/baldrick-broth/actions/workflows/main.yml/b
 ![node-current](https://img.shields.io/node/v/baldrick-broth)
 ![NPM](https://img.shields.io/npm/l/baldrick-broth)
 
+![Experimental](https://img.shields.io/badge/status-experimental-blue)
+
 > Build automation tool and task runner
 
 Take your developer workflow to the next level with a custom CLI with
