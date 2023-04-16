@@ -13,6 +13,8 @@ status](https://github.com/flarebyte/baldrick-broth/actions/workflows/main.yml/b
 Take your developer workflow to the next level with a custom CLI with
 relevant documentation for running your task
 
+![Hero image for baldrick-broth](baldrick-broth-hero-512.jpeg)
+
 Highlights:
 
 -   Automate tasks such as minification, concatenation, testing, and
@@ -25,6 +27,8 @@ Highlights:
 -   Allow developers to define their own model for their project
 -   Provide an easy way for developers to provide interactive input when
     running the program
+
+![Example of baldrick-broth CLI](baldrick-broth-cli.gif "cli")
 
 ## Documentation and links
 
