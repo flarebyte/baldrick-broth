@@ -1,16 +1,16 @@
-import {writeFile} from 'node:fs/promises';
-import {Command} from 'commander';
+import { writeFile } from 'node:fs/promises';
+import { Command } from 'commander';
 import {
   type AnyDataValue,
   type BuildModel,
   safeParseBuild,
 } from './build-model.js';
-import {createCommands} from './commands-creator.js';
-import {buildFilePath} from './env-variables.js';
-import {readYaml} from './file-io.js';
-import {type ValidationError} from './format-message.js';
-import {andThen} from './railway.js';
-import {version} from './version.js';
+import { createCommands } from './commands-creator.js';
+import { buildFilePath } from './env-variables.js';
+import { readYaml } from './file-io.js';
+import type { ValidationError } from './format-message.js';
+import { andThen } from './railway.js';
+import { version } from './version.js';
 
 const exitWithError = (message: string, value?: object) => {
   value === undefined ? console.error(message) : console.error(message, value);
@@ -37,7 +37,9 @@ async function deleteLog() {
   } catch {}
 }
 
-type RunClientFailure = {message: string; filename: string} | ValidationError[];
+type RunClientFailure =
+  | { message: string; filename: string }
+  | ValidationError[];
 /**
  * Run the client without trapping all exceptions
  */
@@ -45,13 +47,13 @@ async function unsafeRunClient() {
   await deleteLog();
   const buildReadingResult = await readYaml(buildFilePath);
   const buildModelResult = andThen<AnyDataValue, BuildModel, RunClientFailure>(
-    safeParseBuild
+    safeParseBuild,
   )(buildReadingResult);
 
   if (buildModelResult.status === 'failure') {
     exitWithError(
       `Loading and parsing the baldrick-broth build file ${buildFilePath} failed`,
-      buildModelResult.error
+      buildModelResult.error,
     );
   }
 

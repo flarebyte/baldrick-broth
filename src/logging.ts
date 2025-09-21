@@ -1,11 +1,11 @@
-import {readFile} from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import winston from 'winston';
-import {coloration} from './coloration.js';
-import {isCI} from './is-ci.js';
-import {type LogMessage} from './log-model.js';
+import { coloration } from './coloration.js';
+import { isCI } from './is-ci.js';
+import type { LogMessage } from './log-model.js';
 
-const {printf} = winston.format;
-const consoleLikeFormat = printf(({message}) => {
+const { printf } = winston.format;
+const consoleLikeFormat = printf(({ message }) => {
   return message;
 });
 
@@ -17,7 +17,7 @@ class BrothLogger {
       transports: [
         new winston.transports.File({
           filename: `temp/log/baldrick-broth-log.txt`,
-          options: {flags: 'a'},
+          options: { flags: 'a' },
           format: consoleLikeFormat,
         }),
       ],
@@ -47,7 +47,7 @@ export const currentTaskWarn = (content: LogMessage) => {
   if (isCI) {
     currentTaskLogger.warn(`✗ ${content.message}`);
   } else {
-    currentTaskLogger.warn(coloration.warn('✗') + ' ' + content.coloredMessage);
+    currentTaskLogger.warn(`${coloration.warn('✗')} ${content.coloredMessage}`);
   }
 };
 
@@ -77,7 +77,7 @@ export const replayLogToConsole = async () => {
       encoding: 'utf8',
     });
     console.log(['', '', currentLog].join('\n'));
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Could not replay the log', error);
   }
 };

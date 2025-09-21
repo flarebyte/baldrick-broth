@@ -268,7 +268,7 @@ export const createTaskAction =
 async function interactivePrompt(
   commandLineInput: CommandLineInput,
   taskContext: Record<string, unknown>,
-  task: ListrTaskWrapper<any, any>,
+  task: ListrTaskWrapper<Ctx, unknown>,
   ctx: Ctx,
 ) {
   if (commandLineInput.opts.a === 'prompt-input') {

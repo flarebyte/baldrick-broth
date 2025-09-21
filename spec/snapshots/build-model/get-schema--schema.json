@@ -25,17 +25,12 @@
                   "description": "A relative path to a file"
                 }
               },
-              "required": [
-                "verbosity",
-                "filepath"
-              ],
+              "required": ["verbosity", "filepath"],
               "additionalProperties": false,
               "description": "Preferences for telemetry"
             }
           },
-          "required": [
-            "telemetry"
-          ],
+          "required": ["telemetry"],
           "additionalProperties": false,
           "description": "Settings for the baldrick-broth engine"
         },
@@ -97,10 +92,7 @@
                             "description": "A https link to a webpage"
                           }
                         },
-                        "required": [
-                          "title",
-                          "url"
-                        ],
+                        "required": ["title", "url"],
                         "additionalProperties": false,
                         "description": "Info about a link"
                       },
@@ -125,10 +117,7 @@
                             "maxLength": 300
                           }
                         },
-                        "required": [
-                          "description",
-                          "flags"
-                        ],
+                        "required": ["description", "flags"],
                         "additionalProperties": false,
                         "description": "Settings for a task parameter"
                       },
@@ -140,12 +129,7 @@
                       "properties": {
                         "name": {
                           "type": "string",
-                          "enum": [
-                            "unknown",
-                            "main",
-                            "before",
-                            "after"
-                          ],
+                          "enum": ["unknown", "main", "before", "after"],
                           "default": "unknown",
                           "description": "Name of the step with either:\nunknown: Describe any unknown or uncertain aspects of the process (should not pick this)\nmain: Describe the main step of the process\nbefore: Describe a step that need to be taken before the process begins\nafter: Describe a step that need to be taken after the process is completed"
                         },
@@ -175,10 +159,7 @@
                                 "description": "The variable to the array of values to be iterated over"
                               }
                             },
-                            "required": [
-                              "name",
-                              "values"
-                            ],
+                            "required": ["name", "values"],
                             "additionalProperties": false,
                             "description": "Configuration of every loop"
                           },
@@ -225,12 +206,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
                                       }
                                     },
-                                    "required": [
-                                      "a",
-                                      "name",
-                                      "title",
-                                      "value"
-                                    ],
+                                    "required": ["a", "name", "title", "value"],
                                     "additionalProperties": false,
                                     "description": "Get a property using a dot prop path"
                                   },
@@ -298,10 +274,7 @@
                                               "description": "A list of references to match against"
                                             }
                                           },
-                                          "required": [
-                                            "if",
-                                            "anyOf"
-                                          ],
+                                          "required": ["if", "anyOf"],
                                           "additionalProperties": false,
                                           "description": "Filter an array of strings"
                                         },
@@ -393,12 +366,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
                                       }
                                     },
-                                    "required": [
-                                      "a",
-                                      "name",
-                                      "title",
-                                      "value"
-                                    ],
+                                    "required": ["a", "name", "title", "value"],
                                     "additionalProperties": false,
                                     "description": "Split a string into multiple strings"
                                   },
@@ -428,12 +396,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
                                       }
                                     },
-                                    "required": [
-                                      "a",
-                                      "name",
-                                      "title",
-                                      "value"
-                                    ],
+                                    "required": ["a", "name", "title", "value"],
                                     "additionalProperties": false,
                                     "description": "Split a string into multiple lines"
                                   },
@@ -623,12 +586,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
                                       }
                                     },
-                                    "required": [
-                                      "a",
-                                      "name",
-                                      "title",
-                                      "value"
-                                    ],
+                                    "required": ["a", "name", "title", "value"],
                                     "additionalProperties": false,
                                     "description": "Return the opposite boolean value"
                                   },
@@ -669,12 +627,7 @@
                                         "description": "A step to increment the range, usually 1"
                                       }
                                     },
-                                    "required": [
-                                      "a",
-                                      "name",
-                                      "title",
-                                      "end"
-                                    ],
+                                    "required": ["a", "name", "title", "end"],
                                     "additionalProperties": false,
                                     "description": "Generate a range of numbers"
                                   },
@@ -704,12 +657,7 @@
                                         "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/if"
                                       }
                                     },
-                                    "required": [
-                                      "a",
-                                      "name",
-                                      "title",
-                                      "value"
-                                    ],
+                                    "required": ["a", "name", "title", "value"],
                                     "additionalProperties": false,
                                     "description": "Invert keys and values into a new object"
                                   },
@@ -1116,9 +1064,7 @@
                                       "description": "Options for when the shell command finish with either:\nexit: Exit the shell after the command has finished.\nsilent: Suppress any output from the command.\ntrim: Remove any leading or trailing whitespace from the output.\njson: Format the output as a JSON object.\nyaml: Format the output as a YAML object.\ncsv: Format the output as a CSV file.\nsave: Save the output to a file.\ndebug: Print debugging information about the command execution."
                                     },
                                     "minItems": 1,
-                                    "default": [
-                                      "exit"
-                                    ],
+                                    "default": ["exit"],
                                     "description": "List of flags to describe the default behavior in case of failure"
                                   },
                                   "onSuccess": {
@@ -1127,9 +1073,7 @@
                                       "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands/items/anyOf/1/properties/onFailure/items"
                                     },
                                     "minItems": 1,
-                                    "default": [
-                                      "trim"
-                                    ],
+                                    "default": ["trim"],
                                     "description": "List of flags to describe the default behavior in case of success"
                                   },
                                   "if": {
@@ -1152,10 +1096,7 @@
                                     "description": "Should the run command spread on multiple lines"
                                   }
                                 },
-                                "required": [
-                                  "title",
-                                  "run"
-                                ],
+                                "required": ["title", "run"],
                                 "additionalProperties": false,
                                 "description": "Configuration for the batch shell script"
                               }
@@ -1167,9 +1108,7 @@
                           "description": "A list of batch shell scripts to run"
                         }
                       },
-                      "required": [
-                        "commands"
-                      ],
+                      "required": ["commands"],
                       "additionalProperties": false,
                       "description": "The primary script or command to be executed for this task"
                     },
@@ -1189,9 +1128,7 @@
                           "$ref": "#/definitions/baldrick-broth-schema/properties/workflows/additionalProperties/properties/tasks/additionalProperties/properties/main/properties/commands"
                         }
                       },
-                      "required": [
-                        "commands"
-                      ],
+                      "required": ["commands"],
                       "additionalProperties": false,
                       "description": "A batch of shell commands to run"
                     },
@@ -1200,10 +1137,7 @@
                       "description": "A batch of shell commands to run"
                     }
                   },
-                  "required": [
-                    "title",
-                    "main"
-                  ],
+                  "required": ["title", "main"],
                   "additionalProperties": false,
                   "description": "Settings for a task"
                 },
@@ -1215,10 +1149,7 @@
                 "description": "A list of individual tasks that make up this workflow"
               }
             },
-            "required": [
-              "title",
-              "tasks"
-            ],
+            "required": ["title", "tasks"],
             "additionalProperties": false,
             "description": "A domain for a list of tasks"
           },
@@ -1230,9 +1161,7 @@
           "description": "A collection of related tasks and processes that achieve a specific goal"
         }
       },
-      "required": [
-        "workflows"
-      ],
+      "required": ["workflows"],
       "additionalProperties": false,
       "description": "Settings for a baldrick-broth file"
     }

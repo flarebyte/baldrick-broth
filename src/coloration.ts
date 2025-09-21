@@ -1,4 +1,4 @@
-import {Chalk} from 'chalk';
+import { Chalk } from 'chalk';
 
 const chalk = new Chalk();
 
