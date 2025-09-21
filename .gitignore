@@ -6,3 +6,6 @@ report/
 temp/
 .message
 .todo.yaml
+# Coverage
+coverage/
+

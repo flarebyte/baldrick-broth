@@ -45,7 +45,8 @@
   "scripts": {
     "build": "tsc --outDir dist",
     "test": "tsx --test test/*.test.ts",
-    "cli": "tsx src/cli.mts"
+    "cli": "tsx src/cli.mts",
+    "test:cov": "c8 --reporter=text-summary --reporter=lcov yarn -s test"
   },
   "dependencies": {
     "chalk": "^5.2.0",
@@ -66,8 +67,22 @@
     "baldrick-dev-ts": "^0.17.0",
     "baldrick-zest-mess": "^0.17.0",
     "ts-node": "10.9.2",
+    "c8": "^9.1.0",
     "tsx": "^4.19.0",
     "typescript": "^5.0.4"
+  },
+  "c8": {
+    "all": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "dist/**",
+      "test/**",
+      "pest-spec/**",
+      "spec/**",
+      "**/*.d.ts"
+    ]
   },
   "peerDependencies": {}
 }
