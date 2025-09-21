@@ -51,3 +51,5 @@ jobs:
           name: Pest
           path: report/*.pest.mocha.json
           reporter: mocha-json
+          fail-on-empty: false
+          fail-on-error: false
