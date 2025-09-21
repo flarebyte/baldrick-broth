@@ -29,7 +29,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-lcov
+          # Ensure unique artifact names per matrix job to avoid 409 conflicts
+          name: coverage-lcov-${{ matrix.os }}-${{ matrix.node }}
           path: coverage/lcov.info
       - name: Create temp folder
         run: mkdir -p temp
