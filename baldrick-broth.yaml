@@ -265,7 +265,7 @@ workflows:
           commands:
             - name: fix
               title: Fix source code
-              run: npx @biomejs/biome check --apply .
+              run: npx @biomejs/biome check --write .
             - name: format
               title: Format source files
               run: npx @biomejs/biome format . --write
