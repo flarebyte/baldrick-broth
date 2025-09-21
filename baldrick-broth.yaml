@@ -66,6 +66,19 @@ workflows:
           commands:
             - title: Run unit tests with coverage
               run: yarn test:cov
+      all:
+        title: Lint + unit + pest + coverage
+        description: Run Biome check, unit tests, acceptance tests and coverage
+        main:
+          commands:
+            - title: Lint check (Biome)
+              run: npx @biomejs/biome check .
+            - title: Unit tests
+              run: yarn test
+            - title: Acceptance tests (pest)
+              run: npx baldrick-broth@latest test pest
+            - title: Coverage (c8)
+              run: yarn test:cov
       unit:
         title: Run node.js unit tests
         description: Run traditional unit tests
@@ -642,18 +655,3 @@ workflows:
               run: npx baldrick-whisker@latest render baldrick-broth.yaml
                 github:flarebyte:baldrick-reserve:template/ts/readme.hbs
                 README.md
-  verify:
-    title: Verify code quality
-    description: Run lint check and all tests
-    tasks:
-      all:
-        title: Lint + unit + pest
-        description: Run Biome check, unit tests and acceptance tests
-        main:
-          commands:
-            - title: Lint check (Biome)
-              run: npx @biomejs/biome check .
-            - title: Unit tests
-              run: yarn test
-            - title: Acceptance tests (pest)
-              run: npx baldrick-broth@latest test pest
