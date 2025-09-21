@@ -45,7 +45,7 @@ jobs:
         run: yarn build
       - name: Test Report
         uses: dorny/test-reporter@v1
-        if: always()
+        if: always() && hashFiles('report/*.pest.mocha.json') != ''
         continue-on-error: true
         with:
           name: Pest
