@@ -1,5 +1,5 @@
 import Handlebars from 'handlebars';
-import { type AnyCommand, type Ctx } from './build-model.js';
+import type { AnyCommand, Ctx } from './build-model.js';
 import { splitDataKey, withMemoryPrefix } from './data-value-utils.js';
 import { rootId } from './id-generator.js';
 
@@ -10,7 +10,7 @@ Handlebars.registerHelper('escapeSpace', escapeSpace);
 const createTemplate = (run: string) =>
   Handlebars.compile(run, { noEscape: true });
 
-export const getExpandedName = (name: string, context: any): string => {
+export const getExpandedName = (name: string, context: unknown): string => {
   const template = createTemplate(name);
   const expandedName = template(context).trim();
   return expandedName;
@@ -18,14 +18,14 @@ export const getExpandedName = (name: string, context: any): string => {
 
 export const getStringFromTemplate = (
   hbsTemplate: string,
-  context: any
+  context: unknown,
 ): string => {
   const template = createTemplate(hbsTemplate);
   const expandedName = template(context).trim();
   return expandedName;
 };
 
-export const getCommandLines = (run: string, context: any): string[] => {
+export const getCommandLines = (run: string, context: unknown): string[] => {
   const template = createTemplate(run);
   const lines = template(context)
     .split('\n')
@@ -34,7 +34,7 @@ export const getCommandLines = (run: string, context: any): string[] => {
   return lines;
 };
 
-export const getSingleCommandLine = (run: string, context: any): string => {
+export const getSingleCommandLine = (run: string, context: unknown): string => {
   const template = createTemplate(run);
   const lines = template(context)
     .split('\n')
@@ -43,15 +43,16 @@ export const getSingleCommandLine = (run: string, context: any): string => {
   return lines.join(' ').trim();
 };
 
-const forceJson = (wholeCtx: any): any => JSON.parse(JSON.stringify(wholeCtx));
+const forceJson = (wholeCtx: unknown): unknown =>
+  JSON.parse(JSON.stringify(wholeCtx));
 
 const getTemplateData = (
   memoryId: string,
-  extra: Record<string, any>
-): Record<string, any> => {
+  extra: Record<string, unknown>,
+): Record<string, unknown> => {
   const keys = Object.keys(extra);
   const branchKeys = keys.filter(withMemoryPrefix(memoryId));
-  const results: Record<string, any> = {};
+  const results: Record<string, unknown> = {};
   for (const dataKey of branchKeys) {
     const [_, key] = splitDataKey(dataKey);
     results[key] = extra[dataKey];
@@ -74,9 +75,9 @@ const getTemplateData = (
 };
 
 const mergeExtraData = (
-  ctxData: Record<string, any>,
-  extra: Record<string, any>
-): Record<string, any> => ({ ...ctxData, ...extra });
+  ctxData: Record<string, unknown>,
+  extra: Record<string, unknown>,
+): Record<string, unknown> => ({ ...ctxData, ...extra });
 
 export const mergeTemplateContext = ({
   memoryId,
@@ -86,7 +87,7 @@ export const mergeTemplateContext = ({
 }: {
   memoryId: string;
   ctx: Ctx;
-  extra: Record<string, any>;
+  extra: Record<string, unknown>;
   command: AnyCommand;
 }) => {
   const mergedExtra = mergeExtraData(ctx.data, extra);

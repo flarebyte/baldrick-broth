@@ -1,20 +1,20 @@
+import { appendFile, writeFile } from 'node:fs/promises';
 import { execaCommand } from 'execa';
-import YAML from 'yaml';
 import CSV from 'papaparse';
-import {
-  type AnyDataValue,
-  type AnyCommand,
-  type Ctx,
-  type onCommandSuccess,
-  type onCommandFailure,
-} from './build-model.js';
-import { type Result, succeed, willFail } from './railway.js';
-import { getSupportedProperty } from './data-value-utils.js';
+import YAML from 'yaml';
 import { basicCommandExecution } from './basic-execution.js';
-import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
-import { currentTaskLogger } from './logging.js';
+import type {
+  AnyCommand,
+  AnyDataValue,
+  Ctx,
+  onCommandFailure,
+  onCommandSuccess,
+} from './build-model.js';
 import { coloration } from './coloration.js';
-import { appendFile, writeFile } from 'fs/promises';
+import { getSupportedProperty } from './data-value-utils.js';
+import { currentTaskLogger } from './logging.js';
+import { type Result, succeed, willFail } from './railway.js';
+import { getSingleCommandLine, mergeTemplateContext } from './templating.js';
 
 type ExecuteCommandLineFailedCategory =
   | 'failed'
@@ -30,7 +30,7 @@ export type CommandLineInput = {
   line: string;
   name: string;
   opts: AnyCommand;
-  extra: Record<string, any>;
+  extra: Record<string, unknown>;
 };
 
 type ExecuteCommandLineFailure = {
@@ -169,7 +169,7 @@ const forceString = (value: unknown): string =>
 
 const executeShellCommandLine = async (
   ctx: Ctx,
-  params: CommandLineInput & { opts: { a: 'shell' } }
+  params: CommandLineInput & { opts: { a: 'shell' } },
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts, memoryId, extra } = params;
 
@@ -184,7 +184,7 @@ const executeShellCommandLine = async (
     : getSingleCommandLine(line, templateCtx);
   currentTaskLogger.info(`> ${coloration.running(runnableLine)}`);
   const { onSuccess, onFailure, stdin } = opts;
-  let maybeStdin;
+  let maybeStdin: { input?: string };
   if (stdin !== undefined) {
     const stdinPropValue = getSupportedProperty(memoryId, ctx, stdin);
     if (stdinPropValue === undefined) {
@@ -307,7 +307,7 @@ const executeShellCommandLine = async (
 const appendVarToFile = async (
   memoryId: string,
   ctx: Ctx,
-  anyCommand: AnyCommand & { a: 'append-to-file' }
+  anyCommand: AnyCommand & { a: 'append-to-file' },
 ): Promise<ExecuteCommandLineResult> => {
   const objectValue =
     getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
@@ -337,7 +337,7 @@ const appendVarToFile = async (
 const writeVarToFile = async (
   memoryId: string,
   ctx: Ctx,
-  anyCommand: AnyCommand & { a: 'write-to-file' }
+  anyCommand: AnyCommand & { a: 'write-to-file' },
 ): Promise<ExecuteCommandLineResult> => {
   const objectValue =
     getSupportedProperty(memoryId, ctx, anyCommand.value) || {};
@@ -369,7 +369,7 @@ const writeVarToFile = async (
  */
 export const executeCommandLine = async (
   ctx: Ctx,
-  params: CommandLineInput
+  params: CommandLineInput,
 ): Promise<ExecuteCommandLineResult> => {
   const { line, name, opts, memoryId, extra } = params;
   if (opts.a === 'shell') {

@@ -3,6 +3,6 @@
     "spec/snapshots/build-model/get-schema--schema.json": [
       "baldrick-broth.yaml",
       "spec/fixtures/build.yaml"
-    ],
+    ]
   }
 }

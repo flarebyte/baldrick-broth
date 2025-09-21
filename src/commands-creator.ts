@@ -1,14 +1,14 @@
-import {type Command} from 'commander';
-import {type BuildModelValidation, type TaskModel} from './build-model.js';
-import {coloration} from './coloration.js';
-import {createTaskAction} from './create-task-action.js';
-import {version} from './version.js';
+import type { Command } from 'commander';
+import type { BuildModelValidation, TaskModel } from './build-model.js';
+import { coloration } from './coloration.js';
+import { createTaskAction } from './create-task-action.js';
+import { version } from './version.js';
 
 const createTaskDescription = (task: TaskModel): string => {
   const descriptions = [task.description ? task.description : task.title];
   if (task.motivation !== undefined) {
     descriptions.push(
-      '\n' + coloration.motivation(`Motivation: ${task.motivation}`)
+      `\n${coloration.motivation(`Motivation: ${task.motivation}`)}`,
     );
   }
 
@@ -17,7 +17,7 @@ const createTaskDescription = (task: TaskModel): string => {
 
 export const createCommands = (
   program: Command,
-  buildModelValidation: BuildModelValidation
+  buildModelValidation: BuildModelValidation,
 ) => {
   program
     .name('baldrick-broth')
@@ -27,7 +27,7 @@ export const createCommands = (
   if (buildModelValidation.status === 'success') {
     const {
       value,
-      value: {workflows},
+      value: { workflows },
     } = buildModelValidation;
     for (const workflowKey in workflows) {
       const workflow = workflows[workflowKey];
@@ -62,15 +62,15 @@ export const createCommands = (
         taskCommand.action(
           createTaskAction({
             build: value,
-            task: {...task, name: `${workflowKey}::${taskId}`},
-          })
+            task: { ...task, name: `${workflowKey}::${taskId}` },
+          }),
         );
         if (task.parameters !== undefined) {
           for (const parameter of task.parameters) {
             taskCommand.option(
               parameter.flags,
               parameter.description,
-              parameter.default
+              parameter.default,
             );
           }
         }
