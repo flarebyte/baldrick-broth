@@ -597,7 +597,7 @@ export const getSchema = (_name: 'default') => {
 
 export const unsafeParse =
   (config: Record<string, string>) => (content: unknown) => {
-    const name = `${config.model}`.trim();
+    const name = `${config['model']}`.trim();
     if (name === 'context') {
       context.parse(content);
       return content;

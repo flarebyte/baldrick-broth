@@ -169,7 +169,7 @@ export const basicCommandExecution = (
         });
       }
 
-      const masked = json_mask(objectValue, anyCommand.mask);
+      const masked = json_mask(objectValue, anyCommand.mask) as AnyDataValue;
       setDataValue(memoryId, ctx, name, masked);
       return success;
     }

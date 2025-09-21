@@ -29,5 +29,10 @@
     "compilerOptions": {},
     "files": true,
     "transpileOnly": true
-  }
+  },
+  "exclude": [
+    "test",
+    "spec",
+    "pest-spec"
+  ]
 }

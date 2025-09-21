@@ -260,7 +260,7 @@ export const createTaskAction =
         logTaskStatistics(started, ctx);
         await replayLogToConsole();
       } catch (error: unknown) {
-        currentTaskLogger.error(error);
+        currentTaskLogger.error(String(error));
       }
     }
   };
@@ -268,11 +268,11 @@ export const createTaskAction =
 async function interactivePrompt(
   commandLineInput: CommandLineInput,
   taskContext: Record<string, unknown>,
-  task: ListrTaskWrapper<Ctx, unknown>,
+  task: ListrTaskWrapper<Ctx, any>,
   ctx: Ctx,
 ) {
   if (commandLineInput.opts.a === 'prompt-input') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Input',
       message: commandLineInput.opts.message,
     });
@@ -280,12 +280,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input,
+      taskContext['input'] as any,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-password') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Password',
       message: commandLineInput.opts.message,
     });
@@ -293,12 +293,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input,
+      taskContext['input'] as any,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-choices') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
       choices: commandLineInput.opts.choices,
@@ -307,12 +307,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input,
+      taskContext['input'] as any,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-confirm') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Confirm',
       message: commandLineInput.opts.message,
     });
@@ -320,7 +320,7 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input,
+      taskContext['input'] as any,
     );
   }
 
@@ -333,7 +333,7 @@ async function interactivePrompt(
     const choices: string[] = isStringArray(possibleChoices)
       ? possibleChoices
       : ['The choice should be an array (645608)'];
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
       choices,
@@ -342,7 +342,7 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input,
+      taskContext['input'] as any,
     );
   }
 }
