@@ -1,9 +1,8 @@
-import {test} from 'node:test';
 import assert from 'node:assert';
-import YAML from 'yaml';
-
-import {getSchema, safeParseBuild, unsafeParse} from '../src/build-model.js';
 import fs from 'node:fs/promises';
+import { test } from 'node:test';
+import YAML from 'yaml';
+import { getSchema, safeParseBuild, unsafeParse } from '../src/build-model.js';
 
 test('build-model: getSchema accepts minimal object', () => {
   const schema = getSchema('default');
@@ -40,14 +39,16 @@ test('build-model: safeParseBuild fails for invalid title length', async () => {
 
 test('build-model: unsafeParse validates context and commands', async () => {
   const ctxContent = await fs.readFile('spec/fixtures/context.yaml', 'utf8');
-  const commandsContent = await fs.readFile('spec/fixtures/commands.yaml', 'utf8');
+  const commandsContent = await fs.readFile(
+    'spec/fixtures/commands.yaml',
+    'utf8',
+  );
   const ctx = YAML.parse(ctxContent);
   const commands = YAML.parse(commandsContent);
 
-  const parseContext = unsafeParse({model: 'context'});
-  const parseCommands = unsafeParse({model: 'commands'});
+  const parseContext = unsafeParse({ model: 'context' });
+  const parseCommands = unsafeParse({ model: 'commands' });
 
   assert.deepStrictEqual(parseContext(ctx), ctx);
   assert.deepStrictEqual(parseCommands(commands), commands);
 });
-

@@ -6,6 +6,7 @@ Options:
   -h, --help      display help for command
 
 Commands:
+  coverage        Generate unit test coverage
   unit            Run node.js unit tests
   pest            Run acceptance tests for the CLI
   pest1           Run one acceptance tests for the CLI
