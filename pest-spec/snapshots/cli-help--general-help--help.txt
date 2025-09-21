@@ -16,4 +16,5 @@ Commands:
   md              Markdown documentation
   release         Release of the library
   scaffold        Scaffolding for the project
+  verify          Verify code quality
   help [command]  display help for command
