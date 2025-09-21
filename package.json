@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@types/papaparse": "^5.3.7",
-    "baldrick-dev-ts": "^0.17.0",
+    "baldrick-dev-ts": "^1.0.0",
     "baldrick-zest-mess": "^0.17.0",
     "ts-node": "10.9.2",
     "c8": "^9.1.0",
