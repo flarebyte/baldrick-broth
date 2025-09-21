@@ -1,17 +1,144 @@
-[STARTED] Main
-[STARTED] Run all baldrick zest files
-[TITLE] run-all-baldrick-zest-files
-[DATA] OK
-[SUCCESS] run-all-baldrick-zest-files
-[SUCCESS] Main
+[33m❯[39m Main
+[33m❯[39m Run unit tests
+› yarn test
+› OK
+[32m✔[39m run-unit-tests
+[32m✔[39m Main
+[?25h
 
+Run node.js unit tests
+> yarn test
+◼ Run unit tests
+[2K[1G[2m$ tsx --test test/*.test.ts[22m
+TAP version 13
+# Subtest: basic-execution: runs commands and populates ctx.data
+ok 1 - basic-execution: runs commands and populates ctx.data
+  ---
+  duration_ms: 17.692167
+  type: 'test'
+  ...
+# Subtest: build-model: getSchema accepts minimal object
+ok 2 - build-model: getSchema accepts minimal object
+  ---
+  duration_ms: 0.88175
+  type: 'test'
+  ...
+# Subtest: build-model: safeParseBuild succeeds for valid fixture
+ok 3 - build-model: safeParseBuild succeeds for valid fixture
+  ---
+  duration_ms: 14.165209
+  type: 'test'
+  ...
+# Subtest: build-model: safeParseBuild fails for invalid title length
+ok 4 - build-model: safeParseBuild fails for invalid title length
+  ---
+  duration_ms: 2.523667
+  type: 'test'
+  ...
+# Subtest: build-model: unsafeParse validates context and commands
+ok 5 - build-model: unsafeParse validates context and commands
+  ---
+  duration_ms: 8.513084
+  type: 'test'
+  ...
+# Subtest: data-value-utils: setDataValue adds and deletes entries
+ok 6 - data-value-utils: setDataValue adds and deletes entries
+  ---
+  duration_ms: 0.37425
+  type: 'test'
+  ...
+# Subtest: data-value-utils: getSupportedProperty uses local then root data
+ok 7 - data-value-utils: getSupportedProperty uses local then root data
+  ---
+  duration_ms: 0.099709
+  type: 'test'
+  ...
+# Subtest: no test yet
+ok 8 - no test yet
+  ---
+  duration_ms: 0.315834
+  type: 'test'
+  ...
+# Subtest: templating: expand single command
+ok 9 - templating: expand single command
+  ---
+  duration_ms: 3.642541
+  type: 'test'
+  ...
+# Subtest: chalk: basic colorization
+ok 10 - chalk: basic colorization
+  ---
+  duration_ms: 0.559375
+  type: 'test'
+  ...
+# Subtest: commander: help information
+ok 11 - commander: help information
+  ---
+  duration_ms: 0.790334
+  type: 'test'
+  ...
+# Subtest: dot-prop: getProperty resolves nested path
+ok 12 - dot-prop: getProperty resolves nested path
+  ---
+  duration_ms: 0.131
+  type: 'test'
+  ...
+# {"level":"info","message":"ok"}
+# Subtest: execa: run node inline script
+ok 13 - execa: run node inline script
+  ---
+  duration_ms: 8.813542
+  type: 'test'
+  ...
+# Subtest: handlebars: template compile
+ok 14 - handlebars: template compile
+  ---
+  duration_ms: 3.942125
+  type: 'test'
+  ...
+# Subtest: json-mask: pick single key
+ok 15 - json-mask: pick single key
+  ---
+  duration_ms: 0.411333
+  type: 'test'
+  ...
+# Subtest: listr2: run a simple task list
+ok 16 - listr2: run a simple task list
+  ---
+  duration_ms: 0.737416
+  type: 'test'
+  ...
+# Subtest: papaparse: parse a CSV row
+ok 17 - papaparse: parse a CSV row
+  ---
+  duration_ms: 0.73325
+  type: 'test'
+  ...
+# Subtest: winston: create a console logger
+ok 18 - winston: create a console logger
+  ---
+  duration_ms: 1.5305
+  type: 'test'
+  ...
+# Subtest: yaml: parse simple content
+ok 19 - yaml: parse simple content
+  ---
+  duration_ms: 2.2265
+  type: 'test'
+  ...
+# Subtest: zod: basic schema success
+ok 20 - zod: basic schema success
+  ---
+  duration_ms: 0.423625
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 332.478208
 
-[38;2;128;0;128m[1m[4mRun unit tests declaratively[24m[22m[39m
-[38;2;75;0;130m◼ Run all baldrick zest files[39m
-[1m⦿ Function basicCommandsExecution[22m [90m./src/basic-execution.ts | spec/basic-execution/basic-execution.zest.yaml[39m
-  [32m✓ PASS[39m [1msome basic execution on the context[22m   [90m📷 spec/snapshots/basic-execution/basic-execution--basic.yaml[39m
-[1m⦿ Function getSchema[22m [90m./src/build-model.ts | spec/build-model/get-schema.zest.yaml[39m
-  [32m✓ PASS[39m [1mProduce a JSON schema[22m   [90m📷 spec/snapshots/build-model/get-schema--schema.json[39m
-[1m⦿ Function safeParseBuild[22m [90m./src/build-model.ts | spec/build-model/safe-parse-build.zest.yaml[39m
-  [32m✓ PASS[39m [1mabstract with object crumble[22m   [90m📷 spec/snapshots/build-model/safe-parse-build--abstract-parsing.yaml[39m
-  [32m✓ PASS[39m [1mTest edge cases that will produce errors[22m   [90m📷 spec/snapshots/build-model/safe-parse-build--invalid-too-large.yaml[39m
