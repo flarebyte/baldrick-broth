@@ -60,6 +60,12 @@ When you are ready for a pull request:
 broth release ready
 ```
 
+You will probably want to update the documentation:
+
+```bash
+broth doc ts
+```
+
 You can also simulate [Github actions](https://docs.github.com/en/actions)
 locally with [act](https://github.com/nektos/act).
 You will need to setup `.actrc` with the node.js docker image `-P
@@ -75,6 +81,18 @@ broth github act
 
 1.  Make sure that an issue describing the intended code change exists and
     that this issue has been accepted.
+
+When you are about to do a pull-request:
+
+```bash
+broth release ready -pr
+```
+
+Then you can create the pull-request:
+
+```bash
+broth release pr
+```
 
 ## Publishing the library
 

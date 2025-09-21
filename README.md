@@ -35,16 +35,22 @@ Highlights:
 
 ## Documentation and links
 
--   [Code Maintenance](MAINTENANCE.md)
+-   [Code Maintenance :wrench:](MAINTENANCE.md)
 -   [Code Of Conduct](CODE_OF_CONDUCT.md)
 -   [Api for baldrick-broth](API.md)
--   [Contributing](CONTRIBUTING.md)
--   [Glossary](GLOSSARY.md)
--   [Diagram for the code base](INTERNAL.md)
--   [Vocabulary used in the code base](CODE_VOCABULARY.md)
--   [Architectural Decision Records](DECISIONS.md)
--   [Contributors](https://github.com/flarebyte/baldrick-broth/graphs/contributors)
+-   [Contributing :busts\_in\_silhouette: :construction:](CONTRIBUTING.md)
+-   [Diagram for the code base :triangular\_ruler:](INTERNAL.md)
+-   [Vocabulary used in the code base :book:](CODE_VOCABULARY.md)
+-   [Architectural Decision Records :memo:](DECISIONS.md)
+-   [Contributors
+    :busts\_in\_silhouette:](https://github.com/flarebyte/baldrick-broth/graphs/contributors)
 -   [Dependencies](https://github.com/flarebyte/baldrick-broth/network/dependencies)
+-   [Glossary
+    :book:](https://github.com/flarebyte/overview/blob/main/GLOSSARY.md)
+-   [Software engineering principles
+    :gem:](https://github.com/flarebyte/overview/blob/main/PRINCIPLES.md)
+-   [Overview of Flarebyte.com ecosystem
+    :factory:](https://github.com/flarebyte/overview)
 -   [Usage](USAGE.md)
 -   [Overview for the json schema for broth yaml file](SCHEMA.md)
 -   [Json schema for broth yaml
