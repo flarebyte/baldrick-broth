@@ -32,7 +32,7 @@ jobs:
           name: coverage-lcov
           path: coverage/lcov.info
       - name: Create temp folder
-        run: mkdir temp
+        run: mkdir -p temp
       - name: Run pest integration tests
         run: |
           if [ -d "pest-spec" ]; then
