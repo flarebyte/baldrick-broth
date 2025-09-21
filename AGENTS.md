@@ -68,7 +68,7 @@ README is generated from `baldrick-broth.yaml` using the TS README template.
 -   Notes:
     -   Runs from repo root and reads `baldrick-broth.yaml` for
         workflows/tasks.
-    -   Pin a version if needed: `npx baldrick-broth@0.15.0`.
+    -   Pin a version if needed: `npx baldrick-broth@0.16.0`.
     -   Some tasks invoke external CLIs (e.g., `gh`, `typedoc`, Biome). Ensure
         they’re available and Node >= 22.
     -   Fallback to yarn only if needed: use `yarn cli` (TS dev), or `yarn
