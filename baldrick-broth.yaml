@@ -58,6 +58,14 @@ workflows:
     title: Test the library
     description: Test the library for defects
     tasks:
+      coverage:
+        title: Generate unit test coverage
+        description: Run unit tests with c8 and produce lcov + summary
+        motivation: Ensure we track regressions in code coverage
+        main:
+          commands:
+            - title: Run unit tests with coverage
+              run: yarn test:cov
       unit:
         title: Run node.js unit tests
         description: Run traditional unit tests
