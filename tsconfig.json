@@ -30,9 +30,5 @@
     "files": true,
     "transpileOnly": true
   },
-  "exclude": [
-    "test",
-    "spec",
-    "pest-spec"
-  ]
+  "exclude": ["test", "spec", "pest-spec"]
 }
