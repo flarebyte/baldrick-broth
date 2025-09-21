@@ -1,0 +1,37 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.4/schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "files": {
+    "includes": [
+      "src/**",
+      "spec/**",
+      "pest-spec/**",
+      "test/**",
+      ".github/**",
+      ".vscode/**",
+      "*.md",
+      "*.json",
+      "*.yaml",
+      "*.yml"
+    ],
+    "maxSize": 3000000,
+    "ignoreUnknown": false
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always"
+    }
+  }
+}

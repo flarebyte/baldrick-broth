@@ -11,7 +11,8 @@ const describeEnum = (intro: string, objectValue: { [k: string]: string }) => {
   return description.join('\n');
 };
 
-const asEnumKeys = (value: {}) => Object.keys(value) as [string, ...string[]];
+const asEnumKeys = (value: object) =>
+  Object.keys(value) as [string, ...string[]];
 
 /** JSON like */
 const literalSchema = z.union([z.string().min(1), z.number(), z.boolean()]);
@@ -19,7 +20,7 @@ type Literal = z.infer<typeof literalSchema>;
 type Json = Literal | { [key: string]: Json } | Json[];
 const jsonishSchema: z.ZodType<Json> = z
   .lazy(() =>
-    z.union([literalSchema, z.array(jsonishSchema), z.record(jsonishSchema)])
+    z.union([literalSchema, z.array(jsonishSchema), z.record(jsonishSchema)]),
   )
   .describe('Any JSON document without null values');
 const engine = z
@@ -51,8 +52,8 @@ const onShellCommandFinish = z
   .describe(
     describeEnum(
       'Options for when the shell command finish',
-      onShellCommandFinishEnum
-    )
+      onShellCommandFinishEnum,
+    ),
   );
 
 const linkPage = z
@@ -66,7 +67,7 @@ const links = z.array(linkPage).optional().describe('A list of useful links');
 
 const metadataStep = {
   name: stringy.customKey.describe(
-    'A short name that could be used a key or variable for the step'
+    'A short name that could be used a key or variable for the step',
   ),
   title: stringy.title,
   description: stringy.description.optional(),
@@ -94,20 +95,20 @@ const advancedShell = z
       .min(1)
       .default(['exit'])
       .describe(
-        'List of flags to describe the default behavior in case of failure'
+        'List of flags to describe the default behavior in case of failure',
       ),
     onSuccess: z
       .array(onShellCommandFinish)
       .min(1)
       .default(['trim'])
       .describe(
-        'List of flags to describe the default behavior in case of success'
+        'List of flags to describe the default behavior in case of success',
       ),
 
     if: stringy.varValue
       .optional()
       .describe(
-        'reference to JSON path that must be satisfied for the step to run'
+        'reference to JSON path that must be satisfied for the step to run',
       ),
     stdin: stringy.varValue
       .optional()
@@ -126,10 +127,10 @@ const valuesLoopEach = z.string().min(1).max(300);
 const loopEach = z
   .object({
     name: stringy.customKey.describe(
-      'The name of the variable to be used as an input to the script or command during each iteration'
+      'The name of the variable to be used as an input to the script or command during each iteration',
     ),
     values: valuesLoopEach.describe(
-      'The variable to the array of values to be iterated over'
+      'The variable to the array of values to be iterated over',
     ),
   })
   .describe('Configuration of every loop');
@@ -154,8 +155,8 @@ const onStringArraySuccess = z
   .describe(
     describeEnum(
       'Options for the transforming the resulting array of string',
-      onStringArraySuccessEnum
-    )
+      onStringArraySuccessEnum,
+    ),
   );
 
 const stringArrayFilterByEnum = {
@@ -176,8 +177,8 @@ const stringArrayFilterBy = z
       .describe(
         describeEnum(
           'A conditional statement that determines whether or not the string should be kept',
-          stringArrayFilterByEnum
-        )
+          stringArrayFilterByEnum,
+        ),
       ),
     anyOf: z
       .array(stringy.varValue)
@@ -332,7 +333,7 @@ const passwordPromptStep = z
     message: stringy.promptMessage,
   })
   .describe(
-    'Prompt that takes user input, hides it from the terminal, and returns a string'
+    'Prompt that takes user input, hides it from the terminal, and returns a string',
   );
 const confirmPromptStep = z
   .strictObject({
@@ -372,7 +373,7 @@ const templateStep = z
       .min(1)
       .max(5000)
       .describe(
-        'Resolve the handlebars template as a atring. https://handlebarsjs.com/guide/'
+        'Resolve the handlebars template as a atring. https://handlebarsjs.com/guide/',
       ),
   })
   .describe('Uses JSON mask to select parts of the json object');
@@ -456,7 +457,7 @@ const batchStep = z
     if: stringy.varValue
       .optional()
       .describe(
-        'A conditional statement that determines whether or not this script or command should be executed'
+        'A conditional statement that determines whether or not this script or command should be executed',
       ),
     each: z
       .array(loopEach)
@@ -464,7 +465,7 @@ const batchStep = z
       .max(3)
       .optional()
       .describe(
-        'An array of values to be iterated over, with each iteration executing the script or command with the current value as an input'
+        'An array of values to be iterated over, with each iteration executing the script or command with the current value as an input',
       ),
     commands,
   })
@@ -484,20 +485,20 @@ const task = z
       .default('')
       .describe('A unique identifier for this task'),
     title: stringy.title.describe(
-      'A brief and descriptive title for this task'
+      'A brief and descriptive title for this task',
     ),
     description: stringy.description
       .optional()
       .describe(
-        'A detailed explanation of the purpose and function of this task'
+        'A detailed explanation of the purpose and function of this task',
       ),
     motivation: stringy.motivation
       .optional()
       .describe(
-        'The reason why this task is necessary within the context of the workflow'
+        'The reason why this task is necessary within the context of the workflow',
       ),
     links: links.describe(
-      'A list of relevant resources and references related to this task'
+      'A list of relevant resources and references related to this task',
     ),
     parameters: z
       .array(parameter)
@@ -505,7 +506,7 @@ const task = z
       .optional()
       .describe('A list of configurable options for this task'),
     main: batchStep.describe(
-      'The primary script or command to be executed for this task'
+      'The primary script or command to be executed for this task',
     ),
     before: batchStep.optional(),
     after: batchStep.optional(),
@@ -514,12 +515,12 @@ const task = z
 const domain = z
   .object({
     title: stringy.title.describe(
-      'A brief and descriptive title for this workflow'
+      'A brief and descriptive title for this workflow',
     ),
     description: stringy.description
       .optional()
       .describe(
-        'A detailed explanation of the purpose and function of this workflow'
+        'A detailed explanation of the purpose and function of this workflow',
       ),
     tasks: z
       .record(stringy.customKey, task)
@@ -530,7 +531,7 @@ const domain = z
 const workflows = z
   .record(stringy.customKey, domain)
   .describe(
-    'A collection of related tasks and processes that achieve a specific goal'
+    'A collection of related tasks and processes that achieve a specific goal',
   );
 export const schema = z
   .object({

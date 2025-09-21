@@ -1,11 +1,17 @@
 import path from 'node:path';
-import { Listr, type ListrTaskWrapper, type ListrTask } from 'listr2';
+import { Listr, type ListrTask, type ListrTaskWrapper } from 'listr2';
 import type {
   BatchStepModel,
   Ctx,
   OnShellCommandFinish,
   RuntimeContext,
 } from './build-model.js';
+import { coloration } from './coloration.js';
+import {
+  getSupportedProperty,
+  isTruthy,
+  setDataValue,
+} from './data-value-utils.js';
 import { type CommandLineInput, executeCommandLine } from './execution.js';
 import { expandBatchStep } from './expand-batch.js';
 import {
@@ -15,12 +21,6 @@ import {
   telemetryTaskRefLogger,
 } from './logging.js';
 import { type Result, succeed } from './railway.js';
-import {
-  getSupportedProperty,
-  isTruthy,
-  setDataValue,
-} from './data-value-utils.js';
-import { coloration } from './coloration.js';
 import { isStringArray } from './string-utils.js';
 
 const SLEEP_KO = 800;
@@ -53,18 +53,18 @@ const toOnResultFlags = (flags: OnShellCommandFinish[]): OnResultFlags => ({
   exit: flags.includes('exit'),
 });
 
-const asJSONLog = (value: any): string =>
+const asJSONLog = (value: unknown): string =>
   coloration.jsonBlock(JSON.stringify(value, null, 2));
 
 const debugContext = (ctx: Ctx) => {
   currentTaskLogger.info(
-    asJSONLog({ keys: Object.keys(ctx), runtime: ctx.runtime, data: ctx.data })
+    asJSONLog({ keys: Object.keys(ctx), runtime: ctx.runtime, data: ctx.data }),
   );
 };
 
 const toCommandLineAction = (
   ctx: Ctx,
-  commandLineInput: CommandLineInput
+  commandLineInput: CommandLineInput,
 ): ListrTask => {
   const title = commandLineInput.opts.title
     ? commandLineInput.opts.title
@@ -80,7 +80,7 @@ const toCommandLineAction = (
       }
 
       const shouldEnable = isTruthy(
-        getSupportedProperty(commandLineInput.memoryId, ctx, ifPath)
+        getSupportedProperty(commandLineInput.memoryId, ctx, ifPath),
       );
       return shouldEnable;
     },
@@ -112,14 +112,14 @@ const toCommandLineAction = (
             commandLineInput.memoryId,
             ctx,
             commandLineInput.name,
-            data
+            data,
           );
         }
         setDataValue(
           commandLineInput.memoryId,
           ctx,
           `result-of-${commandLineInput.name}`,
-          true
+          true,
         );
 
         if (!successFlags.silent) {
@@ -143,7 +143,7 @@ const toCommandLineAction = (
               cmdLineResult.error.stdout,
               cmdLineResult.error.stderr,
               cmdLineResult.error.message,
-            ].join('\n\n')
+            ].join('\n\n'),
           );
         }
 
@@ -167,7 +167,7 @@ const capitalizeWord = (text: string): string =>
 
 const toBatchStepAction = (
   ctx: Ctx,
-  batchStep: BatchStepModel
+  batchStep: BatchStepModel,
 ): BatchStepAction => {
   const title = capitalizeWord(batchStep.name);
 
@@ -182,7 +182,7 @@ const toBatchStepAction = (
 
       if (commandsForStep.status === 'success') {
         const commandTasks = commandsForStep.value.map((input) =>
-          toCommandLineAction(ctx, input)
+          toCommandLineAction(ctx, input),
         );
         return task.newListr([...commandTasks], { exitOnError: false });
       } else {
@@ -221,7 +221,10 @@ export const createTaskAction =
       const beforeStep = toBatchStepAction(ctx, task.before);
       if (beforeStep.status === 'failure') {
         currentTaskLogger.error(
-          makeMessage(`Before ${buildCtx.task.name}`, beforeStep.error.messages)
+          makeMessage(
+            `Before ${buildCtx.task.name}`,
+            beforeStep.error.messages,
+          ),
         );
       } else {
         listTasks.push(beforeStep.value);
@@ -231,7 +234,7 @@ export const createTaskAction =
     const mainStep = toBatchStepAction(ctx, task.main);
     if (mainStep.status === 'failure') {
       currentTaskLogger.error(
-        makeMessage(`Main ${buildCtx.task.name}`, mainStep.error.messages)
+        makeMessage(`Main ${buildCtx.task.name}`, mainStep.error.messages),
       );
     } else {
       listTasks.push(mainStep.value);
@@ -241,7 +244,7 @@ export const createTaskAction =
       const afterStep = toBatchStepAction(ctx, task.after);
       if (afterStep.status === 'failure') {
         currentTaskLogger.error(
-          makeMessage(`After ${buildCtx.task.name}`, afterStep.error.messages)
+          makeMessage(`After ${buildCtx.task.name}`, afterStep.error.messages),
         );
       } else {
         listTasks.push(afterStep.value);
@@ -256,20 +259,20 @@ export const createTaskAction =
         await mainTask.run(ctx);
         logTaskStatistics(started, ctx);
         await replayLogToConsole();
-      } catch (error: any) {
-        currentTaskLogger.error(error);
+      } catch (error: unknown) {
+        currentTaskLogger.error(String(error));
       }
     }
   };
 
 async function interactivePrompt(
   commandLineInput: CommandLineInput,
-  taskContext: any,
-  task: ListrTaskWrapper<any, any>,
-  ctx: Ctx
+  taskContext: Record<string, unknown>,
+  task: ListrTaskWrapper<Ctx, any>,
+  ctx: Ctx,
 ) {
   if (commandLineInput.opts.a === 'prompt-input') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Input',
       message: commandLineInput.opts.message,
     });
@@ -277,12 +280,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input
+      taskContext['input'] as any,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-password') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Password',
       message: commandLineInput.opts.message,
     });
@@ -290,12 +293,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input
+      taskContext['input'] as any,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-choices') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
       choices: commandLineInput.opts.choices,
@@ -304,12 +307,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input
+      taskContext['input'] as any,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-confirm') {
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Confirm',
       message: commandLineInput.opts.message,
     });
@@ -317,7 +320,7 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input
+      taskContext['input'] as any,
     );
   }
 
@@ -325,12 +328,12 @@ async function interactivePrompt(
     const possibleChoices = getSupportedProperty(
       commandLineInput.memoryId,
       ctx,
-      commandLineInput.opts.select
+      commandLineInput.opts.select,
     );
     const choices: string[] = isStringArray(possibleChoices)
       ? possibleChoices
       : ['The choice should be an array (645608)'];
-    taskContext.input = await task.prompt<string>({
+    taskContext['input'] = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
       choices,
@@ -339,7 +342,7 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext.input
+      taskContext['input'] as any,
     );
   }
 }
@@ -357,7 +360,7 @@ function logTaskStatistics(started: [number, number], ctx: Ctx) {
       date.getDate(),
       date.getDay(),
       finished[0],
-    ].join(',')
+    ].join(','),
   );
   // Create a reference file for available tasks
   for (const workflowKey in ctx.build.workflows) {
@@ -369,7 +372,7 @@ function logTaskStatistics(started: [number, number], ctx: Ctx) {
           `${workflowKey}.${taskId}`,
           date.getFullYear(),
           date.getMonth(),
-        ].join(',')
+        ].join(','),
       );
     }
   }

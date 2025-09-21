@@ -1,22 +1,22 @@
-import {type BatchStepModel, type Ctx, type AnyCommand} from './build-model.js';
+import type { AnyCommand, BatchStepModel, Ctx } from './build-model.js';
+import { createDataId, getSupportedProperty } from './data-value-utils.js';
+import type { CommandLineInput } from './execution.js';
+import { stringy } from './field-validation.js';
+import { IdGenerator, rootId } from './id-generator.js';
+import { type Result, succeed, willFail } from './railway.js';
+import { dasherizeTitle } from './string-utils.js';
 import {
-  getExpandedName,
   getCommandLines,
+  getExpandedName,
   mergeTemplateContext,
 } from './templating.js';
-import {createDataId, getSupportedProperty} from './data-value-utils.js';
-import {type CommandLineInput} from './execution.js';
-import {stringy} from './field-validation.js';
-import {type Result, succeed, willFail} from './railway.js';
-import {dasherizeTitle} from './string-utils.js';
-import {IdGenerator, rootId} from './id-generator.js';
 
 type ExpandedCommandLineInputs = Result<
   CommandLineInput[],
-  {messages: string[]}
+  { messages: string[] }
 >;
 
-const getArray = (memoryId: string, ctx: Ctx, name: string): any[] => {
+const getArray = (memoryId: string, ctx: Ctx, name: string): unknown[] => {
   const value = getSupportedProperty(memoryId, ctx, name);
   if (value === undefined) {
     return [];
@@ -31,16 +31,16 @@ const getArray = (memoryId: string, ctx: Ctx, name: string): any[] => {
 
 type CommandLocalVars = {
   commandOpts: AnyCommand;
-  extra: Record<string, any>;
+  extra: Record<string, unknown>;
   memoryId: string;
 };
 
 const expandCommand =
   (ctx: Ctx, _batch: BatchStepModel) =>
   (current: CommandLocalVars): ExpandedCommandLineInputs => {
-    const {commandOpts, extra, memoryId} = current;
+    const { commandOpts, extra, memoryId } = current;
     if (commandOpts.a === 'shell') {
-      const {run, title, name, multiline} = commandOpts;
+      const { run, title, name, multiline } = commandOpts;
 
       const preferredName = name === undefined ? dasherizeTitle(title) : name;
       const templateCtx = mergeTemplateContext({
@@ -68,23 +68,23 @@ const expandCommand =
       return succeed(lineInputs);
     }
 
-    const {name} = commandOpts;
-    return succeed([{line: '', name, opts: commandOpts, memoryId, extra}]);
+    const { name } = commandOpts;
+    return succeed([{ line: '', name, opts: commandOpts, memoryId, extra }]);
   };
 
 const mergeExpandedCommandLineInputs = (
-  inputsArray: ExpandedCommandLineInputs[]
+  inputsArray: ExpandedCommandLineInputs[],
 ): ExpandedCommandLineInputs => {
   const inputsWithErrors = inputsArray.filter((i) => i.status === 'failure');
   if (inputsWithErrors.length > 0) {
     const messages = inputsWithErrors.flatMap((i) =>
-      i.status === 'failure' ? i.error.messages : []
+      i.status === 'failure' ? i.error.messages : [],
     );
-    return willFail({messages});
+    return willFail({ messages });
   }
 
   const inputs = inputsArray.flatMap((i) =>
-    i.status === 'success' ? i.value : []
+    i.status === 'success' ? i.value : [],
   );
   return succeed(inputs);
 };
@@ -92,21 +92,21 @@ const mergeExpandedCommandLineInputs = (
 const expandBatch0 = (
   ctx: Ctx,
   batch: BatchStepModel,
-  extra: Record<string, any>
+  extra: Record<string, unknown>,
 ): ExpandedCommandLineInputs => {
   const expanded = batch.commands
-    .map((commandOpts) => ({commandOpts, extra, memoryId: rootId}))
+    .map((commandOpts) => ({ commandOpts, extra, memoryId: rootId }))
     .map(expandCommand(ctx, batch));
   return mergeExpandedCommandLineInputs(expanded);
 };
 
 const expandBatch1 = (
   ctx: Ctx,
-  batch: BatchStepModel
+  batch: BatchStepModel,
 ): ExpandedCommandLineInputs => {
   const loop0 = batch.each === undefined ? undefined : batch.each[0];
   if (loop0 === undefined) {
-    return willFail({messages: ['Should have at least one loop']});
+    return willFail({ messages: ['Should have at least one loop'] });
   }
 
   const makeId = IdGenerator();
@@ -122,7 +122,7 @@ const expandBatch1 = (
         [createDataId(rootId, extra.name)]: extra.value,
       },
       memoryId: makeId(),
-    }))
+    })),
   );
   const expanded = commandLocalVars.flatMap(expandCommand(ctx, batch));
   return mergeExpandedCommandLineInputs(expanded);
@@ -130,7 +130,7 @@ const expandBatch1 = (
 
 const expandBatch2 = (
   ctx: Ctx,
-  batchStep: BatchStepModel
+  batchStep: BatchStepModel,
 ): ExpandedCommandLineInputs => {
   if (batchStep.each === undefined) {
     return willFail({
@@ -157,7 +157,7 @@ const expandBatch2 = (
   }));
   const commandLocalVars: CommandLocalVars[] = arr0.flatMap((extra0) =>
     arr1
-      .map((extra1) => ({...extra0, ...extra1}))
+      .map((extra1) => ({ ...extra0, ...extra1 }))
       .flatMap((extra) =>
         batchStep.commands.map((commandOpts) => ({
           commandOpts,
@@ -165,8 +165,8 @@ const expandBatch2 = (
             [createDataId(rootId, extra.name)]: extra.value,
           },
           memoryId: makeId(),
-        }))
-      )
+        })),
+      ),
   );
   const expanded = commandLocalVars.flatMap(expandCommand(ctx, batchStep));
   return mergeExpandedCommandLineInputs(expanded);
@@ -174,7 +174,7 @@ const expandBatch2 = (
 
 export const expandBatchStep = (
   ctx: Ctx,
-  batchStep: BatchStepModel
+  batchStep: BatchStepModel,
 ): ExpandedCommandLineInputs => {
   const numberOfLoops =
     batchStep.each === undefined ? 0 : batchStep.each.length;

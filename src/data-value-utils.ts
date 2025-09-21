@@ -1,7 +1,7 @@
-import {getProperty} from 'dot-prop';
-import {type AnyDataValue, type Ctx} from './build-model.js';
-import {rootId} from './id-generator.js';
-import {currentTaskLogger} from './logging.js';
+import { getProperty } from 'dot-prop';
+import type { AnyDataValue, Ctx } from './build-model.js';
+import { rootId } from './id-generator.js';
+import { currentTaskLogger } from './logging.js';
 
 export const createDataId = (memoryId: string, key: string) =>
   `${memoryId}::${key}`;
@@ -10,7 +10,7 @@ export const setDataValue = (
   memoryId: string,
   ctx: Ctx,
   key: string,
-  value: AnyDataValue | undefined
+  value: AnyDataValue | undefined,
 ) => {
   if (ctx.data === undefined) {
     throw new Error('ctx.data should have defined by now');
@@ -42,7 +42,7 @@ export const splitDataKey = (dataKey: string): [string, string] => {
 const getSpecificDataProperty = (
   memoryId: string,
   valuePath: string,
-  value?: Record<string, AnyDataValue>
+  value?: Record<string, AnyDataValue>,
 ): AnyDataValue | undefined => {
   if (value === undefined) {
     return undefined;
@@ -55,7 +55,7 @@ const getSpecificDataProperty = (
     keyName === undefined
   ) {
     currentTaskLogger.warn(
-      `getDataProperty: Invalid path ${valuePath}: ${data_prefix} and ${keyName}`
+      `getDataProperty: Invalid path ${valuePath}: ${data_prefix} and ${keyName}`,
     );
     return undefined;
   }
@@ -66,7 +66,7 @@ const getSpecificDataProperty = (
 const getDataProperty = (
   memoryId: string,
   valuePath: string,
-  value?: Record<string, AnyDataValue>
+  value?: Record<string, AnyDataValue>,
 ): AnyDataValue | undefined => {
   const localValue = getSpecificDataProperty(memoryId, valuePath, value);
   const useLocalValue = localValue !== undefined || memoryId === rootId;
@@ -83,7 +83,7 @@ const getDataProperty = (
 export const getSupportedProperty = (
   memoryId: string,
   ctx: Ctx,
-  valuePath: string
+  valuePath: string,
 ): AnyDataValue | undefined => {
   const isInsideData = valuePath.startsWith('data.');
   const value = isInsideData

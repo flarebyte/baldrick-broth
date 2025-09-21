@@ -1,4 +1,4 @@
-import {type z} from 'zod';
+import type { z } from 'zod';
 
 export type ValidationError = {
   message: string;

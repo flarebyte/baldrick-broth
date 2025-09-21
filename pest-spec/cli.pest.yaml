@@ -3,10 +3,10 @@ title: baldrick-broth
 description: Acceptance testing of baldrick-broth CLI application
 cases:
   test-spec:
-    title: Test specifications files
+    title: Run unit tests via CLI
     steps:
-      - title: Test specifications
-        run: yarn cli test spec
+      - title: Unit tests
+        run: yarn cli test unit
       - title: Remove changing info from output
         run: sed -f pest-spec/scripts/cleaning.sed
         stdin:
@@ -14,3 +14,4 @@ cases:
           receiving: stdout + stderr
         expect:
           snapshot: help.txt
+          ignoreTrailingBlankLines: true

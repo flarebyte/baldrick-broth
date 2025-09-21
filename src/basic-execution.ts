@@ -1,23 +1,23 @@
 import json_mask from 'json-mask';
-import type {AnyCommand, AnyDataValue, Ctx} from './build-model.js';
-import {coloration} from './coloration.js';
+import type { AnyCommand, AnyDataValue, Ctx } from './build-model.js';
+import { coloration } from './coloration.js';
 import {
-  setDataValue,
   getSupportedProperty,
-  isTruthy,
   isFalsy,
+  isTruthy,
+  setDataValue,
 } from './data-value-utils.js';
-import {type LogMessage} from './log-model.js';
-import {type Result, succeed, willFail} from './railway.js';
-import {dasherizeTitle} from './string-utils.js';
-import {getStringFromTemplate, mergeTemplateContext} from './templating.js';
+import type { LogMessage } from './log-model.js';
+import { type Result, succeed, willFail } from './railway.js';
+import { dasherizeTitle } from './string-utils.js';
+import { getStringFromTemplate, mergeTemplateContext } from './templating.js';
 
 type BasicExecution = Result<Ctx, LogMessage>;
 
 const getPropertyList = (
   memoryId: string,
   ctx: Ctx,
-  valuePaths: string[]
+  valuePaths: string[],
 ): Array<AnyDataValue | undefined> =>
   valuePaths.map((path) => getSupportedProperty(memoryId, ctx, path));
 
@@ -43,9 +43,9 @@ export const basicCommandExecution = (
   memoryId: string,
   ctx: Ctx,
   anyCommand: AnyCommand,
-  extra: Record<string, any>
+  extra: Record<string, unknown>,
 ): BasicExecution => {
-  const {a} = anyCommand;
+  const { a } = anyCommand;
   const success: BasicExecution = succeed(ctx);
   const name =
     anyCommand.name === undefined
@@ -63,7 +63,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        getPropertyList(memoryId, ctx, anyCommand.values).some(isTruthy)
+        getPropertyList(memoryId, ctx, anyCommand.values).some(isTruthy),
       );
       return success;
     }
@@ -73,7 +73,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        getPropertyList(memoryId, ctx, anyCommand.values).some(isFalsy)
+        getPropertyList(memoryId, ctx, anyCommand.values).some(isFalsy),
       );
       return success;
     }
@@ -83,7 +83,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        getPropertyList(memoryId, ctx, anyCommand.values).every(isTruthy)
+        getPropertyList(memoryId, ctx, anyCommand.values).every(isTruthy),
       );
       return success;
     }
@@ -93,7 +93,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        getPropertyList(memoryId, ctx, anyCommand.values).every(isFalsy)
+        getPropertyList(memoryId, ctx, anyCommand.values).every(isFalsy),
       );
       return success;
     }
@@ -103,7 +103,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        isFalsy(getSupportedProperty(memoryId, ctx, anyCommand.value))
+        isFalsy(getSupportedProperty(memoryId, ctx, anyCommand.value)),
       );
       return success;
     }
@@ -114,8 +114,8 @@ export const basicCommandExecution = (
         ctx,
         name,
         asStringOrBlank(
-          getSupportedProperty(memoryId, ctx, anyCommand.value)
-        ).split(anyCommand.separator)
+          getSupportedProperty(memoryId, ctx, anyCommand.value),
+        ).split(anyCommand.separator),
       );
       return success;
     }
@@ -128,7 +128,7 @@ export const basicCommandExecution = (
         asStringOrBlank(getSupportedProperty(memoryId, ctx, anyCommand.value))
           .split('\n')
           .map((line) => line.trim())
-          .filter((line) => line.length > 0)
+          .filter((line) => line.length > 0),
       );
       return success;
     }
@@ -138,7 +138,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        range(anyCommand.end, anyCommand.start, anyCommand.step)
+        range(anyCommand.end, anyCommand.start, anyCommand.step),
       );
       return success;
     }
@@ -148,7 +148,7 @@ export const basicCommandExecution = (
         memoryId,
         ctx,
         name,
-        getPropertyList(memoryId, ctx, anyCommand.values).flatMap(asAnyArray)
+        getPropertyList(memoryId, ctx, anyCommand.values).flatMap(asAnyArray),
       );
       return success;
     }
@@ -162,14 +162,14 @@ export const basicCommandExecution = (
             anyCommand.value
           } expects an object but got ${typeof objectValue}`,
           coloredMessage: `mask-object for path ${coloration.path(
-            anyCommand.value
+            anyCommand.value,
           )} expects an ${coloration.expected(
-            'object'
+            'object',
           )} but got ${coloration.actual(typeof objectValue)}`,
         });
       }
 
-      const masked = json_mask(objectValue, anyCommand.mask);
+      const masked = json_mask(objectValue, anyCommand.mask) as AnyDataValue;
       setDataValue(memoryId, ctx, name, masked);
       return success;
     }
@@ -183,7 +183,7 @@ export const basicCommandExecution = (
       });
       const stringValue = getStringFromTemplate(
         anyCommand.template,
-        templateContext
+        templateContext,
       );
       setDataValue(memoryId, ctx, name, stringValue);
       return success;
@@ -199,7 +199,7 @@ export const basicCommandExecution = (
 export const basicCommandsExecution = (
   memoryId: string,
   ctx: Ctx,
-  anyCommands: AnyCommand[]
+  anyCommands: AnyCommand[],
 ): BasicExecution => {
   for (const anyCommand of anyCommands) {
     const result = basicCommandExecution(memoryId, ctx, anyCommand, {});
