@@ -1,8 +1,14 @@
-Usage: baldrick-broth test spec [options]
+Usage: baldrick-broth test [options] [command]
 
-Run unit tests for pure functions declaratively using YAML files
-
-[90mMotivation: Check that the units of code behave as intended[39m
+Test the library for defects
 
 Options:
-  -h, --help  display help for command
+  -h, --help      display help for command
+
+Commands:
+  unit            Run node.js unit tests
+  pest            Run acceptance tests for the CLI
+  pest1           Run one acceptance tests for the CLI
+  scc             Count lines of code
+  cli             Run client directly
+  help [command]  display help for command

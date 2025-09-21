@@ -44,8 +44,8 @@
   },
   "scripts": {
     "build": "tsc --outDir dist",
-    "test": "node --test --loader ts-node/esm test/*.test.ts",
-    "cli": "node --loader ts-node/esm src/cli.mts"
+    "test": "tsx --test test/*.test.ts",
+    "cli": "tsx src/cli.mts"
   },
   "dependencies": {
     "chalk": "^5.2.0",
@@ -65,7 +65,8 @@
     "@types/papaparse": "^5.3.7",
     "baldrick-dev-ts": "^0.17.0",
     "baldrick-zest-mess": "^0.17.0",
-    "ts-node": "^10.9.1",
+    "ts-node": "10.9.2",
+    "tsx": "^4.19.0",
     "typescript": "^5.0.4"
   },
   "peerDependencies": {}
