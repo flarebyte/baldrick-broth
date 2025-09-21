@@ -1,13 +1,17 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "ES2024",
-
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["es2024", "ESNext.Array", "ESNext.Collection", "ESNext.Iterator"],
+    "lib": [
+      "es2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Iterator"
+    ],
     "module": "nodenext",
     "moduleDetection": "force",
     "moduleResolution": "node16",
