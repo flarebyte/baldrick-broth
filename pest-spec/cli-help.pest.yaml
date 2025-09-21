@@ -14,6 +14,7 @@ cases:
           receiving: stdout + stderr
         expect:
           snapshot: help.txt
+          ignoreTrailingBlankLines: true
   command-help:
     title: Display help for a specific command
     steps:
@@ -26,3 +27,4 @@ cases:
           receiving: stdout + stderr
         expect:
           snapshot: spec-help.txt
+          ignoreTrailingBlankLines: true
