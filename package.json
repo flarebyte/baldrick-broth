@@ -1,7 +1,7 @@
 {
   "name": "baldrick-broth",
   "description": "Build automation tool and task runner",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "author": {
     "name": "Olivier Huin",
     "url": "https://github.com/olih"
@@ -21,22 +21,22 @@
   },
   "bugs": "https://github.com/flarebyte/baldrick-broth/issues",
   "bin": {
-    "baldrick-broth": "dist/src/cli.mjs"
+    "baldrick-broth": "dist/cli.mjs"
   },
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/src/cli.mjs",
-      "default": "./dist/src/cli.mjs",
-      "types": "./dist/src"
+      "import": "./dist/cli.mjs",
+      "default": "./dist/cli.mjs",
+      "types": "./dist"
     },
     "./package.json": {
       "default": "./package.json"
     }
   },
-  "main": "./dist/src/index.mjs",
+  "main": "./dist/index.js",
   "files": [
-    "dist/src",
+    "dist",
     "src"
   ],
   "engines": {

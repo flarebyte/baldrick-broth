@@ -3,7 +3,7 @@ model:
     title: Build automation tool and task runner
     description: Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.15.0
+    version: 0.15.1
     keywords:
       - CLI
       - Task runner
