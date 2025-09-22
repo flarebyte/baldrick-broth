@@ -1,7 +1,7 @@
 {
   "name": "baldrick-broth",
   "description": "Build automation tool and task runner",
-  "version": "0.16.0",
+  "version": "0.15.1",
   "author": {
     "name": "Olivier Huin",
     "url": "https://github.com/olih"
