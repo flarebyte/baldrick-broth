@@ -1,6 +1,12 @@
 import path from 'node:path';
-import { Listr, type ListrTask, type ListrTaskWrapper } from 'listr2';
+import {
+  Listr,
+  type ListrRendererFactory,
+  type ListrTask,
+  type ListrTaskWrapper,
+} from 'listr2';
 import type {
+  AnyDataValue,
   BatchStepModel,
   Ctx,
   OnShellCommandFinish,
@@ -265,14 +271,16 @@ export const createTaskAction =
     }
   };
 
+type TaskContext = Record<string, unknown> & { input?: AnyDataValue };
+
 async function interactivePrompt(
   commandLineInput: CommandLineInput,
-  taskContext: Record<string, unknown>,
-  task: ListrTaskWrapper<Ctx, any>,
+  taskContext: TaskContext,
+  task: ListrTaskWrapper<Ctx, ListrRendererFactory>,
   ctx: Ctx,
 ) {
   if (commandLineInput.opts.a === 'prompt-input') {
-    taskContext['input'] = await task.prompt<string>({
+    taskContext.input = await task.prompt<string>({
       type: 'Input',
       message: commandLineInput.opts.message,
     });
@@ -280,12 +288,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext['input'] as any,
+      taskContext.input,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-password') {
-    taskContext['input'] = await task.prompt<string>({
+    taskContext.input = await task.prompt<string>({
       type: 'Password',
       message: commandLineInput.opts.message,
     });
@@ -293,12 +301,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext['input'] as any,
+      taskContext.input,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-choices') {
-    taskContext['input'] = await task.prompt<string>({
+    taskContext.input = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
       choices: commandLineInput.opts.choices,
@@ -307,12 +315,12 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext['input'] as any,
+      taskContext.input,
     );
   }
 
   if (commandLineInput.opts.a === 'prompt-confirm') {
-    taskContext['input'] = await task.prompt<string>({
+    taskContext.input = await task.prompt<string>({
       type: 'Confirm',
       message: commandLineInput.opts.message,
     });
@@ -320,7 +328,7 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext['input'] as any,
+      taskContext.input,
     );
   }
 
@@ -333,7 +341,7 @@ async function interactivePrompt(
     const choices: string[] = isStringArray(possibleChoices)
       ? possibleChoices
       : ['The choice should be an array (645608)'];
-    taskContext['input'] = await task.prompt<string>({
+    taskContext.input = await task.prompt<string>({
       type: 'Select',
       message: commandLineInput.opts.message,
       choices,
@@ -342,7 +350,7 @@ async function interactivePrompt(
       commandLineInput.memoryId,
       ctx,
       commandLineInput.opts.name,
-      taskContext['input'] as any,
+      taskContext.input,
     );
   }
 }
