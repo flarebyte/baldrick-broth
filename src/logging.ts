@@ -5,8 +5,8 @@ import { isCI } from './is-ci.js';
 import type { LogMessage } from './log-model.js';
 
 const { printf } = winston.format;
-const consoleLikeFormat = printf(({ message }) => {
-  return message;
+const consoleLikeFormat = printf((info) => {
+  return String(info.message);
 });
 
 class BrothLogger {
