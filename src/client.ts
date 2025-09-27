@@ -80,13 +80,18 @@ async function unsafeRunClient() {
   }
 
   // Merge: external model takes precedence if provided.
-  const mainValue = (mainRes as { status: 'success'; value: Record<string, AnyDataValue> }).value;
+  const mainValue = (
+    mainRes as { status: 'success'; value: Record<string, AnyDataValue> }
+  ).value;
+  // biome-ignore lint/complexity/useLiteralKeys: TS index signature requires bracket access
   const finalModel = externalModel ?? (mainValue?.['model'] as AnyDataValue);
 
   // If both files are present and main has a non-empty model, warn.
   if (externalModel !== undefined) {
+    // biome-ignore lint/complexity/useLiteralKeys: TS index signature requires bracket access
     const mv = mainValue?.['model'] as unknown;
-    const isEmptyObject = mv && typeof mv === 'object' && Object.keys(mv).length === 0;
+    const isEmptyObject =
+      mv && typeof mv === 'object' && Object.keys(mv).length === 0;
     const hasContent = mv !== undefined && !isEmptyObject;
     if (hasContent) {
       console.warn(
