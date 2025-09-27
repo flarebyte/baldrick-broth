@@ -417,23 +417,8 @@ workflows:
         motivation: Always apply the latest project conventions
         main:
           commands:
-            - title: Remove previous temporary directory
-              run: rm -rf temp/broth
-            - title: Create temporary directory
-              run: mkdir -p temp/broth
-            - a: mask-object
-              name: broth-model
-              title: Extract model from this baldrick-broth.yaml
-              value: build
-              mask: model
-            - name: save-old-model
-              a: write-to-file
-              title: Save baldrick-broth file with existing model
-              value: data.broth-model
-              filename: temp/broth/baldrick-broth-model.json
-            - title: merge model with new workflow
+            - title: copy latest workflow
               run: npx baldrick-whisker@latest object baldrick-broth.yaml
-                temp/broth/baldrick-broth-model.json
                 github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
       norm:
         title: Normalize the project
@@ -510,7 +495,7 @@ workflows:
                 github:flarebyte:baldrick-reserve:template/decisions.hbs
                 DECISIONS.md --no-overwrite
             - title: Create README.md
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/readme.hbs
                 README.md
             - title: Create TECHNICAL_DESIGN.md
@@ -526,7 +511,7 @@ workflows:
                 github:flarebyte:baldrick-reserve:template/ts/agents.hbs
                 AGENTS.md
             - title: Create LICENSE
-              run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render --no-ext baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/license.hbs
                 LICENSE.md
             - title: Fix markdown
@@ -548,7 +533,7 @@ workflows:
               stdin: data.package-json-deps
               run: sponge temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/package.hbs
                 temp/broth/package-specific.json
             - title: merge dependencies with broth model info
@@ -579,7 +564,7 @@ workflows:
               value: data.package-json-deps
               filename: temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/package.hbs
                 temp/broth/package-specific.json
             - title: merge dependencies with broth model info
@@ -600,6 +585,6 @@ workflows:
         main:
           commands:
             - title: Create README.md
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/readme.hbs
                 README.md
