@@ -2,7 +2,15 @@
  * Responsibilities: Logging and telemetry utilities.
  * - Provides file-backed logger, console replay, and CSV telemetry outputs
  */
+/**
+ * Responsibilities: Logging and telemetry utilities.
+ * - Provides file-backed logger, console replay, and centralized telemetry outputs
+ */
+
+import fs from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import winston from 'winston';
 import { coloration } from './coloration.js';
 import { isCI } from './is-ci.js';
@@ -55,12 +63,26 @@ export const currentTaskWarn = (content: LogMessage) => {
   }
 };
 
+// Centralized telemetry directory under user home: ~/.baldrick-broth/telemetry
+const telemetryDir = path.join(os.homedir(), '.baldrick-broth', 'telemetry');
+try {
+  fs.mkdirSync(telemetryDir, { recursive: true });
+} catch {}
+
+const telemetryFile = path.join(telemetryDir, 'baldrick-broth-telemetry.csv');
+const telemetryRefFile = path.join(
+  telemetryDir,
+  'baldrick-broth-telemetry-ref.csv',
+);
+
 export const telemetryTaskLogger = winston.createLogger({
   level: 'info',
   transports: [
     new winston.transports.File({
-      filename: 'temp/log/baldrick-broth-telemetry.csv',
+      filename: telemetryFile,
       format: consoleLikeFormat,
+      maxsize: 1_048_576, // ~1 MB rotation threshold
+      maxFiles: 5,
     }),
   ],
 });
@@ -69,8 +91,10 @@ export const telemetryTaskRefLogger = winston.createLogger({
   level: 'info',
   transports: [
     new winston.transports.File({
-      filename: 'temp/log/baldrick-broth-telemetry-ref.csv',
+      filename: telemetryRefFile,
       format: consoleLikeFormat,
+      maxsize: 1_048_576, // ~1 MB rotation threshold
+      maxFiles: 5,
     }),
   ],
 });
