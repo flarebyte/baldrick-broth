@@ -1,3 +1,8 @@
+/**
+ * Responsibilities: Builds commander commands from the validated build model.
+ * - Creates workflows and tasks with summaries, descriptions, and parameters
+ * - Wires task actions to the Listr-backed executor via createTaskAction
+ */
 import type { Command } from 'commander';
 import type { BuildModelValidation, TaskModel } from './build-model.js';
 import { coloration } from './coloration.js';

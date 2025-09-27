@@ -85,7 +85,8 @@ README is generated from `baldrick-broth.yaml` using the TS README template.
     -   Pest (acceptance/spec runner):
         <https://github.com/flarebyte/baldrick-pest> • npm:
         <https://www.npmjs.com/package/baldrick-pest>
-    -   Doc TS (typedoc/markdown): <https://github.com/flarebyte/baldrick-doc-ts>
+    -   Doc TS (typedoc/markdown):
+        <https://github.com/flarebyte/baldrick-doc-ts>
         • npm: <https://www.npmjs.com/package/baldrick-doc-ts>
     -   Dev TS (markdown, release utils):
         <https://github.com/flarebyte/baldrick-dev-ts> • npm:

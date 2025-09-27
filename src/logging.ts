@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: Logging and telemetry utilities.
+ * - Provides file-backed logger, console replay, and CSV telemetry outputs
+ */
 import { readFile } from 'node:fs/promises';
 import winston from 'winston';
 import { coloration } from './coloration.js';

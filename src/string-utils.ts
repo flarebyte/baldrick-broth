@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: Small string helpers for naming and type checks.
+ * - Normalizes titles to dash-case and validates string arrays
+ */
 const keepAlphaNumeric = (title: string): string => {
   const azText = title.replace(/[^\dA-Za-z-]/g, ' ');
   const singleSpace = azText.replace(/\s+/g, ' ').trim();

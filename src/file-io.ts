@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: File I/O helpers for reading YAML documents.
+ * - Reads and parses YAML, returning Result with structured errors
+ */
 import fs from 'node:fs/promises';
 import YAML from 'yaml';
 import type { AnyDataValue } from './build-model.js';

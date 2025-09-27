@@ -1,3 +1,9 @@
+/**
+ * Responsibilities: Executes tasks via Listr2 and handles prompts and telemetry.
+ * - Translates batch steps into Listr tasks, handles before/main/after phases
+ * - Runs shell/basic commands, integrates Enquirer prompts through adapter
+ * - Logs progress, captures telemetry, and replays log output
+ */
 import path from 'node:path';
 import { ListrEnquirerPromptAdapter } from '@listr2/prompt-adapter-enquirer';
 import {

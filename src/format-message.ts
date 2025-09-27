@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: Formats Zod issues into concise validation errors.
+ * - Extracts useful details per error type and builds readable messages
+ */
 import type { z } from 'zod';
 
 export type ValidationError = {

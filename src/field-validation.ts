@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: Centralized field validators using Zod.
+ * - Provides common string shapes and helpers like customKey, title, url, path
+ */
 import { z } from 'zod';
 
 const isSingleLine = (value: string) => value.split(/[\n\r]/).length <= 1;

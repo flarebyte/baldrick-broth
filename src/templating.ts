@@ -1,3 +1,8 @@
+/**
+ * Responsibilities: Handlebars templating and context building.
+ * - Expands names/lines, merges per-task data with memory-aware scoping
+ * - Provides helper to escape spaces for shell compatibility
+ */
 import Handlebars from 'handlebars';
 import type { AnyCommand, Ctx } from './build-model.js';
 import { splitDataKey, withMemoryPrefix } from './data-value-utils.js';

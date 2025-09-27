@@ -1,3 +1,9 @@
+/**
+ * Responsibilities: Implements built-in, non-shell command actions and helpers.
+ * - Reads values from context, transforms them, and writes back via setDataValue
+ * - Supports operations like get-property, boolean checks, split/range/concat
+ * - Provides json-mask and Handlebars template expansions for data shaping
+ */
 import json_mask from 'json-mask';
 import type { AnyCommand, AnyDataValue, Ctx } from './build-model.js';
 import { coloration } from './coloration.js';

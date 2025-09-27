@@ -1,3 +1,8 @@
+/**
+ * Responsibilities: Manages runtime data namespacing and value access.
+ * - Namespaces task data with memory ids and supports root fallbacks
+ * - Provides helpers to get/set values and truthy/falsy checks
+ */
 import { getProperty } from 'dot-prop';
 import type { AnyDataValue, Ctx } from './build-model.js';
 import { rootId } from './id-generator.js';
