@@ -25,6 +25,18 @@ variables, operators, functions, etc, using a specific YAML syntax.
 Note: The bundled workflow `test all` runs lint, unit tests, pest acceptance
 tests, coverage, and a final TypeScript build step.
 
+## Telemetry
+
+-   Location: `~/.baldrick-broth/telemetry/`
+    -   `baldrick-broth-telemetry.csv`
+    -   `baldrick-broth-telemetry-ref.csv`
+-   Directory is created automatically if it does not exist.
+-   Rotation: files rotate at approximately 1 MB (keep up to 5 files) using
+    winston file transport.
+-   Note: runtime per-task log replay still uses a project-local file at
+    `temp/log/baldrick-broth-log.txt` for convenience during development; only
+    the telemetry CSVs are centralized.
+
 ```mermaid
 erDiagram
     WORKFLOW {

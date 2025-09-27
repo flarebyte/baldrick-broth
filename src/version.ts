@@ -1,4 +1,4 @@
 /**
  * Responsibilities: Holds the current CLI/library version.
  */
-export const version = '0.19.0';
+export const version = '0.20.0';
