@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: Centralizes CLI color styles using chalk.
+ * - Provides named color getters for consistent UI styling and logs
+ */
 import { Chalk } from 'chalk';
 
 const chalk = new Chalk();

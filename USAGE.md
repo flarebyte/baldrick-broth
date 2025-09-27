@@ -1,5 +1,10 @@
 # Usage
 
+This CLI runs on Node.js ≥ 22 (listr2 v9 requires ≥ 20). Some workflows call
+external tools (Biome, `gh`, typedoc, pest); ensure those are available when
+invoking related tasks. For an architectural overview, see
+`CODE_ANALYSIS.md`.
+
 ## Overview
 
 The `baldrick-broth.yaml` YAML file for a task tool consists of two main
@@ -16,6 +21,9 @@ briefly explains what it does. Each task also has one or more commands that
 specify the actual commands that run in the terminal when the task is
 invoked. The commands can be simple strings or complex expressions that use
 variables, operators, functions, etc, using a specific YAML syntax.
+
+Note: The bundled workflow `test all` runs lint, unit tests, pest acceptance
+tests, coverage, and a final TypeScript build step.
 
 ```mermaid
 erDiagram
@@ -159,6 +167,9 @@ when input is invalid.
 
 Interactive prompts can help increase productivity by automating repetitive
 tasks and reducing the time required to perform complex tasks.
+
+Prompts in this CLI are powered by listr2 v9 with the Enquirer adapter.
+Ensure `enquirer` is installed.
 
 Let's dive into an example.
 

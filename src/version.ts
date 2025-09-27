@@ -1,1 +1,4 @@
-export const version = '0.17.0';
+/**
+ * Responsibilities: Holds the current CLI/library version.
+ */
+export const version = '0.18.0';

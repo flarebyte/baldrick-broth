@@ -1,3 +1,8 @@
+/**
+ * Responsibilities: Defines the Broth build model using Zod schemas and types.
+ * - Validates YAML-driven workflows, tasks, commands, and engine metadata
+ * - Exposes safe parsing with structured ValidationError messages
+ */
 import { z } from 'zod';
 import { stringy } from './field-validation.js';
 import { formatMessage, type ValidationError } from './format-message.js';

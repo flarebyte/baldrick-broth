@@ -1,3 +1,8 @@
+/**
+ * Responsibilities: Bootstraps the CLI from the build file.
+ * - Loads YAML, validates the build model and constructs commander commands
+ * - Runs the program and reports success/failure with version info
+ */
 import { writeFile } from 'node:fs/promises';
 import { Command } from 'commander';
 import {

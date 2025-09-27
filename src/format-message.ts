@@ -1,9 +1,18 @@
+/**
+ * Responsibilities: Formats Zod issues into concise validation errors.
+ * - Extracts useful details per error type and builds readable messages
+ */
 import type { z } from 'zod';
 
 export type ValidationError = {
   message: string;
   path: string;
 };
+const read = (obj: unknown, key: string): unknown =>
+  obj && typeof obj === 'object'
+    ? (obj as Record<string, unknown>)[key]
+    : undefined;
+
 export const formatMessage = (issue: z.ZodIssue): ValidationError => {
   const path = issue.path.join('.');
   switch (issue.code) {
@@ -13,7 +22,7 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
         message: [
           'The type for the field is invalid',
           `I would expect ${issue.expected} instead of ${(() => {
-            const i = (issue as any).input as unknown;
+            const i = read(issue, 'input');
             if (Array.isArray(i)) return 'array';
             if (i === null) return 'null';
             const t = typeof i;
@@ -29,8 +38,10 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
         message: [
           'The string format for the field is invalid',
           `${issue.message}`,
-          `Format: ${(issue as any).format}`,
-          (issue as any).pattern ? `Pattern: ${(issue as any).pattern}` : '',
+          `Format: ${String(read(issue, 'format') ?? '')}`,
+          read(issue, 'pattern')
+            ? `Pattern: ${String(read(issue, 'pattern'))}`
+            : '',
         ].join('; '),
       };
     }
@@ -40,7 +51,12 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
         path,
         message: [
           'The enum for the field is invalid',
-          `I would expect any of ${(issue as any).values?.join(', ')}`,
+          (() => {
+            const values = read(issue, 'values');
+            return Array.isArray(values)
+              ? `I would expect any of ${values.map((v) => String(v)).join(', ')}`
+              : 'I would expect a valid enum member';
+          })(),
         ].join('; '),
       };
     }
@@ -50,10 +66,23 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
         path,
         message: [
           'The union for the field is invalid',
-          `I would check ${((issue as any).errors as z.ZodIssue[][])
-            .flat()
-            .map((i) => i.message)
-            .join(', ')}`,
+          (() => {
+            const errors = read(issue, 'errors');
+            const flat: unknown[] = Array.isArray(errors)
+              ? (errors as unknown[]).flat(1)
+              : [];
+            const msgs = flat
+              .map((i) =>
+                i && typeof i === 'object' && 'message' in i
+                  ? String((i as { message?: unknown }).message ?? '')
+                  : '',
+              )
+              .filter(Boolean)
+              .join(', ');
+            return msgs
+              ? `I would check ${msgs}`
+              : 'I would check individual union branches';
+          })(),
         ].join('; '),
       };
     }
@@ -62,8 +91,8 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
       return {
         path,
         message: [
-          `The ${String((issue as any).origin)} for the field is too big`,
-          `I would expect the maximum to be ${(issue as any).maximum}`,
+          `The ${String(read(issue, 'origin'))} for the field is too big`,
+          `I would expect the maximum to be ${String(read(issue, 'maximum'))}`,
         ].join('; '),
       };
     }
@@ -72,8 +101,8 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
       return {
         path,
         message: [
-          `The ${String((issue as any).origin)} for the field is too small`,
-          `I would expect the minimum to be ${(issue as any).minimum}`,
+          `The ${String(read(issue, 'origin'))} for the field is too small`,
+          `I would expect the minimum to be ${String(read(issue, 'minimum'))}`,
         ].join('; '),
       };
     }
@@ -82,10 +111,23 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
       return {
         path,
         message: [
-          `The key for the ${String((issue as any).origin)} is invalid`,
-          `I would check ${((issue as any).issues as z.ZodIssue[])
-            .map((i) => i.message)
-            .join(', ')}`,
+          `The key for the ${String(read(issue, 'origin'))} is invalid`,
+          (() => {
+            const issues = read(issue, 'issues');
+            const msgs = Array.isArray(issues)
+              ? (issues as unknown[])
+                  .map((i) =>
+                    i && typeof i === 'object' && 'message' in i
+                      ? String((i as { message?: unknown }).message ?? '')
+                      : '',
+                  )
+                  .filter(Boolean)
+                  .join(', ')
+              : '';
+            return msgs
+              ? `I would check ${msgs}`
+              : 'I would check the provided key';
+          })(),
         ].join('; '),
       };
     }
@@ -94,11 +136,24 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
       return {
         path,
         message: [
-          `An element for the ${String((issue as any).origin)} is invalid`,
-          `Key: ${JSON.stringify((issue as any).key)}`,
-          `I would check ${((issue as any).issues as z.ZodIssue[])
-            .map((i) => i.message)
-            .join(', ')}`,
+          `An element for the ${String(read(issue, 'origin'))} is invalid`,
+          `Key: ${JSON.stringify(read(issue, 'key'))}`,
+          (() => {
+            const issues = read(issue, 'issues');
+            const msgs = Array.isArray(issues)
+              ? (issues as unknown[])
+                  .map((i) =>
+                    i && typeof i === 'object' && 'message' in i
+                      ? String((i as { message?: unknown }).message ?? '')
+                      : '',
+                  )
+                  .filter(Boolean)
+                  .join(', ')
+              : '';
+            return msgs
+              ? `I would check ${msgs}`
+              : 'I would check the element details';
+          })(),
         ].join('; '),
       };
     }
@@ -108,7 +163,7 @@ export const formatMessage = (issue: z.ZodIssue): ValidationError => {
         path,
         message: [
           'The value is not a valid multiple',
-          `I would expect a multiple of ${(issue as any).divisor}`,
+          `I would expect a multiple of ${String(read(issue, 'divisor'))}`,
         ].join('; '),
       };
     }

@@ -1,3 +1,7 @@
+/**
+ * Responsibilities: Lightweight Result type and combinators (railway pattern).
+ * - Provides succeed/willFail, withDefault, map1, and andThen helpers
+ */
 type Success<a> = {
   status: 'success';
   value: a;

@@ -55,8 +55,8 @@ Highlights:
 -   [Overview for the json schema for broth yaml file](SCHEMA.md)
 -   [Json schema for broth yaml
     file](spec/snapshots/build-model/get-schema--schema.json)
--   For AI agents: [AGENTS.md](AGENTS.md) and project notes
-    [AGENTS\_PROJECT.md](AGENTS_PROJECT.md)
+-   [Code Analysis](CODE_ANALYSIS.md)
+-   [Agent Notes](AGENTS_PROJECT.md)
 
 ## Related
 

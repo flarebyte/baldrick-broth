@@ -1,7 +1,7 @@
 {
   "name": "baldrick-broth",
   "description": "Build automation tool and task runner",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "author": {
     "name": "Olivier Huin",
     "url": "https://github.com/olih"
@@ -56,7 +56,8 @@
     "execa": "9.6.0",
     "handlebars": "^4.7.8",
     "json-mask": "^2.0.0",
-    "listr2": "6.6.1",
+    "listr2": "^9.0.4",
+    "@listr2/prompt-adapter-enquirer": "^3.0.4",
     "papaparse": "^5.5.3",
     "winston": "^3.17.0",
     "yaml": "^2.8.1",

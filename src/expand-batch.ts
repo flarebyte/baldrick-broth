@@ -1,3 +1,8 @@
+/**
+ * Responsibilities: Expands batch models into runnable command line inputs.
+ * - Resolves loops (each), templated names, and command lines per iteration
+ * - Validates expanded names and merges per-iteration extra context
+ */
 import type { AnyCommand, BatchStepModel, Ctx } from './build-model.js';
 import { createDataId, getSupportedProperty } from './data-value-utils.js';
 import type { CommandLineInput } from './execution.js';

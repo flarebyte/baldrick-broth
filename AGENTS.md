@@ -68,7 +68,9 @@ README is generated from `baldrick-broth.yaml` using the TS README template.
 -   Notes:
     -   Runs from repo root and reads `baldrick-broth.yaml` for
         workflows/tasks.
-    -   Pin a version if needed: `npx baldrick-broth@0.17.0`.
+    -   Pin a version if needed: `npx baldrick-broth@0.18.0`.
+    -   See also: `[Code Analysis](CODE_ANALYSIS.md)` and `[Agent
+        Notes](AGENTS_PROJECT.md)`.
     -   Some tasks invoke external CLIs (e.g., `gh`, `typedoc`, Biome). Ensure
         they’re available and Node >= 22.
     -   Fallback to yarn only if needed: use `yarn cli` (TS dev), or `yarn
@@ -85,7 +87,8 @@ README is generated from `baldrick-broth.yaml` using the TS README template.
     -   Pest (acceptance/spec runner):
         <https://github.com/flarebyte/baldrick-pest> • npm:
         <https://www.npmjs.com/package/baldrick-pest>
-    -   Doc TS (typedoc/markdown): <https://github.com/flarebyte/baldrick-doc-ts>
+    -   Doc TS (typedoc/markdown):
+        <https://github.com/flarebyte/baldrick-doc-ts>
         • npm: <https://www.npmjs.com/package/baldrick-doc-ts>
     -   Dev TS (markdown, release utils):
         <https://github.com/flarebyte/baldrick-dev-ts> • npm:

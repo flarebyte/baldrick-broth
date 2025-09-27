@@ -3,7 +3,7 @@ model:
     title: Build automation tool and task runner
     description: Take your developer workflow to the next level with a custom CLI
       with relevant documentation for running your task
-    version: 0.17.0
+    version: 0.18.0
     keywords:
       - CLI
       - Task runner
@@ -28,6 +28,8 @@ model:
       - "[Overview for the json schema for broth yaml file](SCHEMA.md)"
       - "[Json schema for broth yaml
         file](spec/snapshots/build-model/get-schema--schema.json)"
+      - "[Code Analysis](CODE_ANALYSIS.md)"
+      - "[Agent Notes](AGENTS_PROJECT.md)"
     related:
       - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
         ne) Run tests declaratively with a few cunning plans"
@@ -79,6 +81,8 @@ workflows:
               run: npx baldrick-broth@latest test pest
             - title: Coverage (c8)
               run: yarn test:cov
+            - title: Build (tsc)
+              run: yarn build
       unit:
         title: Run node.js unit tests
         description: Run traditional unit tests

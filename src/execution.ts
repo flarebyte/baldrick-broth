@@ -1,3 +1,9 @@
+/**
+ * Responsibilities: Executes commands and parses outputs.
+ * - Runs shell commands (execa), handles stdin, status, and output capture
+ * - Parses JSON/YAML/CSV, executes built-ins, and applies templates
+ * - Persists outputs via append/write helpers and reports structured results
+ */
 import { appendFile, writeFile } from 'node:fs/promises';
 import { execaCommand } from 'execa';
 import CSV from 'papaparse';
