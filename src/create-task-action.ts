@@ -1,11 +1,11 @@
 import path from 'node:path';
+import { ListrEnquirerPromptAdapter } from '@listr2/prompt-adapter-enquirer';
 import {
   Listr,
   type ListrRendererFactory,
   type ListrTask,
   type ListrTaskWrapper,
 } from 'listr2';
-import { ListrEnquirerPromptAdapter } from '@listr2/prompt-adapter-enquirer';
 import type {
   AnyDataValue,
   BatchStepModel,
