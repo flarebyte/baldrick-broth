@@ -79,6 +79,8 @@ workflows:
               run: npx baldrick-broth@latest test pest
             - title: Coverage (c8)
               run: yarn test:cov
+            - title: Build (tsc)
+              run: yarn build
       unit:
         title: Run node.js unit tests
         description: Run traditional unit tests
