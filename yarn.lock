@@ -553,16 +553,6 @@ baldrick-tsconfig-es2024@*:
   resolved "https://registry.yarnpkg.com/baldrick-tsconfig-es2024/-/baldrick-tsconfig-es2024-0.5.0.tgz#ae01b285e668ea9c6fcfc23b8a4aa23ba8d54048"
   integrity sha512-82OwXc0QNQx7nINO4bEOWDhTQWUi+uiwjEhCL7468I6/JB6qrs3mJjSYzph9Pwp4suT+4k6lFpfo2sPZAlwAKA==
 
-baldrick-zest-mess@^0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/baldrick-zest-mess/-/baldrick-zest-mess-0.17.0.tgz#31a85a03b30ed87237dfed54808db1d2fa8d7e74"
-  integrity sha512-xf4EBdWwoIBj+H+X1BwYhyd0VHnuIxdlhljL8IVH3Xn4BHE4ib3lJ1TTiCxkiN9+DAKMVk8ytXBYMHHM7YtofA==
-  dependencies:
-    dot-prop "^7.2.0"
-    fdir "^6.0.1"
-    object-crumble "^0.6.6"
-    zod-to-json-schema "^3.20.4"
-
 binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
@@ -832,13 +822,6 @@ dot-prop@^10.0.0:
   dependencies:
     type-fest "^5.0.0"
 
-dot-prop@^7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/dot-prop/-/dot-prop-7.2.0.tgz#468172a3529779814d21a779c1ba2f6d76609809"
-  integrity sha512-Ol/IPXUARn9CSbkrdV4VJo7uCy1I3VuSiWCaFSg+8BdUOzF9n3jefIpcgAydvUZbTdEBZs2vEiTiS9m61ssiDA==
-  dependencies:
-    type-fest "^2.11.2"
-
 eastasianwidth@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
@@ -958,11 +941,6 @@ extend@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
-
-fdir@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.0.1.tgz#1edca6c0295d072802e2c67a2f4fbf941cd32af5"
-  integrity sha512-bdrUUb0eYQrPRlaAtlSRoLs7sp6yKEwbMQuUgwvi/14TnaqhM/deSZUrC5ic+yjm5nEPPWE61oWpTTxQFQMmLA==
 
 fecha@^4.2.0:
   version "4.2.3"
@@ -2034,11 +2012,6 @@ npm-run-path@^6.0.0:
     path-key "^4.0.0"
     unicorn-magic "^0.3.0"
 
-object-crumble@^0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/object-crumble/-/object-crumble-0.6.6.tgz#d22bf6939bceeec51c8f622dc1234247e41111c2"
-  integrity sha512-AhUFODGJ8BKJh8kXXqHbO5Bx1YyoEnJ9jSrLhJ3tEILshhPAb0JlHcm0Z+ZDX3euS5XP3FiaKlqh1/B8BoYgCw==
-
 one-time@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/one-time/-/one-time-1.0.0.tgz#e06bc174aed214ed58edede573b433bbf827cb45"
@@ -2982,11 +2955,6 @@ type-fest@^1.0.2:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-1.4.0.tgz#e9fb813fe3bf1744ec359d55d1affefa76f14be1"
   integrity sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==
 
-type-fest@^2.11.2:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-2.19.0.tgz#88068015bb33036a598b952e55e9311a60fd3a9b"
-  integrity sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==
-
 type-fest@^3.8.0:
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-3.13.1.tgz#bb744c1f0678bea7543a2d1ec24e83e68e8c8706"
@@ -3377,11 +3345,6 @@ yoctocolors@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yoctocolors/-/yoctocolors-2.1.2.tgz#d795f54d173494e7d8db93150cec0ed7f678c83a"
   integrity sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==
-
-zod-to-json-schema@^3.20.4:
-  version "3.20.4"
-  resolved "https://registry.yarnpkg.com/zod-to-json-schema/-/zod-to-json-schema-3.20.4.tgz#155f687c5a059fdc0f1bb3ff32d6e9200036b6f4"
-  integrity sha512-Un9+kInJ2Zt63n6Z7mLqBifzzPcOyX+b+Exuzf7L1+xqck9Q2EPByyTRduV3kmSPaXaRer1JCsucubpgL1fipg==
 
 zod@^3.23.0:
   version "3.25.76"
