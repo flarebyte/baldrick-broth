@@ -72,13 +72,13 @@ type ExecuteCommandLineResult = Result<
 >;
 
 const toStatus = (params: {
-  exitCode: number;
+  exitCode?: number;
   failed: boolean;
   isCanceled: boolean;
   timedOut: boolean;
-  killed: boolean;
+  isTerminated: boolean;
 }): ExecuteCommandLineFailedCategory | 'success' => {
-  const { exitCode, failed, isCanceled, timedOut, killed } = params;
+  const { exitCode, failed, isCanceled, timedOut, isTerminated } = params;
   if (failed) {
     return 'failed';
   }
@@ -91,11 +91,11 @@ const toStatus = (params: {
     return 'timeout';
   }
 
-  if (killed) {
+  if (isTerminated) {
     return 'killed';
   }
 
-  if (exitCode > 0) {
+  if ((exitCode ?? 0) > 0) {
     return 'failed';
   }
 
@@ -212,7 +212,7 @@ const executeShellCommandLine = async (
     failed,
     isCanceled,
     timedOut,
-    killed,
+    isTerminated,
   } = await execaCommand(runnableLine, {
     reject: false,
     all: true,
@@ -220,7 +220,13 @@ const executeShellCommandLine = async (
     ...maybeStdin,
   });
 
-  const status = toStatus({ exitCode, failed, isCanceled, timedOut, killed });
+  const status = toStatus({
+    exitCode,
+    failed,
+    isCanceled,
+    timedOut,
+    isTerminated,
+  });
 
   if (status === 'success') {
     if (onSuccess.includes('json')) {
@@ -231,7 +237,7 @@ const executeShellCommandLine = async (
             line,
             stdout,
             stderr,
-            exitCode,
+            exitCode: exitCode ?? 1,
             onFailure,
             message: parsed.error.message,
           })
@@ -252,7 +258,7 @@ const executeShellCommandLine = async (
             line,
             stdout,
             stderr,
-            exitCode,
+            exitCode: exitCode ?? 1,
             onFailure,
             message: parsed.error.message,
           })
@@ -273,7 +279,7 @@ const executeShellCommandLine = async (
             line,
             stdout,
             stderr,
-            exitCode,
+            exitCode: exitCode ?? 1,
             onFailure,
             message: parsed.error.message,
           })
@@ -298,9 +304,9 @@ const executeShellCommandLine = async (
     line,
     stdout,
     stderr,
-    exitCode,
+    exitCode: exitCode ?? 1,
     onFailure,
-    message: `Failed with exit code ${exitCode}`,
+    message: `Failed with exit code ${exitCode ?? 1}`,
   });
 };
 

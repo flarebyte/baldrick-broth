@@ -20,7 +20,9 @@ export const stringy = {
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, { message: 'title should be a single line' })
+    .refine(isSingleLine, {
+      error: 'title should be a single line',
+    })
     .describe('A short title that summarizes this section of script'),
   description: z
     .string()
@@ -34,7 +36,7 @@ export const stringy = {
     .min(1)
     .max(300)
     .describe('The main reason why this section of script is needed'),
-  url: z.string().url().max(300).describe('A https link to a webpage'),
+  url: z.url().max(300).describe('A https link to a webpage'),
   path: z.string().max(300).describe('A relative path to a file'),
   propPath: z
     .string()
@@ -45,14 +47,18 @@ export const stringy = {
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, { message: 'message should be a single line' })
+    .refine(isSingleLine, {
+      error: 'message should be a single line',
+    })
     .describe('A short message that will display in the prompt'),
   choice: z
     .string()
     .trim()
     .min(1)
     .max(60)
-    .refine(isSingleLine, { message: 'choice should be a single line' })
+    .refine(isSingleLine, {
+      error: 'choice should be a single line',
+    })
     .describe('A possible choice'),
 };
 export const safeParseField = (
