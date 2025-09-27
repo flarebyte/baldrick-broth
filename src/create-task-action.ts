@@ -5,6 +5,7 @@ import {
   type ListrTask,
   type ListrTaskWrapper,
 } from 'listr2';
+import { ListrEnquirerPromptAdapter } from '@listr2/prompt-adapter-enquirer';
 import type {
   AnyDataValue,
   BatchStepModel,
@@ -276,14 +277,16 @@ type TaskContext = Record<string, unknown> & { input?: AnyDataValue };
 async function interactivePrompt(
   commandLineInput: CommandLineInput,
   taskContext: TaskContext,
-  task: ListrTaskWrapper<Ctx, ListrRendererFactory>,
+  task: ListrTaskWrapper<Ctx, ListrRendererFactory, ListrRendererFactory>,
   ctx: Ctx,
 ) {
   if (commandLineInput.opts.a === 'prompt-input') {
-    taskContext.input = await task.prompt<string>({
-      type: 'Input',
-      message: commandLineInput.opts.message,
-    });
+    taskContext.input = await task
+      .prompt(ListrEnquirerPromptAdapter)
+      .run<string>({
+        type: 'Input',
+        message: commandLineInput.opts.message,
+      });
     setDataValue(
       commandLineInput.memoryId,
       ctx,
@@ -293,10 +296,12 @@ async function interactivePrompt(
   }
 
   if (commandLineInput.opts.a === 'prompt-password') {
-    taskContext.input = await task.prompt<string>({
-      type: 'Password',
-      message: commandLineInput.opts.message,
-    });
+    taskContext.input = await task
+      .prompt(ListrEnquirerPromptAdapter)
+      .run<string>({
+        type: 'Password',
+        message: commandLineInput.opts.message,
+      });
     setDataValue(
       commandLineInput.memoryId,
       ctx,
@@ -306,11 +311,13 @@ async function interactivePrompt(
   }
 
   if (commandLineInput.opts.a === 'prompt-choices') {
-    taskContext.input = await task.prompt<string>({
-      type: 'Select',
-      message: commandLineInput.opts.message,
-      choices: commandLineInput.opts.choices,
-    });
+    taskContext.input = await task
+      .prompt(ListrEnquirerPromptAdapter)
+      .run<string>({
+        type: 'Select',
+        message: commandLineInput.opts.message,
+        choices: commandLineInput.opts.choices,
+      });
     setDataValue(
       commandLineInput.memoryId,
       ctx,
@@ -320,10 +327,12 @@ async function interactivePrompt(
   }
 
   if (commandLineInput.opts.a === 'prompt-confirm') {
-    taskContext.input = await task.prompt<string>({
-      type: 'Confirm',
-      message: commandLineInput.opts.message,
-    });
+    taskContext.input = await task
+      .prompt(ListrEnquirerPromptAdapter)
+      .run<string>({
+        type: 'Confirm',
+        message: commandLineInput.opts.message,
+      });
     setDataValue(
       commandLineInput.memoryId,
       ctx,
@@ -341,11 +350,13 @@ async function interactivePrompt(
     const choices: string[] = isStringArray(possibleChoices)
       ? possibleChoices
       : ['The choice should be an array (645608)'];
-    taskContext.input = await task.prompt<string>({
-      type: 'Select',
-      message: commandLineInput.opts.message,
-      choices,
-    });
+    taskContext.input = await task
+      .prompt(ListrEnquirerPromptAdapter)
+      .run<string>({
+        type: 'Select',
+        message: commandLineInput.opts.message,
+        choices,
+      });
     setDataValue(
       commandLineInput.memoryId,
       ctx,
