@@ -220,7 +220,13 @@ const executeShellCommandLine = async (
     ...maybeStdin,
   });
 
-  const status = toStatus({ exitCode, failed, isCanceled, timedOut, isTerminated });
+  const status = toStatus({
+    exitCode,
+    failed,
+    isCanceled,
+    timedOut,
+    isTerminated,
+  });
 
   if (status === 'success') {
     if (onSuccess.includes('json')) {

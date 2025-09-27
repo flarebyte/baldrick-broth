@@ -20,7 +20,11 @@ type Literal = z.infer<typeof literalSchema>;
 type Json = Literal | { [key: string]: Json } | Json[];
 const jsonishSchema: z.ZodType<Json> = z
   .lazy(() =>
-    z.union([literalSchema, z.array(jsonishSchema), z.record(jsonishSchema)]),
+    z.union([
+      literalSchema,
+      z.array(jsonishSchema),
+      z.record(z.string(), jsonishSchema),
+    ]),
   )
   .describe('Any JSON document without null values');
 const engine = z
@@ -89,18 +93,18 @@ const lineShell = z.string().min(1).max(300).describe('A line of shell script');
 const advancedShell = z
   .object({
     ...metadataCore,
-    a: z.literal('shell').default('shell'),
+    a: z.literal('shell').prefault('shell'),
     onFailure: z
       .array(onShellCommandFinish)
       .min(1)
-      .default(['exit'])
+      .prefault(['exit'])
       .describe(
         'List of flags to describe the default behavior in case of failure',
       ),
     onSuccess: z
       .array(onShellCommandFinish)
       .min(1)
-      .default(['trim'])
+      .prefault(['trim'])
       .describe(
         'List of flags to describe the default behavior in case of success',
       ),
@@ -117,7 +121,7 @@ const advancedShell = z
     run: lineShell,
     multiline: z
       .boolean()
-      .default(false)
+      .prefault(false)
       .describe('Should the run command spread on multiple lines'),
   })
   .describe('Configuration for the batch shell script');
@@ -218,7 +222,7 @@ const splitStringStep = z
       .string()
       .min(1)
       .max(80)
-      .default(' ')
+      .prefault(' ')
       .describe('A separator to split the string'),
     value: stringy.varValue,
   })
@@ -281,16 +285,11 @@ const rangeStep = z
     a: z.literal('range'),
     ...metadataStep,
 
-    start: z
-      .number()
-      .int()
-      .default(0)
-      .describe('The number to start the range with'),
-    end: z.number().int().describe('The number at the end of the range'),
+    start: z.int().prefault(0).describe('The number to start the range with'),
+    end: z.int().describe('The number at the end of the range'),
     step: z
-      .number()
       .int()
-      .default(1)
+      .prefault(1)
       .describe('A step to increment the range, usually 1'),
   })
   .describe('Generate a range of numbers');
@@ -452,7 +451,7 @@ const batchStep = z
   .strictObject({
     name: z
       .enum(asEnumKeys(batchStepNameEmum))
-      .default('unknown')
+      .prefault('unknown')
       .describe(describeEnum('Name of the step', batchStepNameEmum)),
     if: stringy.varValue
       .optional()
@@ -482,7 +481,7 @@ const task = z
     name: z
       .string()
       .max(1)
-      .default('')
+      .prefault('')
       .describe('A unique identifier for this task'),
     title: stringy.title.describe(
       'A brief and descriptive title for this task',
@@ -534,13 +533,12 @@ const workflows = z
     'A collection of related tasks and processes that achieve a specific goal',
   );
 export const schema = z
-  .object({
+  .strictObject({
     engine,
     model: jsonishSchema,
     workflows,
   })
-  .describe('Settings for a baldrick-broth file')
-  .strict();
+  .describe('Settings for a baldrick-broth file');
 
 const lightSchema = z
   .object({
