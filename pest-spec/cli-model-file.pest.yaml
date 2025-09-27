@@ -1,0 +1,20 @@
+---
+title: baldrick-broth with external model
+description: Acceptance test ensuring external model file is prioritized and warns when main model is non-empty
+cases:
+  help-with-external-model:
+    title: Create external model and display help
+    steps:
+      - title: Create external model file
+        run: >-
+          bash -lc 'printf "project:\n  title: External Model Test\n" > baldrick-broth-model.yaml && ls -l baldrick-broth-model.yaml'
+      - title: run help help-command
+        run: yarn cli --help
+      - title: Remove changing info from output
+        run: sed -f pest-spec/scripts/cleaning.sed
+        stdin:
+          step: 1
+          receiving: stdout + stderr
+        expect:
+          snapshot: help-with-external-model.txt
+          ignoreTrailingBlankLines: true

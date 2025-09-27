@@ -1,0 +1,56 @@
+project:
+  title: Build automation tool and task runner
+  description: Take your developer workflow to the next level with a custom CLI
+    with relevant documentation for running your task
+  version: 0.19.0
+  keywords:
+    - CLI
+    - Task runner
+    - Build system
+    - Build tool
+    - Make
+readme:
+  highlights:
+    - Automate tasks such as testing, scaffolding, minification, and
+      compilation of code.
+    - Reduce the amount of time needed to set up new projects
+    - YAML configuration with json-schema allowing code assistance in the
+      editor (eg. visual studio code).
+    - Provide clear documentation for each step of a project build
+    - Ensure that documentation is always up-to-date and available in the CLI
+    - Run certain tasks only if certain conditions are met
+    - Allow developers to define their own model for their project
+    - Provide an easy way for developers to provide interactive input when
+      running a task
+  links:
+    - "[Usage](USAGE.md)"
+    - "[Overview for the json schema for broth yaml file](SCHEMA.md)"
+    - "[Json schema for broth yaml
+      file](spec/snapshots/build-model/get-schema--schema.json)"
+    - "[Code Analysis](CODE_ANALYSIS.md)"
+    - "[Agent Notes](AGENTS_PROJECT.md)"
+  related:
+    - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
+      ne) Run tests declaratively with a few cunning plans"
+  tags:
+    - image-hero
+    - image-demo
+github:
+  account: flarebyte
+  name: baldrick-broth
+copyright:
+  holder: Flarebyte.com
+  startYear: 2022
+license: MIT
+author:
+  name: Olivier Huin
+  url: https://github.com/olih
+implementation:
+  tags:
+    - cli
+    - zest
+    - pest
+    - zod
+    - railway
+    - commander
+workflow-version: 0.3.0

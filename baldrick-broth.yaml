@@ -1,60 +1,4 @@
-model:
-  project:
-    title: Build automation tool and task runner
-    description: Take your developer workflow to the next level with a custom CLI
-      with relevant documentation for running your task
-    version: 0.18.0
-    keywords:
-      - CLI
-      - Task runner
-      - Build system
-      - Build tool
-      - Make
-  readme:
-    highlights:
-      - Automate tasks such as testing, scaffolding, minification, and
-        compilation of code.
-      - Reduce the amount of time needed to set up new projects
-      - YAML configuration with json-schema allowing code assistance in the
-        editor (eg. visual studio code).
-      - Provide clear documentation for each step of a project build
-      - Ensure that documentation is always up-to-date and available in the CLI
-      - Run certain tasks only if certain conditions are met
-      - Allow developers to define their own model for their project
-      - Provide an easy way for developers to provide interactive input when
-        running a task
-    links:
-      - "[Usage](USAGE.md)"
-      - "[Overview for the json schema for broth yaml file](SCHEMA.md)"
-      - "[Json schema for broth yaml
-        file](spec/snapshots/build-model/get-schema--schema.json)"
-      - "[Code Analysis](CODE_ANALYSIS.md)"
-      - "[Agent Notes](AGENTS_PROJECT.md)"
-    related:
-      - "[baldrick-zest-engine](https://github.com/flarebyte/baldrick-zest-engi\
-        ne) Run tests declaratively with a few cunning plans"
-    tags:
-      - image-hero
-      - image-demo
-  github:
-    account: flarebyte
-    name: baldrick-broth
-  copyright:
-    holder: Flarebyte.com
-    startYear: 2022
-  license: MIT
-  author:
-    name: Olivier Huin
-    url: https://github.com/olih
-  implementation:
-    tags:
-      - cli
-      - zest
-      - pest
-      - zod
-      - railway
-      - commander
-  workflow-version: 0.3.0
+model: {}
 workflows:
   test:
     title: Test the library
@@ -473,23 +417,8 @@ workflows:
         motivation: Always apply the latest project conventions
         main:
           commands:
-            - title: Remove previous temporary directory
-              run: rm -rf temp/broth
-            - title: Create temporary directory
-              run: mkdir -p temp/broth
-            - a: mask-object
-              name: broth-model
-              title: Extract model from this baldrick-broth.yaml
-              value: build
-              mask: model
-            - name: save-old-model
-              a: write-to-file
-              title: Save baldrick-broth file with existing model
-              value: data.broth-model
-              filename: temp/broth/baldrick-broth-model.json
-            - title: merge model with new workflow
+            - title: copy latest workflow
               run: npx baldrick-whisker@latest object baldrick-broth.yaml
-                temp/broth/baldrick-broth-model.json
                 github:flarebyte:baldrick-reserve:data/ts/baldrick-broth.yaml
       norm:
         title: Normalize the project
@@ -566,7 +495,7 @@ workflows:
                 github:flarebyte:baldrick-reserve:template/decisions.hbs
                 DECISIONS.md --no-overwrite
             - title: Create README.md
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/readme.hbs
                 README.md
             - title: Create TECHNICAL_DESIGN.md
@@ -582,7 +511,7 @@ workflows:
                 github:flarebyte:baldrick-reserve:template/ts/agents.hbs
                 AGENTS.md
             - title: Create LICENSE
-              run: npx baldrick-whisker@latest render --no-ext baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render --no-ext baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/license.hbs
                 LICENSE.md
             - title: Fix markdown
@@ -604,7 +533,7 @@ workflows:
               stdin: data.package-json-deps
               run: sponge temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/package.hbs
                 temp/broth/package-specific.json
             - title: merge dependencies with broth model info
@@ -635,7 +564,7 @@ workflows:
               value: data.package-json-deps
               filename: temp/broth/package-deps.json
             - title: Create package.json metadata from broth model
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/package.hbs
                 temp/broth/package-specific.json
             - title: merge dependencies with broth model info
@@ -656,6 +585,6 @@ workflows:
         main:
           commands:
             - title: Create README.md
-              run: npx baldrick-whisker@latest render baldrick-broth.yaml
+              run: npx baldrick-whisker@latest render baldrick-broth-model.yaml
                 github:flarebyte:baldrick-reserve:template/ts/readme.hbs
                 README.md
